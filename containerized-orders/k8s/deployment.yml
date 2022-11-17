@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: k8s-containerized-services
+  name: k8s-service-orders
+  labels:
+    app: k8s-service-orders
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-service-orders
+  template:
+    metadata:
+      labels:
+        app: k8s-service-orders
+    spec:
+      containers:
+        - name: containerized-orders
+          image: haunxhus/service-orders-api:latest
+          #magePullPolicy: Never
+          ports:
+            - containerPort: 2222

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: containerized-gateway
+  namespace: k8s-containerized-services
+spec:
+  selector:
+    app: k8s-service-gateway
+  ports:
+    - protocol: TCP
+      port: 8762
+      targetPort: 8762
+  type: LoadBalancer

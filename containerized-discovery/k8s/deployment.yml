@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: k8s-containerized-services
+  name: k8s-service-discovery
+  labels:
+    app: k8s-service-discovery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-service-discovery
+  template:
+    metadata:
+      labels:
+        app: k8s-service-discovery
+    spec:
+      containers:
+        - name: containerized-discovery
+          image: haunxhus/service-discovery:latest
+          #imagePullPolicy: Never
+          ports:
+            - containerPort: 8761

@@ -1,0 +1,59 @@
+server:
+  port: ${PORT:8762}
+
+spring:
+  application:
+    name: containerized-gateway
+  logstash:
+    server: logstash
+    port: 5000
+  zipkin:
+    base-url: http://zipkin:9411
+  cloud:
+    gateway:
+      routes:
+        - id: containerized-main
+          uri: lb://containerized-main
+          predicates:
+          - Path=/backoffice/**
+        - id: CONTAINERIZED-accounts
+          uri: lb://containerized-accounts
+          predicates:
+          - Path=/account/**
+        - id: containerized-orders
+          uri: lb://containerized-orders
+          predicates:
+          - Path=/order/**
+        - id: containerized-products
+          uri: lb://containerized-products
+          predicates:
+          - Path=/product/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  metrics:
+    distribution:
+      percentiles-histogram.http.server.requests: false
+      percentiles.http.server.requests: 0.5, 0.9, 0.95, 0.99, 0.999
+      sla.http.server.requests: 500ms, 2000ms
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://discovery:8761/eureka/
+
+# Increase the Hystrix timeout to 60s (globally)
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000

@@ -1,0 +1,10 @@
+version: '3'
+services:
+  orders:
+    image: tanerdiler/service-orders-api
+    container_name: service-orders
+    build:
+      context: ./containerized-orders
+      dockerfile: Dockerfile
+    ports:
+      - "7502:2222"

@@ -1,0 +1,18 @@
+# spring:
+#   cloud:
+#     kubernetes:
+#       discovery:
+#         all-namespaces: true
+#       enabled: true
+
+#     loadbalancer:
+#       ribbon:
+#         enabled: false
+
+# eureka:
+#   client:
+#     enabled: false
+
+# containerized:
+#   app:
+#     name: k8s-containerized-main.in.application-kubernetes_yml.profile.kubernetes

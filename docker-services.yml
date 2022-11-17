@@ -1,0 +1,78 @@
+version: '3'
+services:
+  # gateway:
+  #   image: tanerdiler/service-gateway
+  #   container_name: service-gateway
+  #   build:
+  #     context: ./containerized-gateway
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8762:8762"
+    #links:
+    #  - discovery
+    #  - logstash
+    #  - zipkin
+
+  # accounts:
+  #   image: tanerdiler/service-accounts-api
+  #   container_name: service-accounts
+  #   build:
+  #     context: ./containerized-accounts
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "7500:2222"
+    #links:
+     # - discovery
+     # - logstash
+    #  - zipkin
+
+  products:
+    image: tanerdiler/service-products-api
+    container_name: service-products
+    build:
+      context: ./containerized-products
+      dockerfile: Dockerfile
+    ports:
+      - "7501:2222"
+    #depends_on:
+    #  - discovery
+    #  - accounts
+    #links:
+     # - discovery
+     # - logstash
+     # - zipkin
+
+  orders:
+    image: tanerdiler/service-orders-api
+    container_name: service-orders
+    build:
+      context: ./containerized-orders
+      dockerfile: Dockerfile
+    ports:
+      - "7502:2222"
+    #depends_on:
+    #  - discovery
+     # - products
+    #links:
+    #  - discovery
+    #  - logstash
+    #  - zipkin
+
+  main:
+    image: tanerdiler/service-main-api
+    container_name: service-main
+    build:
+      context: ./containerized-main
+      dockerfile: Dockerfile
+    ports:
+      - "7503:2222"
+    #depends_on:
+     # - discovery
+    #  - orders
+    #links:
+     # - discovery
+     # - logstash
+     # - accounts
+     # - products
+     # - orders
+     # - zipkin

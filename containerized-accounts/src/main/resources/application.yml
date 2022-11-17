@@ -1,0 +1,51 @@
+server:
+  port: ${PORT:2222}
+  servlet:
+    context-path: /account
+
+spring:
+  application:
+    name: containerized-accounts
+  logging:
+    pattern:
+      console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([${springAppName:-},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}]){yellow} %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
+    level:
+      org.springframework: WARN
+      org.hibernate: WARN
+  logstash:
+    server: logstash
+    port: 5000
+  zipkin:
+    base-url: http://zipkin:9411
+  cloud:
+    kubernetes:
+      enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  metrics:
+    distribution:
+      percentiles-histogram.http.server.requests: false
+      percentiles.http.server.requests: 0.5, 0.9, 0.95, 0.99, 0.999
+      sla.http.server.requests: 500ms, 2000ms
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://discovery:8761/eureka/
+
+ribbon:
+  eureka:
+    enabled: true
+
+containerized:
+  app:
+    name: k8s-containerized-accounts.in.configmap.profile.N/A
