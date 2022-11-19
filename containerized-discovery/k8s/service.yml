@@ -4,6 +4,7 @@ metadata:
   namespace: k8s-containerized-services
   name: discovery
 spec:
+  type: LoadBalancer
   selector:
     app: k8s-service-discovery
   ports:

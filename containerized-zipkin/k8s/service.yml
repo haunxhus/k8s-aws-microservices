@@ -4,6 +4,7 @@ metadata:
   name: zipkin
   namespace: k8s-containerized-services
 spec:
+  type: LoadBalancer
   selector:
     app: k8s-service-zipkin
   ports:
