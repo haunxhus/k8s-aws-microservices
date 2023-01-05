@@ -1,5 +1,5 @@
 server:
-  port: ${PORT:2222}
+  port: ${PORT:2223}
 
 spring:
   application:
@@ -12,9 +12,11 @@ spring:
       org.hibernate: WARN
   logstash:
     server: logstash
+    #server: localhost
     port: 5000
   zipkin:
     base-url: http://zipkin:9411
+    #base-url: http://localhost:9411
   main:
     allow-bean-definition-overriding: true
 
@@ -28,7 +30,8 @@ eureka:
     fetch-registry: true
     serviceUrl:
       defaultZone: http://discovery:8761/eureka/
-
+      #defaultZone: http://localhost:8761/eureka/
+       
 ribbon:
   eureka:
     enabled: true

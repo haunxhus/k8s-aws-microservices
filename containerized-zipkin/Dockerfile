@@ -1,5 +1,5 @@
 FROM openjdk:11-jdk-slim
-MAINTAINER Taner Diler <taner.diler@gmail.com>
-ADD target/containerized-gateway.jar containerized-gateway.jar
-ENTRYPOINT ["java", "-jar", "/containerized-gateway.jar"]
+MAINTAINER JavaTeamDu5 <JavaTeamDu5@vmodev.com>
+ADD target/containerized-zipkin.jar containerized-zipkin.jar
+ENTRYPOINT ["java", "-jar", "/containerized-zipkin.jar"]
 EXPOSE 8761

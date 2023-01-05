@@ -13,7 +13,7 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     scrape_interval: 5s
     static_configs:
-      - targets: ['main:2222']
+      - targets: ['main:2223']
   - job_name: 'accounts'
     # Override the global default and scrape targets from this job every 5 seconds.
     metrics_path: '/actuator/prometheus'
@@ -25,13 +25,13 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     scrape_interval: 5s
     static_configs:
-      - targets: ['products:2222']
+      - targets: ['products:2227']
   - job_name: 'orders'
     # Override the global default and scrape targets from this job every 5 seconds.
     metrics_path: '/actuator/prometheus'
     scrape_interval: 5s
     static_configs:
-      - targets: ['orders:2222']
+      - targets: ['orders:2226']
   - job_name: 'discovery'
     # Override the global default and scrape targets from this job every 5 seconds.
     metrics_path: '/actuator/prometheus'

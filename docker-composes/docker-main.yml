@@ -1,0 +1,10 @@
+version: '3'
+services:
+  main:
+    image: containerized-main
+    container_name: containerized-main
+    build:
+      context: ../ 
+      dockerfile: ./containerized-main/Dockerfile
+    ports:
+      - "2222:2222"

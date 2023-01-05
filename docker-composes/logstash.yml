@@ -1,0 +1,17 @@
+version: '3'
+services:
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.5.3
+    #image: docker.elastic.co/logstash/logstash:7.8.0
+    container_name: logstash
+    restart: unless-stopped
+    command: logstash -f /usr/share/logstash/pipeline
+    volumes:
+      - ./docker-composes/containerized-logstash/config:/usr/share/logstash/config:ro
+      - ./docker-composes/containerized-logstash/pipeline:/usr/share/logstash/pipeline:ro
+    environment:
+      LS_JAVA_OPTS: "-Xms512m -Xmx512m"
+    ports:
+      - "5000:5000"
+      - "5044:5044"
+      - "12204:12204"

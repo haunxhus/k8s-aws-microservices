@@ -1,0 +1,13 @@
+version: '3'
+services:
+  gateway:
+    image: containerized-gateway
+    container_name: containerized-gateway
+    build:
+      context: ../
+      dockerfile: ./containerized-gateway/Dockerfile
+    ports:
+      - "8762:8762"
+    restart: on-failure
+    stdin_open: true 
+    tty: true

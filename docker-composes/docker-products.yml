@@ -1,0 +1,13 @@
+version: '3'
+services:
+  products:
+    image: containerized-products
+    container_name: containerized-products
+    build:
+      context: ../
+      dockerfile: ./containerized-products/Dockerfile
+    ports:
+      - "2227:2227"
+    restart: on-failure
+    stdin_open: true 
+    tty: true

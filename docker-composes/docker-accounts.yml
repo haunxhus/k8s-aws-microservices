@@ -1,0 +1,13 @@
+version: '3'
+services:
+  accounts:
+    image: containerized-accounts
+    container_name: containerized-accounts
+    build:
+      context: ../
+      dockerfile: ./containerized-accounts/Dockerfile
+    ports:
+      - "2222:2222"
+    restart: on-failure
+    stdin_open: true # connect docker container by shell: docker run -i
+    tty: true # connect docker container by shell:        docker run -i

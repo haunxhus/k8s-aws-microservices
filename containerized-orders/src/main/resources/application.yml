@@ -1,5 +1,5 @@
 server:
-  port: ${PORT:2222}
+  port: ${PORT:2226}
   servlet:
     context-path: /order
 
@@ -14,9 +14,11 @@ spring:
       org.hibernate: WARN
   logstash:
     server: logstash
+    #server: localhost
     port: 5000
   zipkin:
     base-url: http://zipkin:9411
+    #base-url: http://localhost:9411
 
 management:
   endpoints:
@@ -38,6 +40,7 @@ eureka:
     fetch-registry: true
     serviceUrl:
       defaultZone: http://discovery:8761/eureka/
+      #defaultZone: http://localhost:8761/eureka/
 
 ribbon:
   eureka:

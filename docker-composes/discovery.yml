@@ -1,0 +1,13 @@
+version: '3'
+services:  
+  discovery:
+    image: tanerdiler/service-discovery
+    container_name: service-discovery
+    build:
+      context: ./docker-composes/containerized-products
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    restart: on-failure
+    stdin_open: true 
+    tty: true

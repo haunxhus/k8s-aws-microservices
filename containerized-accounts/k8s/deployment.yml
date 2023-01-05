@@ -6,7 +6,7 @@ metadata:
   labels:
     app: k8s-service-accounts
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: k8s-service-accounts
@@ -15,12 +15,14 @@ spec:
       labels:
         app: k8s-service-accounts
     spec:
+      #loadBalancerClass: nil 
       containers:
         - name: containerized-accounts
-          image: haunxhus/service-accounts-api:latest
+          image: linhpv5555/containerized-accounts:latest
           #imagePullPolicy: Never
           ports:
             - containerPort: 2222
+            #name: service-accounts
 #          livenessProbe:
 #            httpGet:
 #              path: /health
@@ -33,3 +35,6 @@ spec:
 #              port: 8080
 #              scheme: HTTP
 #            initialDelaySeconds: 10
+
+          #args:
+          #  - "-apptype=accounts"

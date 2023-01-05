@@ -1,0 +1,45 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: k8s-service-ingress
+  namespace: k8s-containerized-services
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    #kubernetes.io/ingress.class: "nginx"
+    #kubernetes.io/ingress.class: ingress-nginx
+    #ingressclass.kubernetes.io/is-default-class: "true"
+spec:
+  ingressClassName: nginx
+  defaultBackend:
+    service:
+      name: containerized-gateway
+      port: 
+        number: 8762
+  #  resource:
+  #    apiGroup: k8s.example.com
+  #    kind: StorageBucket
+  #    name: static-assets
+  rules:
+  - http:
+      paths:
+        - path: /product-ingress
+          pathType: Prefix
+          backend:
+            service:
+              name: containerized-products
+              port: 
+                number: 2227
+        - path: /account-ingress
+          pathType: Prefix
+          backend:
+            service:
+              name: containerized-accounts
+              port: 
+                number: 2222
+        - path: /gateway-ingress
+          pathType: Prefix
+          backend:
+            service:
+              name: containerized-gateway
+              port: 
+                number: 8762
