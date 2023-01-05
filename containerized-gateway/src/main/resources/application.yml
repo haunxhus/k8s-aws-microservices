@@ -6,9 +6,11 @@ spring:
     name: containerized-gateway
   logstash:
     server: logstash
+    #server: localhost
     port: 5000
   zipkin:
     base-url: http://zipkin:9411
+    #base-url: http://localhost:9411
   cloud:
     gateway:
       routes:
@@ -16,7 +18,7 @@ spring:
           uri: lb://containerized-main
           predicates:
           - Path=/backoffice/**
-        - id: CONTAINERIZED-accounts
+        - id: containerized-accounts
           uri: lb://containerized-accounts
           predicates:
           - Path=/account/**
@@ -48,6 +50,7 @@ eureka:
     registerWithEureka: true
     serviceUrl:
       defaultZone: http://discovery:8761/eureka/
+      #defaultZone: http://localhost:8761/eureka/
 
 # Increase the Hystrix timeout to 60s (globally)
 hystrix:

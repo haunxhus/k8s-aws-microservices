@@ -8,5 +8,14 @@ spec:
     app: k8s-service-accounts
   ports:
     - protocol: TCP
-      port: 7500
+      port: 2222
       targetPort: 2222
+  type: LoadBalancer
+  #externalTrafficPolicy: Local
+  #externalIPs:
+  #  - 80.11.12.10
+      #targetPort: service-accounts
+  #status:
+  #loadBalancer:
+  #  ingress:
+  #  - ip: localhost

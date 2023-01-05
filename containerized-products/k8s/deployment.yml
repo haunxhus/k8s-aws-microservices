@@ -7,6 +7,10 @@ metadata:
     app: k8s-service-products
 spec:
   replicas: 1
+  progressDeadlineSeconds: 660 # 11 minutes, default is 10 minutes
+  revisionHistoryLimit: 12
+  strategy:
+    type: RollingUpdate # default
   selector:
     matchLabels:
       app: k8s-service-products
@@ -17,7 +21,7 @@ spec:
     spec:
       containers:
         - name: containerized-products
-          image: haunxhus/service-products-api:latest
+          image: linhpv5555/containerized-products:latest
           #imagePullPolicy: Never
           ports:
-            - containerPort: 2222
+            - containerPort: 2227

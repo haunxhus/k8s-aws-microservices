@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: containerized-gateway
-          image: haunxhus/service-gateway:latest
+          image: linhpv5555/containerized-gateway:latest
           #imagePullPolicy: Never
           ports:
             - containerPort: 8762

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: containerized-discovery
-          image: haunxhus/service-discovery:latest
+          image: linhpv5555/containerized-discovery:latest
           #imagePullPolicy: Never
           ports:
             - containerPort: 8761

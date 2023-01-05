@@ -20,8 +20,7 @@ public class ProductRepository {
 		products.put(4, new Product(4, "sırt çantası", 50D));
 	}
 
-	public Optional<Product> findById(Integer id)
-	{
+	public Optional<Product> findById(Integer id) {
 		return Optional.ofNullable(products.get(id));
 	}
 

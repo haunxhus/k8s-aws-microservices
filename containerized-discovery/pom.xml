@@ -6,6 +6,7 @@
 		<groupId>com.tanerdiler.microservice</groupId>
 		<artifactId>containerized-microservices</artifactId>
 		<version>2.5.0</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>containerized-discovery</artifactId>
