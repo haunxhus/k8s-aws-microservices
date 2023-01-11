@@ -4,9 +4,10 @@ metadata:
   namespace: k8s-containerized-services
   name: containerized-main
 spec:
+  type: LoadBalancer
   selector:
     app: k8s-service-main
   ports:
     - protocol: TCP
-      port: 7503
-      targetPort: 2222
+      port: 2223
+      targetPort: 2223

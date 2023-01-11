@@ -138,6 +138,8 @@ services:
       dockerfile: ./containerized-products/Dockerfile
     networks:
       - e-network
+    volumes:
+      - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
     depends_on:
       - logstash
       - zipkin
@@ -159,6 +161,8 @@ services:
       dockerfile: ./containerized-gateway/Dockerfile
     networks:
       - e-network
+    volumes:
+      - "./wait-for-services.sh:/usr/local/bin/wait-for-services.sh:ro" # :ro, ro = read only
     depends_on:
       - logstash
       - zipkin
@@ -166,6 +170,78 @@ services:
     entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-gateway.jar"]
     ports:
       - 8762:8762
+    restart: on-failure
+    stdin_open: true 
+    tty: true
+    
+ # #################################################### containerized-accounts service #######################################################   
+    
+  containerized-accounts:
+    container_name: containerized-accounts
+    image: containerized-accounts
+    build: 
+      context: .
+      dockerfile: ./containerized-accounts/Dockerfile
+    networks:
+      - e-network
+    volumes:
+      - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
+    depends_on:
+      - logstash
+      - zipkin
+      - discovery
+    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-accounts.jar"]
+    ports:
+      - 2222:2222
+    restart: on-failure
+    stdin_open: true 
+    tty: true    
+
+
+
+ # #################################################### containerized-orders service #######################################################   
+    
+  containerized-orders:
+    container_name: containerized-orders
+    image: containerized-orders
+    build: 
+      context: .
+      dockerfile: ./containerized-orders/Dockerfile
+    networks:
+      - e-network
+    volumes:
+      - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
+    depends_on:
+      - logstash
+      - zipkin
+      - discovery
+    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-orders.jar"]
+    ports:
+      - 2226:2226
+    restart: on-failure
+    stdin_open: true 
+    tty: true
+    
+    
+ # #################################################### containerized-main service #######################################################   
+    
+  containerized-main:
+    container_name: containerized-main
+    image: containerized-main
+    build: 
+      context: .
+      dockerfile: ./containerized-main/Dockerfile
+    networks:
+      - e-network
+    volumes:
+      - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
+    depends_on:
+      - logstash
+      - zipkin
+      - discovery
+    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-main.jar"]
+    ports:
+      - 2223:2223
     restart: on-failure
     stdin_open: true 
     tty: true

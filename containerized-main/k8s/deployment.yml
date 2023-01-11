@@ -6,7 +6,7 @@ metadata:
   labels:
     app: k8s-service-main
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: k8s-service-main
@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: containerized-main
-          image: haunxhus/service-main-api:latest
+          image: linhpv5555/containerized-main:latest
           #imagePullPolicy: Never
           ports:
-            - containerPort: 2222
+            - containerPort: 2223
