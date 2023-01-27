@@ -115,4 +115,5 @@ sudo microk8s kubectl port-forward -n k8s-containerized-services service/contain
 sudo microk8s kubectl port-forward -n kube-system service/kubernetes-dashboard 10443:443 --address 0.0.0.0 &
 
 # ################################# ingress k8s ##################################################
-sudo microk8s kubectl apply -f ingress.yml
+sudo microk8s kubectl apply -f ingress-k8s/ingress.yml
+sudo microk8s kubectl apply -f ingress-k8s/nginx-config.yml
