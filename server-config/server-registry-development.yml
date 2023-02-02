@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: server-registry
+
+server:
+  port: 8761   # where this discovery server is accessible
+  waitTimeInMsWhenSyncEmpty: 1000
+  address: 0.0.0.0
+
+# Configure this Discovery Server
+eureka:
+  #  instance:
+  #    hostname: localhost
+  client:
+    registerWithEureka: false # do not auto-register as client
+    fetchRegistry: false
+
+# Actuator config
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: containerized-config-server
+  profiles:
+    active: local,development,production
+  cloud:
+    config:
+      server:
+        # config git repo to fetch configuration files
+        git:
+          uri: https://github.com/haunxhus/k8s-aws-microservices.git
+          # folder contains all of yml, properties files
+          search-paths: server-config/
+          # git username
+          username: trongdai306@gmail.com
+          # git token
+          password: tokenOfGit
+          # git branch will be fetch configuration files
+          default-label: feature/server-config-storage-daitt
+
+server:
+  port: 8888
+management:
+  # disable spring security on management end points
+  security:
+    enabled: false
+  # actuator port
+  server:
+    port: 8999

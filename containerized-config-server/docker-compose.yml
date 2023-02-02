@@ -1,0 +1,17 @@
+version: "3.0"
+
+services:
+  containerized-config-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: containerized-config-server
+    hostname: containerized-config-server
+    networks:
+      - server-config
+    restart: always
+    ports:
+      - 8888:8888
+networks:
+  server-config:
+    external: true

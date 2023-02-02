@@ -1,0 +1,50 @@
+spring:
+  kafka:
+    consumer:
+      group-id: vmo
+    bootstrap-servers: localhost:9092
+  datasource:
+    driverClassName: org.h2.Driver
+    password: root
+    username: root
+    url: jdbc:h2:mem:example
+  h2:
+    console:
+      settings:
+        trace: 'false'
+        web-allow-others: 'false'
+      path: /h2-console
+      enabled: 'true'
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+      type:
+        descriptor:
+          sql:
+            BasicBinder: TRACE
+vmo:
+  email:
+    pass: mxgtxvfpqnzhxqzl
+    from: phamlong201119931995@gmail.com
+    to: linhpv@vmodev.com
+server:
+  port: '8090'
+
+#Actuator config
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

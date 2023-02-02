@@ -1,0 +1,28 @@
+resilience4j:
+  circuitbreaker:
+    instances:
+      orderService:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        automaticTransitionFromOpenToHalfOpenEnabled: false
+        failureRateThreshold: 20
+        permittedNumberOfCallsInHalfOpenState: 2
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,refresh
+  endpoint:
+    health:
+      show-details: always
+      
+spring:
+  kafka:
+   bootstrap-servers : localhost:9092
+

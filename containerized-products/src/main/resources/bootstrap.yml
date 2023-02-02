@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: containerized-products
+  config:
+    import: optional:configserver:http://localhost:8888/
+  cloud:
+    config:
+      profile: development
+      name: server-product
+# config in docker
+#      discovery:
+#        service-id: spring-config-server
+#        enabled: true
