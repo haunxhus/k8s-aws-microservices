@@ -16,7 +16,7 @@ spring:
           # git token
           password: tokenOfGit
           # git branch will be fetch configuration files
-          default-label: feature/server-config-storage-daitt
+          default-label: master-test
 
 server:
   port: 8888
