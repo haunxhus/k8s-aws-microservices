@@ -26,21 +26,35 @@ spec:
   rules:
   - http:
       paths:
-        - path: /product-ingress
+        - path: /product
           pathType: Prefix
           backend:
             service:
               name: containerized-products
               port: 
                 number: 2227
-        - path: /account-ingress
+        - path: /account
           pathType: Prefix
           backend:
             service:
               name: containerized-accounts
               port: 
                 number: 2222
-        - path: /gateway-ingress
+        - path: /backoffice
+          pathType: Prefix
+          backend:
+            service:
+              name: containerized-main
+              port: 
+                number: 2223
+        - path: /order
+          pathType: Prefix
+          backend:
+            service:
+              name: containerized-orders
+              port: 
+                number: 2226
+        - path: /
           pathType: Prefix
           backend:
             service:

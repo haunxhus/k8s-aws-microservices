@@ -39,14 +39,20 @@ sudo docker compose -f docker-compose-v1.yml build
 sudo microk8s kubectl delete --all services --namespace=k8s-containerized-services
 sudo microk8s kubectl delete --all deployments --namespace=k8s-containerized-services
 sudo microk8s kubectl delete --all pods --namespace=k8s-containerized-services
+sudo microk8s kubectl delete --all ingress-nginx --namespace=k8s-containerized-services
 sudo microk8s kubectl delete --all ingress --namespace=k8s-containerized-services
+sudo microk8s kubectl delete --all configmap --namespace=k8s-containerized-services
 sudo microk8s kubectl delete namespace k8s-containerized-services
 
-sudo microk8s kubectl delete --all services --namespace=ingress-nginx
-sudo microk8s kubectl delete --all deployments --namespace=ingress-nginx
-sudo microk8s kubectl delete --all pods --namespace=ingress-nginx
-sudo microk8s kubectl delete --all ingress --namespace=ingress-nginx
-sudo microk8s kubectl delete namespace ingress-nginx
+#sudo microk8s kubectl delete --all services --namespace=ingress-nginx
+#sudo microk8s kubectl delete --all deployments --namespace=ingress-nginx
+#sudo microk8s kubectl delete --all pods --namespace=ingress-nginx
+#sudo microk8s kubectl delete --all pods --namespace=ingress
+
+#sudo microk8s kubectl delete --all ingress --namespace=ingress-nginx
+#sudo microk8s kubectl delete --all ingress --namespace=ingress
+#sudo microk8s kubectl delete namespace ingress-nginx
+#sudo microk8s kubectl delete namespace ingress
 
 
 #microk8s kubectl create namespace k8s-containerized-services
