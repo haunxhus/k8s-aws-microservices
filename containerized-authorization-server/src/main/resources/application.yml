@@ -1,0 +1,65 @@
+server:
+  port: 9000
+
+spring:
+  sql:
+    init:
+      mode: always
+  datasource:
+    url: jdbc:mysql://${DB_HOST:mysql8}:3306/${DB_NAME}
+    username: ${DB_PASSWORD}
+    password: ${DB_USERNAME}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
+  application:
+    name: containerized-authorization-server
+  logging:
+    pattern:
+      console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([${springAppName:-},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}]){yellow} %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
+    level:
+      org.springframework: WARN
+      org.hibernate: WARN
+#  logstash:
+#    server: logstash
+#    #server: localhost
+#    port: 5000
+#  zipkin:
+#    base-url: http://zipkin:9411
+#    #base-url: http://localhost:9411
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: false
+      percentiles:
+        http.server.requests: 0.5, 0.9, 0.95, 0.99, 0.999
+      sla.http.server.requests: 500ms, 2000ms
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://discovery:8761/eureka/
+      #defaultZone: http://localhost:8761/eureka/
+
+ribbon:
+  eureka:
+    enabled: true
+
+containerized:
+  app:
+    name: k8s-containerized-authorization-server.in.configmap.profile.N/A

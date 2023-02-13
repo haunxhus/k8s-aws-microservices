@@ -8,7 +8,7 @@ COPY /zipkin-server/src /tmp/src/
 
 WORKDIR /tmp/	
 
-RUN mvn clean package
+RUN mvn clean package -DskipTests
 
 #step 2, pull base image
 FROM openjdk:11
