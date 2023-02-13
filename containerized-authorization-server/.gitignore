@@ -1,9 +1,8 @@
-.java-version
-/target/
-/**/target
-/**/bin
-/**/.DS_Store
+HELP.md
+target/
 !.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
 ### STS ###
 .apt_generated
@@ -22,11 +21,13 @@
 
 ### NetBeans ###
 /nbproject/private/
-/build/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-.vscode/*
-./docker/db/data/*
-.docker/db/data/*
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
