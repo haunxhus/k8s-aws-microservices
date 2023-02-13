@@ -28,4 +28,7 @@
 /nbdist/
 /.nb-gradle/
 .vscode/*
+./docker/db/data/*
+.docker/db/data/*
+
 /docker/db/data/
