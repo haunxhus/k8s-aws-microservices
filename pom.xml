@@ -39,6 +39,7 @@
 		<module>containerized-products</module>
 		<module>containerized-orders</module>
 		<module>containerized-main</module>
+		<module>containerized-authorization-server</module>
 		<module>containerized-config-server</module>
 		<module>containerized-authorization-server</module>
 	</modules>
