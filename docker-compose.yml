@@ -55,9 +55,9 @@ services:
     environment:
       LS_JAVA_OPTS: "-Xms512m -Xmx512m"
     ports:
-      - 5000:5000
-      - 5044:5044
-      - 12204:12204
+      - "5000:5000"
+      - "5044:5044"
+      - "12204:12204"
 
   # #################################################### zipkin service #######################################################
 
@@ -89,7 +89,7 @@ services:
       - logstash
     entrypoint: ["./wait-for-services.sh", "logstash", "5000", "java", "-jar", "zipkin-server.jar"]
     ports:
-       - 9411:9411
+       - "9411:9411"
     restart: on-failure
 
  # #################################################### kibana service #######################################################
@@ -99,7 +99,7 @@ services:
     image: docker.elastic.co/kibana/kibana:8.5.3
     container_name: kibana
     ports:
-      - 5601:5601
+      - "5601:5601"
     environment:
       ELASTICSEARCH_URL: http://elasticsearch:9200
       ELASTICSEARCH_HOSTS: http://elasticsearch:9200
@@ -126,7 +126,7 @@ services:
       - logstash
    # command: ["wait-for-services.sh", "zipkin", "9411", "java",  "-jar", "containerized-discovery.jar"]
     ports:
-      - 8761:8761
+      - "8761:8761"
     restart: on-failure
     stdin_open: true # connect docker container by shell: docker run -i
     tty: true # connect docker container by shell:        docker run -i
@@ -149,7 +149,7 @@ services:
       - discovery
     entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-products.jar"]
     ports:
-      - 2227:2227
+      - "2227:2227"
     restart: on-failure
     stdin_open: true
     tty: true
@@ -172,7 +172,7 @@ services:
       - discovery
     entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-gateway.jar"]
     ports:
-      - 8762:8762
+      - "8762:8762"
     restart: on-failure
     stdin_open: true
     tty: true
@@ -195,7 +195,7 @@ services:
       - discovery
     entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-accounts.jar"]
     ports:
-      - 2222:2222
+      - "2222:2222"
     restart: on-failure
     stdin_open: true
     tty: true
@@ -220,7 +220,7 @@ services:
       - discovery
     entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-orders.jar"]
     ports:
-      - 2226:2226
+      - "2226:2226"
     restart: on-failure
     stdin_open: true
     tty: true
@@ -244,7 +244,7 @@ services:
       - discovery
     entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-main.jar"]
     ports:
-      - 2223:2223
+      - "2223:2223"
     restart: on-failure
     stdin_open: true
     tty: true
@@ -255,7 +255,7 @@ services:
     image: containerized-authorization-server
     build:
       context: .
-      dockerfile: ./containerized-authorization-server/Dockerfile-multi-stage
+      dockerfile: ./containerized-authorization-server/Dockerfile
 #    networks:
 #      - e-network
     environment:
