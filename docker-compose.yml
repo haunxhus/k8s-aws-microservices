@@ -1,9 +1,9 @@
 
 version: '3.7'
 
-#networks:
-#    e-network:
-#        driver: bridge
+networks:
+    e-network:
+        driver: bridge
 volumes:
   docker:
     driver: local
@@ -16,8 +16,8 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3
     #image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
     container_name: elasticsearch
-#    networks:
-#      - e-network
+    networks:
+      - e-network
     ports:
       - 9200:9200
       - 9300:9300
@@ -43,12 +43,13 @@ services:
     image: docker.elastic.co/logstash/logstash:8.5.3
     #image: docker.elastic.co/logstash/logstash:7.8.0
     container_name: logstash
-#    networks:
-#      - e-network
+    networks:
+      - e-network
     restart: unless-stopped
     command: logstash -f /usr/share/logstash/pipeline
     depends_on:
-      - elasticsearch
+      elasticsearch:
+          condition: service_started
     volumes:
       - ./containerized-logstash/config:/usr/share/logstash/config:ro
       - ./containerized-logstash/pipeline:/usr/share/logstash/pipeline:ro
@@ -75,27 +76,9 @@ services:
  #     - 9411:9411
  #   restart: on-failure
 
-  zipkin:
-    container_name: zipkin
-    image: zipkin-server
-    build:
-        context: .
-        dockerfile: ./zipkin-server/Dockerfile
-#    networks:
-#       - e-network
-    volumes:
-      - ./zipkin-server:/usr/share/zipkin-server
-    depends_on:
-      - logstash
-    entrypoint: ["./wait-for-services.sh", "logstash", "5000", "java", "-jar", "zipkin-server.jar"]
-    ports:
-       - "9411:9411"
-    restart: on-failure
-
- # #################################################### kibana service #######################################################
+  # #################################################### kibana service #######################################################
 
   kibana:
-    #image: docker.elastic.co/kibana/kibana:7.8.0
     image: docker.elastic.co/kibana/kibana:8.5.3
     container_name: kibana
     ports:
@@ -104,10 +87,33 @@ services:
       ELASTICSEARCH_URL: http://elasticsearch:9200
       ELASTICSEARCH_HOSTS: http://elasticsearch:9200
     depends_on:
-      - elasticsearch
+      elasticsearch:
+        condition: service_started
     restart: on-failure
-#    networks:
-#      - e-network
+    networks:
+      - e-network
+
+
+  # #################################################### zipkin #######################################################
+
+  zipkin:
+    container_name: zipkin
+    image: zipkin-server
+    build:
+      context: .
+      dockerfile: ./zipkin-server/Dockerfile
+    networks:
+      - e-network
+    volumes:
+      - ./zipkin-server:/usr/share/zipkin-server
+    depends_on:
+      logstash:
+        condition: service_started
+    entrypoint: ["./wait-for-services.sh", "logstash", "5000", "java", "-jar", "zipkin-server.jar"]
+    ports:
+       - "9411:9411"
+    restart: on-failure
+
 
  # #################################################### containerized-discovery service #######################################################
 
@@ -119,11 +125,13 @@ services:
       # in ubuntu environment must have ./
       # dockerfile: ./containerized-discovery/Dockerfile
       dockerfile: ./containerized-discovery/Dockerfile
-#    networks:
-#      - e-network
+    networks:
+      - e-network
     depends_on:
-      - zipkin
-      - logstash
+      zipkin:
+        condition: service_started
+      logstash:
+        condition: service_started
    # command: ["wait-for-services.sh", "zipkin", "9411", "java",  "-jar", "containerized-discovery.jar"]
     ports:
       - "8761:8761"
@@ -139,14 +147,17 @@ services:
     build:
       context: .
       dockerfile: ./containerized-products/Dockerfile
-#    networks:
-#      - e-network
+    networks:
+      - e-network
     volumes:
       - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
     depends_on:
-      - logstash
-      - zipkin
-      - discovery
+      logstash:
+        condition: service_started
+      zipkin:
+        condition: service_started
+      discovery:
+        condition: service_started
     entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-products.jar"]
     ports:
       - "2227:2227"
@@ -162,14 +173,17 @@ services:
     build:
       context: .
       dockerfile: ./containerized-gateway/Dockerfile
-#    networks:
-#      - e-network
+    networks:
+      - e-network
     volumes:
       - "./wait-for-services.sh:/usr/local/bin/wait-for-services.sh:ro" # :ro, ro = read only
     depends_on:
-      - logstash
-      - zipkin
-      - discovery
+      logstash:
+        condition: service_started
+      zipkin:
+        condition: service_started
+      discovery:
+        condition: service_started
     entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-gateway.jar"]
     ports:
       - "8762:8762"
@@ -185,14 +199,17 @@ services:
     build:
       context: .
       dockerfile: ./containerized-accounts/Dockerfile
-#    networks:
-#      - e-network
+    networks:
+      - e-network
     volumes:
       - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
     depends_on:
-      - logstash
-      - zipkin
-      - discovery
+      logstash:
+        condition: service_started
+      zipkin:
+        condition: service_started
+      discovery:
+        condition: service_started
     entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-accounts.jar"]
     ports:
       - "2222:2222"
@@ -210,14 +227,17 @@ services:
     build:
       context: .
       dockerfile: ./containerized-orders/Dockerfile
-#    networks:
-#      - e-network
+    networks:
+      - e-network
     volumes:
       - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
     depends_on:
-      - logstash
-      - zipkin
-      - discovery
+      logstash:
+        condition: service_started
+      zipkin:
+        condition: service_started
+      discovery:
+        condition: service_started
     entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-orders.jar"]
     ports:
       - "2226:2226"
@@ -234,14 +254,17 @@ services:
     build:
       context: .
       dockerfile: ./containerized-main/Dockerfile
-#    networks:
-#      - e-network
+    networks:
+      - e-network
     volumes:
       - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
     depends_on:
-      - logstash
-      - zipkin
-      - discovery
+      logstash:
+        condition: service_started
+      zipkin:
+        condition: service_started
+      discovery:
+        condition: service_started
     entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-main.jar"]
     ports:
       - "2223:2223"
@@ -256,8 +279,8 @@ services:
     build:
       context: .
       dockerfile: ./containerized-authorization-server/Dockerfile
-#    networks:
-#      - e-network
+    networks:
+      - e-network
     environment:
       - DB_HOST=mysql8
       - DB_PORT=3306
@@ -271,7 +294,10 @@ services:
     ports:
       - "9000:9000"
     depends_on:
-      - mysql8
+      discovery:
+        condition: service_started
+      mysql8:
+        condition: service_started
     restart: on-failure
     stdin_open: true
     tty: true
