@@ -1,9 +1,9 @@
 
 version: '3.7'
 
-networks:
-    e-network:
-        driver: bridge
+#networks:
+#    e-network:
+#        driver: bridge
 volumes:
   docker:
     driver: local
@@ -16,8 +16,8 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3
     #image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
     container_name: elasticsearch
-    networks:
-      - e-network
+#    networks:
+#      - e-network
     ports:
       - 9200:9200
       - 9300:9300
@@ -43,8 +43,8 @@ services:
     image: docker.elastic.co/logstash/logstash:8.5.3
     #image: docker.elastic.co/logstash/logstash:7.8.0
     container_name: logstash
-    networks:
-      - e-network
+#    networks:
+#      - e-network
     restart: unless-stopped
     command: logstash -f /usr/share/logstash/pipeline
     depends_on:
@@ -90,8 +90,8 @@ services:
       elasticsearch:
         condition: service_started
     restart: on-failure
-    networks:
-      - e-network
+#    networks:
+#      - e-network
 
 
   # #################################################### zipkin #######################################################
@@ -102,8 +102,8 @@ services:
     build:
       context: .
       dockerfile: ./zipkin-server/Dockerfile
-    networks:
-      - e-network
+#    networks:
+#      - e-network
     volumes:
       - ./zipkin-server:/usr/share/zipkin-server
     depends_on:
@@ -125,14 +125,14 @@ services:
       # in ubuntu environment must have ./
       # dockerfile: ./containerized-discovery/Dockerfile
       dockerfile: ./containerized-discovery/Dockerfile
-    networks:
-      - e-network
+#    networks:
+#      - e-network
     depends_on:
       zipkin:
         condition: service_started
       logstash:
         condition: service_started
-   # command: ["wait-for-services.sh", "zipkin", "9411", "java",  "-jar", "containerized-discovery.jar"]
+    command: ["wait-for-services.sh", "zipkin", "9411", "java",  "-jar", "containerized-discovery.jar"]
     ports:
       - "8761:8761"
     restart: on-failure
@@ -147,8 +147,8 @@ services:
     build:
       context: .
       dockerfile: ./containerized-products/Dockerfile
-    networks:
-      - e-network
+#    networks:
+#      - e-network
     volumes:
       - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
     depends_on:
@@ -173,8 +173,8 @@ services:
     build:
       context: .
       dockerfile: ./containerized-gateway/Dockerfile
-    networks:
-      - e-network
+#    networks:
+#      - e-network
     volumes:
       - "./wait-for-services.sh:/usr/local/bin/wait-for-services.sh:ro" # :ro, ro = read only
     depends_on:
@@ -199,8 +199,8 @@ services:
     build:
       context: .
       dockerfile: ./containerized-accounts/Dockerfile
-    networks:
-      - e-network
+#    networks:
+#      - e-network
     volumes:
       - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
     depends_on:
@@ -227,8 +227,8 @@ services:
     build:
       context: .
       dockerfile: ./containerized-orders/Dockerfile
-    networks:
-      - e-network
+#    networks:
+#      - e-network
     volumes:
       - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
     depends_on:
@@ -254,8 +254,8 @@ services:
     build:
       context: .
       dockerfile: ./containerized-main/Dockerfile
-    networks:
-      - e-network
+#    networks:
+#      - e-network
     volumes:
       - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
     depends_on:
@@ -279,8 +279,8 @@ services:
     build:
       context: .
       dockerfile: ./containerized-authorization-server/Dockerfile
-    networks:
-      - e-network
+#    networks:
+#      - e-network
     environment:
       - DB_HOST=mysql8
       - DB_PORT=3306
@@ -289,8 +289,8 @@ services:
       - DB_USERNAME=vmodev
 #    volumes:
 #      - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
-#    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-authorization-server.jar"]
-    entrypoint: ["java", "-jar", "containerized-authorization-server.jar"]
+    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-authorization-server.jar"]
+#    entrypoint: ["java", "-jar", "containerized-authorization-server.jar"]
     ports:
       - "9000:9000"
     depends_on:
