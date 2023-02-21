@@ -185,7 +185,9 @@ services:
         condition: service_started
       discovery:
         condition: service_started
-    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-gateway.jar"]
+      containerized-authorization-server:
+        condition: service_started
+    entrypoint: ["./wait-for-services.sh", "containerized-authorization-server", "9000", "java", "-jar", "containerized-gateway.jar"]
     ports:
       - "8762:8762"
     restart: on-failure
