@@ -3,6 +3,7 @@ package com.spring.oauthserver.service;
 import com.spring.oauthserver.entity.User;
 import com.spring.oauthserver.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Log4j2
 @Service
 @Transactional
 public class CustomUserDetailsService implements UserDetailsService {
@@ -50,6 +52,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         for (String role : roles) {
             authorities.add(new SimpleGrantedAuthority(role));
         }
+        log.info("authorities :{}", authorities);
         return authorities;
     }
 }

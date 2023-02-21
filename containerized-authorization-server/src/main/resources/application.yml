@@ -2,6 +2,9 @@ server:
   port: 9000
 
 spring:
+  sql:
+    init:
+      mode: always
   datasource:
     url: jdbc:mysql://${DB_HOST:mysql8}:3306/${DB_NAME}
     username: ${DB_PASSWORD}
@@ -10,6 +13,9 @@ spring:
   jpa:
     database: mysql
     show-sql: true
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
   application:
     name: containerized-authorization-server
   logging:
@@ -18,13 +24,13 @@ spring:
     level:
       org.springframework: WARN
       org.hibernate: WARN
-  logstash:
-    server: logstash
-    #server: localhost
-    port: 5000
-  zipkin:
-    base-url: http://zipkin:9411
-    #base-url: http://localhost:9411
+#  logstash:
+#    server: logstash
+#    #server: localhost
+#    port: 5000
+#  zipkin:
+#    base-url: http://zipkin:9411
+#    #base-url: http://localhost:9411
 
 management:
   endpoints:

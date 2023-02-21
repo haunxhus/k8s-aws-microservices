@@ -106,12 +106,13 @@ services:
 #      - e-network
     volumes:
       - ./zipkin-server:/usr/share/zipkin-server
+      - "${HOME}/.m2:/root/.m2"
     depends_on:
       logstash:
         condition: service_started
     entrypoint: ["./wait-for-services.sh", "logstash", "5000", "java", "-jar", "zipkin-server.jar"]
     ports:
-       - "9411:9411"
+      - "9411:9411"
     restart: on-failure
 
 
