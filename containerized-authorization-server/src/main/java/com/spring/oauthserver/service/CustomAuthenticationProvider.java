@@ -22,8 +22,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
+        log.info("username: {}", username);
         String password = authentication.getCredentials().toString();
+        log.info("password: {}", password);
         UserDetails user = customUserDetailsService.loadUserByUsername(username);
+        log.info("user: {}", user.toString());
         return checkPassword(user, password);
     }
 
@@ -33,6 +36,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                     user.getPassword(),
                     user.getAuthorities());
         } else {
+            log.warn("No user found!");
             throw new BadCredentialsException("Bad Credentials");
         }
     }
