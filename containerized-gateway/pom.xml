@@ -18,6 +18,10 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
@@ -42,18 +46,18 @@
 		</dependency>
 
 		<!-- KUBERNETES -->
-		<!-- <dependency> 
-				<groupId>org.springframework.cloud</groupId> 
-				<artifactId>spring-cloud-starter-kubernetes-client-all</artifactId> 
-				<version>${spring-cloud.k8s.version}</version> 
-			</dependency> 
-			<dependency> 
-				<groupId>org.springframework.cloud</groupId> 
-				<artifactId>spring-cloud-starter-openfeign</artifactId> 
-			</dependency> 
-			<dependency> 
-				<groupId>org.springframework.cloud</groupId> 
-				<artifactId>spring-cloud-starter-loadbalancer</artifactId> 
+		<!-- <dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-starter-kubernetes-client-all</artifactId>
+				<version>${spring-cloud.k8s.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-starter-openfeign</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-starter-loadbalancer</artifactId>
 			</dependency> -->
 
 		<!-- Micrometer Prometheus registry -->
@@ -118,4 +122,22 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	<repositories>
+		<repository>
+			<id>netflix-candidates</id>
+			<name>Netflix Candidates</name>
+			<url>https://artifactory-oss.prod.netflix.net/artifactory/maven-oss-candidates</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 </project>
