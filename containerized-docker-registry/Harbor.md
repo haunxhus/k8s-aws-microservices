@@ -16,8 +16,8 @@ Harbor là một open source cloud native registry giúp xây dựng private doc
 
 > &nbsp;&nbsp;**Docker Hub** là dịch vụ của Docker cho việc tìm kiếm và chia sẻ các Docker Image dành cho mọi người. 
 
-> Tuy nhiên khi bạn triển khai một dự án và yêu cầu phải có **Docker Registry** cho riêng mình, hoặc do điều kiện không cho phép có kết nối ra ngoài Internet để download từ Docker Hub.  
-=> Lúc đó bạn sẽ nghĩ đến việc cần xây dựng một Docker Registry riêng. **Private Docker Registry** sẽ giúp bạn quản lý các Docker Image và chia sẻ với mọi người trong team. Nó cũng giúp việc chia sẻ/tải về các Docker Image chỉ dùng kết nối nội bộ mà không yêu cầu phải có kết nối internet.  
+> Tuy nhiên khi bạn triển khai một dự án và yêu cầu phải có **Docker Registry** cho riêng mình, hoặc do điều kiện không cho phép có kết nối ra ngoài Internet để download từ **Docker Hub**.  
+=> Lúc đó bạn sẽ nghĩ đến việc cần xây dựng một **Docker Registry** riêng. **Private Docker Registry** sẽ giúp bạn quản lý các Docker Image và chia sẻ với mọi người trong team. Nó cũng giúp việc chia sẻ/tải về các Docker Image chỉ dùng kết nối nội bộ mà không yêu cầu phải có kết nối internet.  
 
 > Và **Harbor** là một open source giúp xây dựng **Private Docker Registry**.
 
@@ -182,7 +182,7 @@ sudo ./install.sh
 
 > ``Cuối cùng dù setup config như nào thì khi chạy lên vẫn sẽ có một file **docker-compose.yml** được tạo ra. M.n có thể vọc về các container trong file này.``  
 
-> ``Ak m.n cũng có thể vọc xem harbor lưu dũ liệu như nào ở folder (cái này ăn theo config) default là: **/var/log/harbor**`` 
+> ``Ak m.n cũng có thể vọc xem harbor lưu dũ liệu như nào ở folder (cái này ăn theo config) default là: **/data**`` 
 
 # **IV. Truy cập, Thao tác và Cách setup dự án**
 ``Không biết nói sao nhưng sự thực là phần này mình thấy khá thừa mọi người có thể đọc document or có nhiều bài hướng dẫn rồi or . . . . . . . tự nghịch :))``
@@ -241,10 +241,16 @@ $ docker images
 $ docker pull 35.xxx.xxx.xxx/kube-demo/my-ubuntu
 ```
 
-
-
-
-
+`` - Bên trên là phần setup cơ bản nhất để có được một project và sử dụng Harbor một cách bình thường.``  
+`` - Đối với những case/yêu cầu đặc biệt thì tùy phần sẽ có cách xử lý riêng - và vì nó khá đặc thù trong từng case/yêu cầu nên sẽ không xuất hiện trong phần này.``  
+`` => Tuy vậy một chút chia sẻ kinh nghiệm của mình nếu gặp các case/yêu cầu này (hi vọng sẽ có ích) sẽ là: ``  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `` -> Xác định xem công nghệ mình - version sử dụng có feature đáp ứng được không``  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `` -> Nếu có thì ok nghịch thử or tìm phần hướng dẫn để setup``  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `` Nếu không thì hãy thử tận dụng những gì đang có của công nghệ đấy kết hợp/biến đổi nó sao cho làm ra được một cái có chức năng tương tự đáp ứng được cái mình cần - cái này cũng cần tính toán về độ phức tạp và tài nguyên cần có.``  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ``-> Còn nếu thực sự không thể, or nếu phần tận dụng tốn quá nhiều tài nguyên so với cái khác mà bắt buộc phải có chức năng đấy ^_^.  Thì . . . ^_^ ^_^ ^_^ . . . Đọc và làm theo cả đoạn trên rồi mà còn đọc được dòng này thì . . . ^_^. ``  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ``Nhưng đây cũng là kinh nghiệm khi lựa chọn một công nghệ nào đấy trước khi lựa chọn để build lên phần nào đấy ^_^.``
+  
+`` => Bên trên là một chút kinh nghiệm của bản thân mình đối với những case/yêu cầu không phải cơ bản, phải tìm hiểu nhiều hơn - hi vọng sẽ có ích. Nếu trong thời gian tới được xử lý những case/yêu cầu khác đối với Harbor thì mình sẽ update tiếp.``
 
 
 
