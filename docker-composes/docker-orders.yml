@@ -1,0 +1,10 @@
+version: '3'
+services:
+  orders:
+    image: containerized-orders
+    container_name: containerized-orders
+    build:
+      context: ../
+      dockerfile: ./containerized-orders/Dockerfile
+    ports:
+      - "2226:2226"

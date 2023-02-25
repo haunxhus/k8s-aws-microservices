@@ -1,0 +1,12 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nginx-config
+  namespace: ingress
+data:
+  proxy-connect-timeout: "10s"
+  proxy-read-timeout: "10s"
+  client-max-body-size: "2m"
+  map-hash-bucket-size: "128"
+  # ssl-protocols: SSLv2
+  load-balance: "ewma" #round_robin # default

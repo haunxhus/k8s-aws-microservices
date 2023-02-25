@@ -1,0 +1,13 @@
+version: '3'
+services:  
+  discovery:
+    image: containerized-discovery
+    container_name: containerized-discovery
+    build:
+      context: ../
+      dockerfile: ./containerized-discovery/Dockerfile
+    ports:
+      - "8761:8761"
+    restart: on-failure
+    stdin_open: true 
+    tty: true

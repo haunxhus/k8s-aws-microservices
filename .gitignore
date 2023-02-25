@@ -1,7 +1,7 @@
 .java-version
-elasticsearch
 /target/
 /**/target
+/**/bin
 /**/.DS_Store
 !.mvn/wrapper/maven-wrapper.jar
 
@@ -27,3 +27,4 @@ elasticsearch
 /dist/
 /nbdist/
 /.nb-gradle/
+.vscode/*

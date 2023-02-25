@@ -17,10 +17,12 @@ spec:
     spec:
       containers:
         - name: containerized-logstash
-          image: docker.elastic.co/logstash/logstash:7.8.0
+          image: docker.elastic.co/logstash/logstash:8.5.3
+          #image: docker.elastic.co/logstash/logstash:7.8.0
           #imagePullPolicy: Never
           ports:
             - containerPort: 5000
+            - containerPort: 5044
             - containerPort: 12204
           volumeMounts:
             - name: containerized-logstash-pipeline

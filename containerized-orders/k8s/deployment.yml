@@ -6,7 +6,7 @@ metadata:
   labels:
     app: k8s-service-orders
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: k8s-service-orders
@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: containerized-orders
-          image: haunxhus/service-orders-api:latest
+          image: linhpv5555/containerized-orders:latest
           #magePullPolicy: Never
           ports:
-            - containerPort: 2222
+            - containerPort: 2226

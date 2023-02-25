@@ -8,5 +8,5 @@ spec:
     app: k8s-service-orders
   ports:
     - protocol: TCP
-      port: 7502
-      targetPort: 2222
+      port: 2226
+      targetPort: 2226

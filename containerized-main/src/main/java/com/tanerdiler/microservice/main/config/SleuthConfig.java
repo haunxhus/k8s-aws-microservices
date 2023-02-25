@@ -1,19 +1,19 @@
 package com.tanerdiler.microservice.main.config;
 
-import brave.Span;
-import brave.Tracer;
-import lombok.RequiredArgsConstructor;
-import org.springframework.cloud.sleuth.instrument.web.TraceWebFilter;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.web.filter.GenericFilterBean;
+import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.filter.GenericFilterBean;
+
+import brave.Span;
+import brave.Tracer;
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor

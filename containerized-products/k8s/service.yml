@@ -8,5 +8,5 @@ spec:
     app: k8s-service-products
   ports:
     - protocol: TCP
-      port: 7501
-      targetPort: 2222
+      port: 2227
+      targetPort: 2227

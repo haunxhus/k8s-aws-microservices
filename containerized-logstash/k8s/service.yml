@@ -15,3 +15,7 @@ spec:
       port: 12204
       targetPort: 12204
       name: logstash
+    - protocol: TCP
+      port: 5044
+      targetPort: 5044
+      name: tcpn

@@ -11,11 +11,15 @@ eureka:
     enableSelfPreservation: false
 
 spring:
+  application:
+    name: containerized-discovery
   logstash:
     server: logstash
+    #server: localhost
     port: 5000
   zipkin:
     base-url: http://zipkin:9411
+    #base-url: http://localhost:9411
 
 management:
   endpoints:

@@ -1,0 +1,63 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: k8s-service-ingress
+  namespace: k8s-containerized-services
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/proxy-body-size: 800m
+    # nginx.ingress.kubernetes.io/upstream-hash-by: "$request_uri" # load-balancing method
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
+    #kubernetes.io/ingress.class: "nginx" # is the same with  config ingressClassName: nginx
+    #kubernetes.io/ingress.class: ingress-nginx
+    #ingressclass.kubernetes.io/is-default-class: "true"
+spec:
+  ingressClassName: nginx
+  defaultBackend:
+    service:
+      name: containerized-gateway
+      port: 
+        number: 8762
+  #  resource:
+  #    apiGroup: k8s.example.com
+  #    kind: StorageBucket
+  #    name: static-assets
+  rules:
+  - http:
+      paths:
+        - path: /product
+          pathType: Prefix
+          backend:
+            service:
+              name: containerized-products
+              port: 
+                number: 2227
+        - path: /account
+          pathType: Prefix
+          backend:
+            service:
+              name: containerized-accounts
+              port: 
+                number: 2222
+        - path: /backoffice
+          pathType: Prefix
+          backend:
+            service:
+              name: containerized-main
+              port: 
+                number: 2223
+        - path: /order
+          pathType: Prefix
+          backend:
+            service:
+              name: containerized-orders
+              port: 
+                number: 2226
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: containerized-gateway
+              port: 
+                number: 8762
