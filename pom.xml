@@ -39,6 +39,7 @@
 		<module>containerized-products</module>
 		<module>containerized-orders</module>
 		<module>containerized-main</module>
+		<module>containerized-config-server</module>
 	</modules>
 
 	<dependencies>

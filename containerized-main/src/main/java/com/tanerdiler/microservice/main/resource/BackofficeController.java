@@ -1,7 +1,5 @@
 package com.tanerdiler.microservice.main.resource;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/backoffice/api/v1/backoffice")
+@RequestMapping("/api/v1/backoffice")
 @RequiredArgsConstructor
 public class BackofficeController {
 	

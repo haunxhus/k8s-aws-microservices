@@ -18,8 +18,10 @@ FROM openjdk:11
 # check sql must started then running my application
 RUN apt-get -q update && apt-get -qy install netcat && apt-get clean
 
-ADD wait-for-services.sh /wait-for-services.sh
-RUN chmod 755 /wait-for-services.sh
+ADD wait-for-multi-services.sh /wait-for-multi-services.sh
+RUN chmod 755 /wait-for-multi-services.sh
+
+RUN ls -la
 
 #step 1, will run combine from maven and oracle
 COPY --from=maven_construct /tmp/target/*.jar containerized-main.jar

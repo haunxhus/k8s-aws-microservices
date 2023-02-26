@@ -10,6 +10,7 @@ spec:
     - protocol: TCP
       port: 2222
       targetPort: 2222
+      notePort: 32071
   type: LoadBalancer
   #externalTrafficPolicy: Local
   #externalIPs:

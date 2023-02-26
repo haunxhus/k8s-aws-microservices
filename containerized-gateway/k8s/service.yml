@@ -10,4 +10,5 @@ spec:
     - protocol: TCP
       port: 8762
       targetPort: 8762
+      nodePort: 32609
   type: LoadBalancer

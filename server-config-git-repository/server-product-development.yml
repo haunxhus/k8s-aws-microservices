@@ -1,10 +1,11 @@
 server:
-  port: ${PORT:2223}
-  context-path: /backoffice
+  port: ${PORT:2227}
+  servlet:
+    context-path: /product
 
 spring:
   application:
-    name: containerized-main
+    name: containerized-products
   logging:
     pattern:
       console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([${springAppName:-},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}]){yellow} %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
@@ -18,10 +19,18 @@ spring:
   zipkin:
     base-url: http://zipkin:9411
     #base-url: http://localhost:9411
-  main:
-    allow-bean-definition-overriding: true
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
+  metrics:
+    distribution:
+      percentiles-histogram.http.server.requests: false
+      percentiles.http.server.requests: 0.5, 0.9, 0.95, 0.99, 0.999
+      sla.http.server.requests: 500ms, 2000ms
 
 eureka:
   instance:
@@ -32,11 +41,11 @@ eureka:
     serviceUrl:
       defaultZone: http://discovery:8761/eureka/
       #defaultZone: http://localhost:8761/eureka/
-       
+
 ribbon:
   eureka:
     enabled: true
 
 containerized:
   app:
-    name: k8s-containerized-main.in.configmap.profile.N/A
+    name: k8s-containerized-products.in.configmap.profile.N/A

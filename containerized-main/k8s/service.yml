@@ -11,3 +11,4 @@ spec:
     - protocol: TCP
       port: 2223
       targetPort: 2223
+      nodePort: 31563

@@ -104,6 +104,11 @@ sudo microk8s kubectl create -f containerized-orders/k8s/service.yml
 #sudo microk8s kubectl port-forward svc/containerized-orders 2226:2226
 # curl localhost:2226/order/api/v1/orders
 
+# ################################# server config service ##################################################
+sudo microk8s kubectl create -f containerized-config-server/k8s/configmap.yml
+sudo microk8s kubectl create -f containerized-config-server/k8s/deployment.yml
+sudo microk8s kubectl create -f containerized-config-server/k8s/service.yml
+
 # ################################# main service ##################################################
 sudo microk8s kubectl create -f containerized-main/k8s/configmap.yml
 sudo microk8s kubectl create -f containerized-main/k8s/deployment.yml

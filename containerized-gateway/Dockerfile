@@ -18,13 +18,13 @@ FROM openjdk:11
 # check sql must started then running my application
 RUN apt-get -q update && apt-get -qy install netcat && apt-get clean
 
-ADD wait-for-services.sh /wait-for-services.sh
-RUN chmod 755 /wait-for-services.sh
+ADD wait-for-multi-services.sh /wait-for-multi-services.sh
+RUN chmod 755 /wait-for-multi-services.sh
 
 #step 1, will run combine from maven and oracle
 COPY --from=maven_construct /tmp/target/*.jar containerized-gateway.jar
 
 EXPOSE 8762
 #step 5, default command, final step: build application
-#ENTRYPOINT ["/wait-for-services.sh", "zipkin", "9411", "java",  "-jar", "containerized-gateway.jar"]
+#ENTRYPOINT ["/wait-for-multi-services.sh", "zipkin", "9411", "java",  "-jar", "containerized-gateway.jar"]
 ENTRYPOINT ["java",  "-jar", "containerized-gateway.jar"]
