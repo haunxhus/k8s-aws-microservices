@@ -178,6 +178,8 @@ services:
 #      - e-network
     volumes:
       - "./wait-for-services.sh:/usr/local/bin/wait-for-services.sh:ro" # :ro, ro = read only
+    environment:
+      - ISSUER_HOST=containerized-authorization-server #this env must be matched with the containerized-authorization-server service
     depends_on:
       logstash:
         condition: service_started
@@ -285,6 +287,7 @@ services:
 #    networks:
 #      - e-network
     environment:
+      - ISSUER_HOST=containerized-authorization-server #this env must be matched with the containerized-gateway service
       - DB_HOST=mysql8
       - DB_PORT=3306
       - DB_NAME=user_registration
