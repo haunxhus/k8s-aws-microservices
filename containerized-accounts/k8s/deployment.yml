@@ -18,7 +18,8 @@ spec:
       #loadBalancerClass: nil 
       containers:
         - name: containerized-accounts
-          image: linhpv5555/containerized-accounts:latest
+          #image: linhpv5555/containerized-accounts:latest # docker hub
+          image: containerized-accounts:v1.0.0 # locally
           #imagePullPolicy: Never
           ports:
             - containerPort: 2222

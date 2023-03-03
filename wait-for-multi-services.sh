@@ -14,7 +14,7 @@ isNotValidPort(){
 
 argumentPosition=1
 
-shiftNext=$(($#-3))
+shiftNext=$(($#-3)) # 3 mean ignore the last 3 arguments
 >&2 echo "Total arguments checked to connect services: ${shiftNext}"
 
 if [ "$shiftNext" -lt 4 ]; then

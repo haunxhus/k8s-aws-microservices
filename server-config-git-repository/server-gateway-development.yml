@@ -30,6 +30,10 @@ spring:
           uri: lb://containerized-products
           predicates:
             - Path=/product/**
+# https://stackoverflow.com/questions/54117061/springcloudgateway-log-incoming-request-url-and-corresponding-route-uri
+logging:
+  level:
+    org.springframework.cloud.gateway.handler.RoutePredicateHandlerMapping: DEBUG
 
 management:
   endpoints:

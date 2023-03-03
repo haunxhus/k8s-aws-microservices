@@ -17,7 +17,8 @@ spec:
     spec:
       containers:
         - name: containerized-gateway
-          image: linhpv5555/containerized-gateway:latest
-          #imagePullPolicy: Never
+          #image: linhpv5555/containerized-gateway:latest # docker hub
+          image: containerized-gateway:v1.0.0 # locally
+          imagePullPolicy: IfNotPresent # the image is pulled only if it is not already present locally.
           ports:
             - containerPort: 8762

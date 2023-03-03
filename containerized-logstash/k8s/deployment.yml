@@ -20,6 +20,7 @@ spec:
           image: docker.elastic.co/logstash/logstash:8.5.3
           #image: docker.elastic.co/logstash/logstash:7.8.0
           #imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5000
             - containerPort: 5044

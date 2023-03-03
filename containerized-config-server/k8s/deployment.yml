@@ -21,7 +21,8 @@ spec:
     spec:
       containers:
         - name: containerized-config-server
-          image: linhpv5555/containerized-config-server:latest
+          #image: linhpv5555/containerized-config-server:latest # docker hub
+          image: containerized-config-server:v1.0.0 # locally
           #imagePullPolicy: Never
           ports:
             - containerPort: 8888

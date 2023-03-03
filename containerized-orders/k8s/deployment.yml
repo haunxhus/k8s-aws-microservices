@@ -17,7 +17,9 @@ spec:
     spec:
       containers:
         - name: containerized-orders
-          image: linhpv5555/containerized-orders:latest
+          #image: linhpv5555/containerized-orders:latest # docker hub
+          image: containerized-orders:v1.0.0 # local
           #magePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 2226

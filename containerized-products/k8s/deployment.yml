@@ -21,7 +21,9 @@ spec:
     spec:
       containers:
         - name: containerized-products
-          image: linhpv5555/containerized-products:latest
+          #image: linhpv5555/containerized-products:latest # docker hub
+          image: containerized-products:v1.0.0 # local
           #imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 2227

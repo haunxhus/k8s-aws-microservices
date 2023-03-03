@@ -74,7 +74,7 @@ services:
       
   zipkin:
     container_name: zipkin
-    image: zipkin-server
+    image: zipkin-server:v1.0.0
     build: 
         context: .
         dockerfile: ./zipkin-server/Dockerfile
@@ -110,7 +110,7 @@ services:
  
   discovery:
     container_name: containerized-discovery
-    image: containerized-discovery
+    image: containerized-discovery:v1.0.0
     build: 
       context: .
       # in ubuntu environment must have ./
@@ -133,7 +133,7 @@ services:
   
   containerized-config-server:
     container_name: containerized-config-server
-    image: containerized-config-server
+    image: containerized-config-server:v1.0.0
     build:
       context: .
       dockerfile: ./containerized-config-server/Dockerfile
@@ -156,7 +156,7 @@ services:
     
   containerized-products:
     container_name: containerized-products
-    image: containerized-products
+    image: containerized-products:v1.0.0
     build: 
       context: .
       dockerfile: ./containerized-products/Dockerfile
@@ -181,7 +181,7 @@ services:
     
   containerized-gateway:
     container_name: containerized-gateway
-    image: containerized-gateway
+    image: containerized-gateway:v1.0.0
     build: 
       context: .
       dockerfile: ./containerized-gateway/Dockerfile
@@ -206,7 +206,7 @@ services:
     
   containerized-accounts:
     container_name: containerized-accounts
-    image: containerized-accounts
+    image: containerized-accounts:v1.0.0
     build: 
       context: .
       dockerfile: ./containerized-accounts/Dockerfile
@@ -233,7 +233,7 @@ services:
     
   containerized-orders:
     container_name: containerized-orders
-    image: containerized-orders
+    image: containerized-orders:v1.0.0
     build: 
       context: .
       dockerfile: ./containerized-orders/Dockerfile
@@ -259,7 +259,7 @@ services:
     
   containerized-main:
     container_name: containerized-main
-    image: containerized-main
+    image: containerized-main:v1.0.0
     build: 
       context: .
       dockerfile: ./containerized-main/Dockerfile
