@@ -1,4 +1,3 @@
-
 version: '3'
 
 networks:
@@ -292,11 +291,12 @@ services:
     networks:
       - e-network
     environment:
-      DB_HOST: db
-      DB_PORT: 3306
-      DB_NAME: user_registration
-      DB_PASSWORD: vmodev
-      DB_USERNAME: vmodev
+      - ISSUER_HOST=containerized-authorization-server #this env must be matched with the containerized-gateway service
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=user_registration
+      - DB_PASSWORD=vmodev
+      - DB_USERNAME=vmodev
     #    volumes:
     #      - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
     #    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-authorization-server.jar"]
