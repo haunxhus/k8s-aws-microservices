@@ -30,6 +30,23 @@ What is not being deprecated:
 
 ## Getting Started
 
+As I research about the design patterns for using authorization server, we can see 2 patterns mostly using in the field
+as the images below:
+
+**Spring gateway as the client server**
+![Spring gateway as the client server](/home/tuan/Workspace/VMO/RnD/Core/k8s-aws-microservices/assets/gw/gw-as-cli.png)
+
+**Spring gateway as the resource server**
+![Spring gateway as the resource server](/home/tuan/Workspace/VMO/RnD/Core/k8s-aws-microservices/assets/gw/gw-as-res.png)
+
+In this source we're using Spring Gateway as the resource server, because of reducing the heavy in configuration and
+security logic in each service, we just need config and check in central place that means at the gateway.
+
+![Implemented pattern](/home/tuan/Workspace/VMO/RnD/Core/k8s-aws-microservices/assets/gw/img.png)
+Implemented pattern
+
+Look deeper into the code
+
 The OAuth 2.0 specification describes a number of grants (“methods”) for a client application to acquire an access
 token (which represents a user’s permission for the client to access their data).
 
