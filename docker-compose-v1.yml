@@ -10,8 +10,8 @@ volumes:
 
 services:
 
-  # #################################################### elasticsearch service ####################################################### 
-  
+  # #################################################### elasticsearch service #######################################################
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3
     #image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
@@ -37,8 +37,8 @@ services:
       - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
 
-  # #################################################### logstash service #######################################################    
-  
+  # #################################################### logstash service #######################################################
+
   logstash:
     image: docker.elastic.co/logstash/logstash:8.5.3
     #image: docker.elastic.co/logstash/logstash:7.8.0
@@ -58,7 +58,7 @@ services:
       - 5000:5000
       - 5044:5044
       - 12204:12204
-      
+
       # #################################################### zipkin service #######################################################
 
       # zipkin:
@@ -72,8 +72,8 @@ services:
       #     - logstash
       #   ports:
       # Port used for the Zipkin UI and HTTP Api
-      #     - 9411:9411
-      #   restart: on-failure
+  #     - 9411:9411
+  #   restart: on-failure
 
   zipkin:
     container_name: zipkin
@@ -92,7 +92,7 @@ services:
       - 9411:9411
     restart: on-failure
 
-    # #################################################### kibana service #######################################################
+  # #################################################### kibana service #######################################################
 
   kibana:
     #image: docker.elastic.co/kibana/kibana:7.8.0
@@ -205,7 +205,7 @@ services:
     stdin_open: true
     tty: true
 
-    # #################################################### containerized-accounts service #######################################################
+  # #################################################### containerized-accounts service #######################################################
 
   containerized-accounts:
     container_name: containerized-accounts
@@ -232,7 +232,7 @@ services:
 
 
 
-    # #################################################### containerized-orders service #######################################################
+  # #################################################### containerized-orders service #######################################################
 
   containerized-orders:
     container_name: containerized-orders
@@ -258,7 +258,7 @@ services:
     tty: true
 
 
-    # #################################################### containerized-main service #######################################################
+  # #################################################### containerized-main service #######################################################
 
   containerized-main:
     container_name: containerized-main
@@ -293,11 +293,12 @@ services:
     networks:
       - e-network
     environment:
-      DB_HOST: db
-      DB_PORT: 3306
-      DB_NAME: user_registration
-      DB_PASSWORD: vmodev
-      DB_USERNAME: vmodev
+      - ISSUER_HOST=containerized-authorization-server #this env must be matched with the containerized-gateway service
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=user_registration
+      - DB_PASSWORD=vmodev
+      - DB_USERNAME=vmodev
     #    volumes:
     #      - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
     #    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-authorization-server.jar"]
