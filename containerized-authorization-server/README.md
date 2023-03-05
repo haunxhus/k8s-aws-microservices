@@ -30,6 +30,23 @@ What is not being deprecated:
 
 ## Getting Started
 
+As I research about the design patterns for using authorization server, we can see 2 patterns mostly using in the field
+as the images below:
+
+**Spring gateway as the client server**
+![Spring gateway as the client server](../assets/gw/gw-as-cli.png)
+
+**Spring gateway as the resource server**
+![Spring gateway as the resource server](../assets/gw/gw-as-res.png)
+
+In this source we're using Spring Gateway as the resource server, because of reducing the heavy in configuration and
+security logic in each service, we just need config and check in central place that means at the gateway.
+
+![Implemented pattern](../assets/gw/img.png)
+Implemented pattern
+
+**Look deeper**
+
 The OAuth 2.0 specification describes a number of grants (“methods”) for a client application to acquire an access
 token (which represents a user’s permission for the client to access their data).
 
@@ -42,3 +59,24 @@ Spring OAuth2 predefined grant types:
 - ResourceOwnerPasswordTokenGranter(it`s password grant type which one you use in example)
 
 If you want to change token acquiring logic you can go with custom TokenGranter.
+
+To run quickly with docker-compose just need to run maven command:
+
+**Here we go**
+
+Run with docker-compose
+
+```shell
+mvn clean install
+docker-compose build --no-cache
+docker-compose up --force-recreate
+```
+
+Run with docker-compose with multiple stage
+
+```shell
+docker-compose build -f docker-compose-v1.yml --no-cache
+docker-compose up -f docker-compose-v1.yml --force-recreate
+```
+
+
