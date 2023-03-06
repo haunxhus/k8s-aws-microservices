@@ -11,25 +11,55 @@ spring:
   zipkin:
     base-url: http://zipkin:9411
     #base-url: http://localhost:9411
+  #cloud:
+  #  gateway:
+  #    discovery:
+  #      locator:
+  #        enabled: true
+  #        lower-case-service-id: true
+  #    routes:
+  #      - id: containerized-main
+  #        uri: lb://containerized-main
+  #        predicates:
+  #          - Path=/backoffice/**
+  #      - id: containerized-accounts
+  #        uri: lb://containerized-accounts
+  #        predicates:
+  #          - Path=/account/**
+  #      - id: containerized-orders
+  #        uri: lb://containerized-orders
+  #        predicates:
+  #          - Path=/order/**
+  #      - id: containerized-products
+  #        uri: lb://containerized-products
+  #        predicates:
+  #          - Path=/product/**
+  # https://stackoverflow.com/questions/70665413/how-to-add-a-api-v1-prefix-to-uri-in-spring-cloud-gateway
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
       routes:
         - id: containerized-main
           uri: lb://containerized-main
           predicates:
-            - Path=/backoffice/**
+            - Path=/gateway/backoffice/**
         - id: containerized-accounts
           uri: lb://containerized-accounts
           predicates:
-            - Path=/account/**
+            - Path=/gateway/account/**
         - id: containerized-orders
           uri: lb://containerized-orders
           predicates:
-            - Path=/order/**
+            - Path=/gateway/order/**
         - id: containerized-products
           uri: lb://containerized-products
           predicates:
-            - Path=/product/**
+            - Path=/gateway/product/**
+      default-filters:
+        - RewritePath=/gateway/(?<remaining>.*), /$\{remaining}
 # https://stackoverflow.com/questions/54117061/springcloudgateway-log-incoming-request-url-and-corresponding-route-uri
 logging:
   level:

@@ -63,8 +63,8 @@ sudo microk8s ctr image import containerized-orders.tar
 sudo docker save containerized-main > containerized-main.tar
 sudo microk8s ctr image import containerized-main.tar
 
-sudo docker save containerized-accounts > containerized-orders.tar
-sudo microk8s ctr image import containerized-orders.tar
+sudo docker save containerized-accounts > containerized-accounts.tar
+sudo microk8s ctr image import containerized-accounts.tar
 
 sudo docker save containerized-discovery > containerized-discovery.tar
 sudo microk8s ctr image import containerized-discovery.tar
