@@ -111,8 +111,8 @@ sudo microk8s kubectl delete namespace k8s-containerized-services
 sudo microk8s kubectl create -f k8s/namespace.yml
 sudo microk8s kubectl config view
 sudo microk8s kubectl config set-context dev --namespace=k8s-containerized-services \
-  --cluster=linhpvk8s \
-  --user=linhpvk8s
+  --cluster=$USER \
+  --user=$USER
 
 # ################################# elasticsearch ##################################################
 sudo microk8s kubectl create -f elasticsearch-k8s/elasticsearch-deployment.yaml
@@ -195,7 +195,9 @@ sudo microk8s kubectl create -f containerized-gateway/k8s/deployment.yml
 sudo microk8s kubectl create -f containerized-gateway/k8s/service.yml
 #sudo microk8s kubectl port-forward svc/gateway 8762:8762
 
-if lsof -Pi :8762 -sTCP:LISTEN -t >/dev/null ; then
+sleep 30
+#https://unix.stackexchange.com/questions/149419/how-to-check-whether-a-particular-port-is-open-on-a-machine-from-a-shell-script
+if nc -vz 127.0.0.1 8762 >/dev/null ; then
     echo "this port 8762 is occupied."
 else
     echo "this port 8762 not running"
@@ -204,10 +206,10 @@ fi
 
 #curl localhost:8762/backoffice/api/v1/backoffice/orders
 
-if lsof -Pi :10443 -sTCP:LISTEN -t >/dev/null ; then
+if nc -vz 127.0.0.1 10443 >/dev/null ; then
 	 echo "this port 10443 is occupied."
 else 
-     echo "this port 8762 not running"
+     echo "this port 10443 not running"
 	 sudo microk8s kubectl port-forward -n kube-system service/kubernetes-dashboard 10443:443 --address 0.0.0.0 &
 fi
 
