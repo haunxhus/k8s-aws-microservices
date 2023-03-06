@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: k8s-containerized-services
+  name: k8s-service-config-server
+  labels:
+    app: k8s-service-config-server
+spec:
+  replicas: 2
+  progressDeadlineSeconds: 660 # 11 minutes, default is 10 minutes
+  revisionHistoryLimit: 12
+  strategy:
+    type: RollingUpdate # default
+  selector:
+    matchLabels:
+      app: k8s-service-config-server
+  template:
+    metadata:
+      labels:
+        app: k8s-service-config-server
+    spec:
+      containers:
+        - name: containerized-config-server
+          #image: linhpv5555/containerized-config-server:latest # docker hub
+          image: containerized-config-server:v1.0.0 # locally
+          #imagePullPolicy: Never
+          ports:
+            - containerPort: 8888

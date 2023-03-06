@@ -17,20 +17,21 @@ spring:
         - id: containerized-main
           uri: lb://containerized-main
           predicates:
-          - Path=/backoffice/**
+          - Path=/gateway/backoffice/**
         - id: containerized-accounts
           uri: lb://containerized-accounts
           predicates:
-          - Path=/account/**
+          - Path=/gateway/account/**
         - id: containerized-orders
           uri: lb://containerized-orders
           predicates:
-          - Path=/order/**
+          - Path=/gateway/order/**
         - id: containerized-products
           uri: lb://containerized-products
           predicates:
-          - Path=/product/**
-
+          - Path=/gateway/product/**
+      default-filters:
+        - RewritePath=/gateway/(?<remaining>.*), /$\{remaining}
 management:
   endpoints:
     web:

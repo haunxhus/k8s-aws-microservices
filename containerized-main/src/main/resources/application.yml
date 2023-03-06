@@ -1,5 +1,6 @@
 server:
   port: ${PORT:2223}
+  context-path: /backoffice
 
 spring:
   application:

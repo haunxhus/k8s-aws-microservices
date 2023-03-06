@@ -40,6 +40,18 @@
 			<artifactId>spring-cloud-kubernetes-client-config</artifactId>
 			<version>${spring-cloud.k8s.version}</version>
 		</dependency> -->
+		<!-- Cloud config -->
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
+
+		<!-- Bootstrap init-->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bootstrap</artifactId>
+		</dependency>
 
 		<!--  netflix eureka client needs this artifact -->
 		<dependency>

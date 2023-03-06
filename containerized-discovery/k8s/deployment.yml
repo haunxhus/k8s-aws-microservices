@@ -17,7 +17,8 @@ spec:
     spec:
       containers:
         - name: containerized-discovery
-          image: linhpv5555/containerized-discovery:latest
+          #image: linhpv5555/containerized-discovery:latest # docker hub
+          image: containerized-discovery:v1.0.0 # locally
           #imagePullPolicy: Never
           ports:
             - containerPort: 8761
