@@ -27,7 +27,7 @@ public class MinioRepository implements IORepository{
     public void upload(String bucket, MultipartFile multipartFile) throws Exception {
         minioClient.putObject(PutObjectArgs.builder()
                 .bucket(bucket)
-                .object("/binhkd-001/" + multipartFile.getOriginalFilename())
+                .object(multipartFile.getOriginalFilename())
                 .stream(multipartFile.getInputStream(), multipartFile.getSize(), partSizeUpload)
                 .build());
     }
