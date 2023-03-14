@@ -79,4 +79,11 @@ docker-compose build -f docker-compose-v1.yml --no-cache
 docker-compose up -f docker-compose-v1.yml --force-recreate
 ```
 
+Run with docker-compose with k8s
 
+```shell
+docker-compose build -f docker-compose-v1.yml --no-cache
+docker-compose up -f docker-compose-v1.yml --force-recreate
+```
+
+Access into url localhost:9000:login
