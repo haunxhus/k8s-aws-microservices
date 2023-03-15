@@ -3,8 +3,10 @@ package com.tanerdiler.microservice.main.repository;
 import com.tanerdiler.microservice.main.model.Order;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -17,4 +19,10 @@ public interface OrderServiceClient
 
 	@GetMapping(value = "/order/api/v1/orders")
 	List<Order> findAll();
+
+	@PostMapping(value = "/order/api/v1/orders")
+	Order createOrder(Order order);
+
+	@DeleteMapping(value = "/order/api/v1/orders/{orderId}")
+	Order deleteOrderById(@PathVariable("orderId") Integer orderId);
 }
