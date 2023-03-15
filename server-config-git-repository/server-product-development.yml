@@ -25,7 +25,9 @@ management:
     web:
       exposure:
         include: "*"
-
+  endpoint:
+    health:
+      show-details: always
   metrics:
     distribution:
       percentiles-histogram.http.server.requests: false
@@ -39,8 +41,8 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     serviceUrl:
-      defaultZone: http://discovery:8761/eureka/
-      #defaultZone: http://localhost:8761/eureka/
+      #defaultZone: http://discovery:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
 
 ribbon:
   eureka:

@@ -12,6 +12,23 @@ metadata:
     #kubernetes.io/ingress.class: "nginx" # is the same with  config ingressClassName: nginx
     #kubernetes.io/ingress.class: ingress-nginx
     #ingressclass.kubernetes.io/is-default-class: "true"
+    
+#To configure your ingress to achieve zero downtime deployment, you can use various features and settings in Kubernetes.
+#
+#Here are some key configuration options that can help you achieve zero downtime deployment:
+#
+#Session affinity or sticky sessions: By default, Kubernetes ingress routes traffic to any available pod that matches the ingress rules. However, during a deployment update, you may want to ensure that users are routed to the same instance of your application to avoid disruptions. You can enable session affinity or sticky sessions in your ingress to ensure that traffic is routed to the same pod for a given user session.
+#
+#Connection draining: To avoid routing traffic to a pod that is being terminated during a deployment update, you can enable connection draining in your ingress. This ensures that existing connections are allowed to complete before the pod is terminated.
+#
+#Health checks: To ensure that your ingress routes traffic only to healthy pods, you can configure health checks for your pods. This ensures that any pods that are not ready or healthy are not included in the routing pool.
+#
+#Rolling updates: To perform a rolling update of your deployment, you can use the rollingUpdate strategy in your deployment configuration. This ensures that new pods are gradually introduced into the routing pool, while old pods are gradually removed.
+    # Enable session affinity or sticky sessions
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/connection-draining: "true"
+    nginx.ingress.kubernetes.io/session-cookie-name: "route"
+    nginx.ingress.kubernetes.io/connection-draining-timeout: "40s"
 spec:
   ingressClassName: nginx
   defaultBackend:
@@ -54,6 +71,7 @@ spec:
               name: containerized-orders
               port: 
                 number: 2226
+        # currently this path not working because the 4 path will take when type url, we have to comment 4 path above to make this gateway path work
         - path: /
           pathType: Prefix
           backend:

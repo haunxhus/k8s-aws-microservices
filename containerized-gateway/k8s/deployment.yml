@@ -5,8 +5,18 @@ metadata:
   namespace: k8s-containerized-services
   labels:
     app: k8s-service-gateway
+    environment: develop
+    team: vmo-du5-java
 spec:
-  replicas: 1
+  replicas: 2
+  minReadySeconds: 5
+  progressDeadlineSeconds: 660 # 11 minutes, default is 10 minutes
+  revisionHistoryLimit: 12
+  strategy:
+    type: RollingUpdate # default
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: k8s-service-gateway
@@ -22,3 +32,22 @@ spec:
           imagePullPolicy: IfNotPresent # the image is pulled only if it is not already present locally.
           ports:
             - containerPort: 8762
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8762
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: 8762
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 2
+          startupProbe:
+            tcpSocket:
+              port: 8762
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 5

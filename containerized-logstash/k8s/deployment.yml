@@ -5,8 +5,10 @@ metadata:
   namespace: k8s-containerized-services
   labels:
     app: k8s-service-logstash
+    environment: develop
+    team: vmo-du5-java
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: k8s-service-logstash

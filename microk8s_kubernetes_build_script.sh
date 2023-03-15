@@ -54,32 +54,42 @@ sudo docker compose -f docker-compose-v1.yml build
 #sudo docker tag containerized-config-server:v1.0.0 linhpv5555/containerized-config-server:v1.0.0
 #sudo docker push linhpv5555/containerized-config-server:v1.0.0
 
+CONTAINTER_NAMSPACES=k8s-containerized-services
+if [ "$1" ]; then
+  CONTAINTER_NAMSPACES=$1
+fi
+
 
 
 #################### 2, Commands with using localy docker ##############################################################
-sudo docker save containerized-orders > containerized-orders.tar
-sudo microk8s ctr image import containerized-orders.tar
+if ! [ -d "$HOME/microservice-k8s-tar" ]; then
+	mkdir $HOME/microservice-k8s-tar 
+fi
 
-sudo docker save containerized-main > containerized-main.tar
-sudo microk8s ctr image import containerized-main.tar
+# import docker image to local registry of microk8s
+sudo docker save containerized-orders > $HOME/microservice-k8s-tar/containerized-orders.tar
+sudo microk8s ctr image import $HOME/microservice-k8s-tar/containerized-orders.tar
 
-sudo docker save containerized-accounts > containerized-accounts.tar
-sudo microk8s ctr image import containerized-accounts.tar
+sudo docker save containerized-main > $HOME/microservice-k8s-tar/containerized-main.tar
+sudo microk8s ctr image import $HOME/microservice-k8s-tar/containerized-main.tar
 
-sudo docker save containerized-discovery > containerized-discovery.tar
-sudo microk8s ctr image import containerized-discovery.tar
+sudo docker save containerized-accounts > $HOME/microservice-k8s-tar/containerized-accounts.tar
+sudo microk8s ctr image import $HOME/microservice-k8s-tar/containerized-accounts.tar
 
-sudo docker save containerized-products > containerized-products.tar
-sudo microk8s ctr image import containerized-products.tar
+sudo docker save containerized-discovery > $HOME/microservice-k8s-tar/containerized-discovery.tar
+sudo microk8s ctr image import $HOME/microservice-k8s-tar/containerized-discovery.tar
 
-sudo docker save zipkin-server > zipkin-server.tar
-sudo microk8s ctr image import zipkin-server.tar
+sudo docker save containerized-products > $HOME/microservice-k8s-tar/containerized-products.tar
+sudo microk8s ctr image import $HOME/microservice-k8s-tar/containerized-products.tar
 
-sudo docker save containerized-gateway > containerized-gateway.tar
-sudo microk8s ctr image import containerized-gateway.tar
+sudo docker save zipkin-server > $HOME/microservice-k8s-tar/zipkin-server.tar
+sudo microk8s ctr image import $HOME/microservice-k8s-tar/zipkin-server.tar
 
-sudo docker save containerized-config-server > containerized-config-server.tar
-sudo microk8s ctr image import containerized-config-server.tar
+sudo docker save containerized-gateway > $HOME/microservice-k8s-tar/containerized-gateway.tar
+sudo microk8s ctr image import $HOME/microservice-k8s-tar/containerized-gateway.tar
+
+sudo docker save containerized-config-server > $HOME/microservice-k8s-tar/containerized-config-server.tar
+sudo microk8s ctr image import $HOME/microservice-k8s-tar/containerized-config-server.tar
 
 # show list images in microk8s after import
 sudo microk8s ctr images ls
@@ -87,14 +97,14 @@ sudo microk8s ctr images ls
 
 # sudo microk8s kubectl get pods | grep k8s-service | awk '{print $1}' | xargs sudo microk8s kubectl delete pod
 
-# ######### delete services, deployments, pods, ingress if exits in 'k8s-containerized-services' and 'ingress-nginx' namespaces
-sudo microk8s kubectl delete --all services --namespace=k8s-containerized-services
-sudo microk8s kubectl delete --all deployments --namespace=k8s-containerized-services
-sudo microk8s kubectl delete --all pods --namespace=k8s-containerized-services
-sudo microk8s kubectl delete --all ingress-nginx --namespace=k8s-containerized-services
-sudo microk8s kubectl delete --all ingress --namespace=k8s-containerized-services
-sudo microk8s kubectl delete --all configmap --namespace=k8s-containerized-services
-sudo microk8s kubectl delete namespace k8s-containerized-services
+# ######### delete services, deployments, pods, ingress if exits in '$CONTAINTER_NAMSPACES' and 'ingress-nginx' namespaces
+sudo microk8s kubectl delete --all services --namespace=$CONTAINTER_NAMSPACES
+sudo microk8s kubectl delete --all deployments --namespace=$CONTAINTER_NAMSPACES
+sudo microk8s kubectl delete --all pods --namespace=$CONTAINTER_NAMSPACES
+sudo microk8s kubectl delete --all ingress-nginx --namespace=$CONTAINTER_NAMSPACES
+sudo microk8s kubectl delete --all ingress --namespace=$CONTAINTER_NAMSPACES
+sudo microk8s kubectl delete --all configmap --namespace=$CONTAINTER_NAMSPACES
+sudo microk8s kubectl delete namespace $CONTAINTER_NAMSPACES
 
 #sudo microk8s kubectl delete --all services --namespace=ingress-nginx
 #sudo microk8s kubectl delete --all deployments --namespace=ingress-nginx
@@ -107,10 +117,10 @@ sudo microk8s kubectl delete namespace k8s-containerized-services
 #sudo microk8s kubectl delete namespace ingress
 
 
-#microk8s kubectl create namespace k8s-containerized-services
+#microk8s kubectl create namespace $CONTAINTER_NAMSPACES
 sudo microk8s kubectl create -f k8s/namespace.yml
 sudo microk8s kubectl config view
-sudo microk8s kubectl config set-context dev --namespace=k8s-containerized-services \
+sudo microk8s kubectl config set-context dev --namespace=$CONTAINTER_NAMSPACES \
   --cluster=$USER \
   --user=$USER
 
@@ -128,28 +138,28 @@ sudo microk8s kubectl create -f containerized-logstash/k8s/deployment.yml
 sudo microk8s kubectl create -f containerized-logstash/k8s/service.yml
 
 # ################################# zipkin-server ##################################################
-sudo microk8s kubectl wait pods -n k8s-containerized-services -l app=k8s-service-logstash  --for=jsonpath='{.status.phase}'=Running --timeout=180s
+sudo microk8s kubectl wait pods -n $CONTAINTER_NAMSPACES -l app=k8s-service-logstash  --for=jsonpath='{.status.phase}'=Running --timeout=180s
 sleep 30
 sudo microk8s kubectl create -f zipkin-server/k8s/deployment.yml
 sudo microk8s kubectl create -f zipkin-server/k8s/service.yml
 
 # ################################# discovery service ##################################################
-#while [[ $(microk8s kubectl get pods -l app=k8s-service-zipkin -n k8s-containerized-services -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "waiting for pod" && sleep 1; done
-sudo microk8s kubectl wait pods -n k8s-containerized-services -l app=k8s-service-zipkin --for=jsonpath='{.status.phase}'=Running --timeout=180s
+#while [[ $(microk8s kubectl get pods -l app=k8s-service-zipkin -n $CONTAINTER_NAMSPACES -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "waiting for pod" && sleep 1; done
+sudo microk8s kubectl wait pods -n $CONTAINTER_NAMSPACES -l app=k8s-service-zipkin --for=jsonpath='{.status.phase}'=Running --timeout=180s
 sleep 30
 sudo microk8s kubectl create -f containerized-discovery/k8s/deployment.yml
 sudo microk8s kubectl create -f containerized-discovery/k8s/service.yml
 
 # ################################# server config service ##################################################
-sudo microk8s kubectl wait pods -n k8s-containerized-services -l app=k8s-service-discovery --for=jsonpath='{.status.phase}'=Running --timeout=180s
+sudo microk8s kubectl wait pods -n $CONTAINTER_NAMSPACES -l app=k8s-service-discovery --for=jsonpath='{.status.phase}'=Running --timeout=180s
 sleep 30
 sudo microk8s kubectl create -f containerized-config-server/k8s/configmap.yml
 sudo microk8s kubectl create -f containerized-config-server/k8s/deployment.yml
 sudo microk8s kubectl create -f containerized-config-server/k8s/service.yml
 
 # ################################# accounts service ##################################################
-sudo microk8s kubectl wait pods -n k8s-containerized-services -l app=k8s-service-discovery --for=jsonpath='{.status.phase}'=Running --timeout=180s
-sudo microk8s kubectl wait pods -n k8s-containerized-services -l app=k8s-service-config-server --for=jsonpath='{.status.phase}'=Running --timeout=180s
+sudo microk8s kubectl wait pods -n $CONTAINTER_NAMSPACES -l app=k8s-service-discovery --for=jsonpath='{.status.phase}'=Running --timeout=180s
+sudo microk8s kubectl wait pods -n $CONTAINTER_NAMSPACES -l app=k8s-service-config-server --for=jsonpath='{.status.phase}'=Running --timeout=180s
 sleep 30
 sudo microk8s kubectl create -f containerized-accounts/k8s/configmap.yml
 sudo microk8s kubectl create -f containerized-accounts/k8s/deployment.yml
@@ -158,8 +168,8 @@ sudo microk8s kubectl create -f containerized-accounts/k8s/service.yml
 # curl localhost:2222/account/api/v1/accounts
 
 # ################################# products service ##################################################
-sudo microk8s kubectl wait pods -n k8s-containerized-services -l app=k8s-service-discovery --for=jsonpath='{.status.phase}'=Running --timeout=180s
-sudo microk8s kubectl wait pods -n k8s-containerized-services -l app=k8s-service-config-server --for=jsonpath='{.status.phase}'=Running --timeout=180s
+sudo microk8s kubectl wait pods -n $CONTAINTER_NAMSPACES -l app=k8s-service-discovery --for=jsonpath='{.status.phase}'=Running --timeout=180s
+sudo microk8s kubectl wait pods -n $CONTAINTER_NAMSPACES -l app=k8s-service-config-server --for=jsonpath='{.status.phase}'=Running --timeout=180s
 sleep 30
 sudo microk8s kubectl create -f containerized-products/k8s/configmap.yml
 sudo microk8s kubectl create -f containerized-products/k8s/deployment.yml
@@ -168,8 +178,8 @@ sudo microk8s kubectl create -f containerized-products/k8s/service.yml
 # curl http://localhost:2227/product/api/v1/products
 
 # ################################# orders service ##################################################
-sudo microk8s kubectl wait pods -n k8s-containerized-services -l app=k8s-service-discovery --for=jsonpath='{.status.phase}'=Running --timeout=180s
-sudo microk8s kubectl wait pods -n k8s-containerized-services -l app=k8s-service-config-server --for=jsonpath='{.status.phase}'=Running --timeout=180s
+sudo microk8s kubectl wait pods -n $CONTAINTER_NAMSPACES -l app=k8s-service-discovery --for=jsonpath='{.status.phase}'=Running --timeout=180s
+sudo microk8s kubectl wait pods -n $CONTAINTER_NAMSPACES -l app=k8s-service-config-server --for=jsonpath='{.status.phase}'=Running --timeout=180s
 sleep 30
 sudo microk8s kubectl create -f containerized-orders/k8s/configmap.yml
 sudo microk8s kubectl create -f containerized-orders/k8s/deployment.yml
@@ -178,8 +188,8 @@ sudo microk8s kubectl create -f containerized-orders/k8s/service.yml
 # curl localhost:2226/order/api/v1/orders
 
 # ################################# main service ##################################################
-sudo microk8s kubectl wait pods -n k8s-containerized-services -l app=k8s-service-discovery --for=jsonpath='{.status.phase}'=Running --timeout=180s
-sudo microk8s kubectl wait pods -n k8s-containerized-services -l app=k8s-service-config-server --for=jsonpath='{.status.phase}'=Running --timeout=180s
+sudo microk8s kubectl wait pods -n $CONTAINTER_NAMSPACES -l app=k8s-service-discovery --for=jsonpath='{.status.phase}'=Running --timeout=180s
+sudo microk8s kubectl wait pods -n $CONTAINTER_NAMSPACES -l app=k8s-service-config-server --for=jsonpath='{.status.phase}'=Running --timeout=180s
 sleep 30
 sudo microk8s kubectl create -f containerized-main/k8s/configmap.yml
 sudo microk8s kubectl create -f containerized-main/k8s/deployment.yml
@@ -188,25 +198,27 @@ sudo microk8s kubectl create -f containerized-main/k8s/service.yml
 # curl localhost:2223/backoffice/api/v1/backoffice/orders
 
 # ################################# gateway service ##################################################
-sudo microk8s kubectl wait pods -n k8s-containerized-services -l app=k8s-service-discovery --for=jsonpath='{.status.phase}'=Running --timeout=180s
-sudo microk8s kubectl wait pods -n k8s-containerized-services -l app=k8s-service-config-server --for=jsonpath='{.status.phase}'=Running --timeout=180s
+sudo microk8s kubectl wait pods -n $CONTAINTER_NAMSPACES -l app=k8s-service-discovery --for=jsonpath='{.status.phase}'=Running --timeout=180s
+sudo microk8s kubectl wait pods -n $CONTAINTER_NAMSPACES -l app=k8s-service-config-server --for=jsonpath='{.status.phase}'=Running --timeout=180s
 sleep 30
 sudo microk8s kubectl create -f containerized-gateway/k8s/deployment.yml
 sudo microk8s kubectl create -f containerized-gateway/k8s/service.yml
 #sudo microk8s kubectl port-forward svc/gateway 8762:8762
 
 sleep 30
+
+LOCALHOST=127.0.0.1
 #https://unix.stackexchange.com/questions/149419/how-to-check-whether-a-particular-port-is-open-on-a-machine-from-a-shell-script
-if nc -vz 127.0.0.1 8762 >/dev/null ; then
+if nc -vz $LOCALHOST 8762 >/dev/null ; then
     echo "this port 8762 is occupied."
 else
     echo "this port 8762 not running"
-	sudo microk8s kubectl port-forward -n k8s-containerized-services service/containerized-gateway 8762:8762 --address 0.0.0.0 &
+	sudo microk8s kubectl port-forward -n $CONTAINTER_NAMSPACES service/containerized-gateway 8762:8762 --address 0.0.0.0 &
 fi
 
 #curl localhost:8762/backoffice/api/v1/backoffice/orders
 
-if nc -vz 127.0.0.1 10443 >/dev/null ; then
+if nc -vz $LOCALHOST 10443 >/dev/null ; then
 	 echo "this port 10443 is occupied."
 else 
      echo "this port 10443 not running"
