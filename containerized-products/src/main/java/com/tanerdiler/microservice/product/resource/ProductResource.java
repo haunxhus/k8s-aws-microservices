@@ -2,7 +2,9 @@ package com.tanerdiler.microservice.product.resource;
 
 import java.util.Collection;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +28,10 @@ public class ProductResource {
 	@Value("${containerized.app.name}")
 	private String myAppName;
 
+	private static final String CLIENT_SERVICE= "clientService";
+
 	@GetMapping("/app-name")
+	@CircuitBreaker(name=CLIENT_SERVICE, fallbackMethod = "clientFallback")
 	public String getContainerizedAppName() {
 		log.info("Product info /app-name");
 		log.warn("Product warn /app-name");
@@ -34,7 +39,9 @@ public class ProductResource {
 		return myAppName;
 	}
 
+
 	@GetMapping("/{id}")
+	@CircuitBreaker(name=CLIENT_SERVICE, fallbackMethod = "clientFallback")
 	public ResponseEntity<Product> get(@PathVariable("id") Integer id) {
 		final var product = repository.findById(id).get();
 		log.info("Product {} info detail fetched {}", id, product);
@@ -50,5 +57,10 @@ public class ProductResource {
 		log.warn("warn Executing fetching all products {}", products);
 		log.error("error Executing fetching all products {}", products);
 		return ResponseEntity.ok(products);
+	}
+
+	public  ResponseEntity<String> clientFallback(Exception e){
+		return new ResponseEntity<String>("Client service is down", HttpStatus.OK);
+
 	}
 }

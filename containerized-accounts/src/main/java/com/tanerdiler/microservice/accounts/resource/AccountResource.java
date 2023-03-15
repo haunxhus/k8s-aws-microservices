@@ -2,10 +2,12 @@ package com.tanerdiler.microservice.accounts.resource;
 
 import com.tanerdiler.microservice.accounts.model.Account;
 import com.tanerdiler.microservice.accounts.repository.AccountRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,12 +28,16 @@ public class AccountResource
 	@Value("${containerized.app.name}")
 	private String myAppName;
 
+	private static final String CLIENT_SERVICE= "clientService";
+
 	@GetMapping("/app-name")
+	@CircuitBreaker(name=CLIENT_SERVICE, fallbackMethod = "clientFallback")
 	public String getContainerizedAppName() {
 		return myAppName;
 	}
 
 	@GetMapping("/{id}")
+	@CircuitBreaker(name=CLIENT_SERVICE, fallbackMethod = "clientFallback")
 	public ResponseEntity<Account> get(@PathVariable("id") Integer id)
 	{
 		final var account = repository.findById(id).get();
@@ -45,6 +51,11 @@ public class AccountResource
 		final var accounts = (repository.findAll().get());
 		log.info("Executing fetching all accounts {}", accounts);
 		return ResponseEntity.ok(accounts);
+	}
+
+	public  ResponseEntity<String> clientFallback(Exception e){
+		return new ResponseEntity<String>("Client service is down", HttpStatus.OK);
+
 	}
 
 }
