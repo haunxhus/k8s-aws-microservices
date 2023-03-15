@@ -1,16 +1,19 @@
 package com.tanerdiler.microservice.main.resource;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.tanerdiler.microservice.main.dto.OrderRequest;
+import com.tanerdiler.microservice.main.service.BackOfficeService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,6 +37,8 @@ public class BackofficeController {
 	private final ProductServiceClient productService;
 	private final OrderServiceClient orderService;
 	private final AccountServiceClient accountService;
+
+	private final BackOfficeService backOfficeService;
 
 	private static final Logger logger = LogManager.getLogger(BackofficeController.class);
 
@@ -65,5 +70,10 @@ public class BackofficeController {
 
 		return ResponseEntity.ok(orderDTOList);
 
+	}
+
+	@PostMapping("/orders")
+	public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderRequest request) {
+		return new ResponseEntity<>(backOfficeService.createOrder(request), HttpStatus.CREATED);
 	}
 }
