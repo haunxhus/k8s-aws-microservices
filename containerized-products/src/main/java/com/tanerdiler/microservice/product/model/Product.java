@@ -14,4 +14,5 @@ public class Product implements Serializable {
 	private Integer id;
 	private String name;
 	private Double price;
+	private Double amount;
 }

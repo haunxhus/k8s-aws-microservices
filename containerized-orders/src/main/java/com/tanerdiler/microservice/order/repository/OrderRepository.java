@@ -43,6 +43,10 @@ public class OrderRepository
 	public Order save(Order order)
 	{
 		Integer maxId = orders.keySet().stream().max(Integer::compareTo).get();
-		return orders.put(maxId, order);
+		return orders.put(maxId +1, order);
+	}
+
+	public void deleteOrder(Integer orderId) {
+		orders.remove(orderId);
 	}
 }

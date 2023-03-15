@@ -5,6 +5,7 @@ import com.tanerdiler.microservice.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,5 +41,19 @@ public class OrderResource
 		final var orders = repository.findAll().get();
 		log.info("Executing fetching all orders {}", orders);
 		return ResponseEntity.ok(orders);
+	}
+
+	@PostMapping()
+	public ResponseEntity<Order> create(@RequestBody Order order) {
+		log.info("Creating new order {}", order);
+		final var orders = repository.save(order);
+		return new ResponseEntity<>(order, HttpStatus.CREATED);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteOrderById(@PathVariable("id") Integer id) {
+		log.info("Delete order with id {}", id);
+		repository.deleteOrder(id);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
