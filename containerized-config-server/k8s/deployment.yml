@@ -5,15 +5,21 @@ metadata:
   name: k8s-service-config-server
   labels:
     app: k8s-service-config-server
+    environment: develop
+    team: vmo-du5-java
 spec:
-  replicas: 2
+  replicas: 3
   progressDeadlineSeconds: 660 # 11 minutes, default is 10 minutes
   revisionHistoryLimit: 12
   strategy:
     type: RollingUpdate # default
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: k8s-service-config-server
+  minReadySeconds: 5
   template:
     metadata:
       labels:
@@ -26,3 +32,21 @@ spec:
           #imagePullPolicy: Never
           ports:
             - containerPort: 8888
+          readinessProbe:
+            tcpSocket:
+                port: 8888
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: 8888
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 2
+          startupProbe:
+            tcpSocket:
+              port: 8888
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 2

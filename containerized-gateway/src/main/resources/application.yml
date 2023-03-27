@@ -37,7 +37,9 @@ management:
     web:
       exposure:
         include: "*"
-
+  endpoint:
+    health:
+      show-details: always
   metrics:
     distribution:
       percentiles-histogram.http.server.requests: false

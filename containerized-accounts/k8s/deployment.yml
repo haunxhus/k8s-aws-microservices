@@ -5,25 +5,40 @@ metadata:
   namespace: k8s-containerized-services
   labels:
     app: k8s-service-accounts
+    environment: develop
+    team: vmo-du5-java
 spec:
   replicas: 3
+  progressDeadlineSeconds: 660 # 11 minutes, default is 10 minutes
+  revisionHistoryLimit: 12
+  strategy:
+    type: RollingUpdate # default
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: k8s-service-accounts
+  minReadySeconds: 5
   template:
     metadata:
       labels:
         app: k8s-service-accounts
     spec:
       #loadBalancerClass: nil 
+      # https://stackoverflow.com/questions/40366192/kubernetes-how-to-make-deployment-to-update-image
+      terminationGracePeriodSeconds: 30
       containers:
         - name: containerized-accounts
           #image: linhpv5555/containerized-accounts:latest # docker hub
           image: containerized-accounts:v1.0.0 # locally
-          #imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 2222
             #name: service-accounts
+            #Configure liveness and readiness probes
+            #To configure health checks for your pods, you can use Kubernetes liveness and readiness probes.
+            # https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 #          livenessProbe:
 #            httpGet:
 #              path: /health
@@ -33,9 +48,27 @@ spec:
 #          readinessProbe:
 #            httpGet:
 #              path: /health
-#              port: 8080
+#              port: 2222
 #              scheme: HTTP
 #            initialDelaySeconds: 10
-
+          readinessProbe:
+            httpGet:
+              path: /account/actuator/health
+              port: 2222
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: 2222
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 2
+          startupProbe:
+            tcpSocket:
+              port: 2222
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 5
           #args:
           #  - "-apptype=accounts"
