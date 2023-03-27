@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +37,9 @@ public class BackofficeController {
 
 	private static final Logger logger = LogManager.getLogger(BackofficeController.class);
 
+	private static final String CLIENT_SERVICE= "clientService";
 	@GetMapping("/orders")
+	@CircuitBreaker(name=CLIENT_SERVICE, fallbackMethod = "clientFallback")
 	public ResponseEntity<List<OrderDTO>> getOrders() {
 
 		log.warn("Fetching all orders...");
@@ -62,6 +66,11 @@ public class BackofficeController {
 		});
 
 		return ResponseEntity.ok(orderDTOList);
+
+	}
+
+	public  ResponseEntity<String> clientFallback(Exception e){
+		return new ResponseEntity<String>("Client service is down", HttpStatus.OK);
 
 	}
 }
