@@ -9,7 +9,9 @@ set -e
 
 service_name_to_wait=$1
 
-while ! nc -z $1 $2; do sleep 10; done
+echo "Waiting for the service ${service_name_to_wait}!"
+
+while ! nc -z $1 $2; do sleep 20; done
 
 >&2 echo "The service ${service_name_to_wait} are connected!"
 # ref: https://www.geeksforgeeks.org/shift-command-in-linux-with-examples/

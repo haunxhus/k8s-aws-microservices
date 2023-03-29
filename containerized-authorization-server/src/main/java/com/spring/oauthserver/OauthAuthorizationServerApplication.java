@@ -1,11 +1,11 @@
-package com.tanerdiler.microservice.gateway;
+package com.spring.oauthserver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ContainerizedGatewayApplication {
+public class OauthAuthorizationServerApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ContainerizedGatewayApplication.class, args);
+        SpringApplication.run(OauthAuthorizationServerApplication.class, args);
     }
 }

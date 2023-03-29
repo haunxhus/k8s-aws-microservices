@@ -2,34 +2,57 @@ server:
   port: ${PORT:8762}
 
 spring:
+  main:
+    web-application-type: reactive
+    allow-bean-definition-overriding: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://${ISSUER_HOST:localhost}:9000
   application:
     name: containerized-gateway
   logstash:
-    server: logstash
-    #server: localhost
+#    server: logstash
+    server: localhost
     port: 5000
   zipkin:
     base-url: http://zipkin:9411
-    #base-url: http://localhost:9411
+#    base-url: http://localhost:9411
   cloud:
     gateway:
       routes:
         - id: containerized-main
-          uri: lb://containerized-main
+#          uri: lb://containerized-main
+          uri: http://containerized-main:2223
+#          uri: http://localhost:2223
           predicates:
           - Path=/backoffice/**
         - id: containerized-accounts
-          uri: lb://containerized-accounts
+#          uri: lb://containerized-accounts
+          uri: http://containerized-accounts:2222
+#          uri: http://localhost:2222
           predicates:
           - Path=/account/**
         - id: containerized-orders
-          uri: lb://containerized-orders
+#          uri: lb://containerized-orders
+          uri: http://containerized-orders:2226
+#          uri: http://localhost:2226
           predicates:
           - Path=/order/**
         - id: containerized-products
-          uri: lb://containerized-products
+#          uri: lb://containerized-products
+          uri: http://containerized-products:2227
+#          uri: http://localhost:2227
           predicates:
           - Path=/product/**
+
+#        - id: containerized-authorization-server
+##          uri: lb://containerized-authorization-server
+#          uri: http://containerized-authorization-server:9000
+##          uri: http://localhost:9000
+#          predicates:
+#          - Path=/auth/**
 
 management:
   endpoints:
@@ -39,8 +62,10 @@ management:
 
   metrics:
     distribution:
-      percentiles-histogram.http.server.requests: false
-      percentiles.http.server.requests: 0.5, 0.9, 0.95, 0.99, 0.999
+      percentiles-histogram:
+        http.server.requests: false
+      percentiles:
+        http.server.requests: 0.5, 0.9, 0.95, 0.99, 0.999
       sla.http.server.requests: 500ms, 2000ms
 
 eureka:
@@ -50,7 +75,7 @@ eureka:
     registerWithEureka: true
     serviceUrl:
       defaultZone: http://discovery:8761/eureka/
-      #defaultZone: http://localhost:8761/eureka/
+#      defaultZone: http://localhost:8761/eureka/
 
 # Increase the Hystrix timeout to 60s (globally)
 hystrix:
