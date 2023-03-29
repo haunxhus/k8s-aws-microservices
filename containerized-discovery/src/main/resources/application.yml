@@ -8,7 +8,7 @@ eureka:
     registerWithEureka: false
     fetchRegistry: false
   server:
-    enableSelfPreservation: false
+    enableSelfPreservation: true #enabling self-preservation mode may impact the discovery process and can lead to increased memory usage,
 
 spring:
   application:

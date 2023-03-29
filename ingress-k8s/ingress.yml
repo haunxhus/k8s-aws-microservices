@@ -28,6 +28,7 @@ metadata:
     nginx.ingress.kubernetes.io/affinity: "cookie"
     nginx.ingress.kubernetes.io/connection-draining: "true"
     nginx.ingress.kubernetes.io/session-cookie-name: "route"
+    nginx.ingress.kubernetes.io/load-balance: "round_robin" #ewma
     nginx.ingress.kubernetes.io/connection-draining-timeout: "40s"
 spec:
   ingressClassName: nginx
