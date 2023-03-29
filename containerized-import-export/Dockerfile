@@ -9,6 +9,6 @@ ENV MINIO_UPLOAD_PART_SIZE $MINIO_UPLOAD_PART_SIZE
 ENV MINIO_DOWNLOAD_EXPIRY_TIME $MINIO_DOWNLOAD_EXPIRY_TIME
 ENV APPLICATION_MODE_DEBUG $APPLICATION_MODE_DEBUG
 
-COPY ./target/minio-connection-java-17-0.0.1-SNAPSHOT.jar .
+COPY ./target/containerized-import-export-0.0.1-SNAPSHOT.jar .
 
-ENTRYPOINT ["java","-jar","minio-connection-java-17-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","containerized-import-export-0.0.1-SNAPSHOT.jar"]

@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>minio-connection-java-17</artifactId>
+	<artifactId>containerized-import-export</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>minio-connection-java-17</name>
+	<name>containerized-import-export</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
