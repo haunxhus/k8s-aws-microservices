@@ -23,16 +23,16 @@ public class ProductResource {
 
 	private final ProductRepository repository;
 
-	@Value("${containerized.app.name}")
-	private String myAppName;
-
-	@GetMapping("/app-name")
-	public String getContainerizedAppName() {
-		log.info("Product info /app-name");
-		log.warn("Product warn /app-name");
-		log.error("Product error /app-name");
-		return myAppName;
-	}
+//	@Value("${containerized.app.name}")
+//	private String myAppName;
+//
+//	@GetMapping("/app-name")
+//	public String getContainerizedAppName() {
+//		log.info("Product info /app-name");
+//		log.warn("Product warn /app-name");
+//		log.error("Product error /app-name");
+//		return myAppName;
+//	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Product> get(@PathVariable("id") Integer id) {

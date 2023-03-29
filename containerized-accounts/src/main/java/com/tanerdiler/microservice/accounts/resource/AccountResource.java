@@ -23,13 +23,13 @@ public class AccountResource
 {
 	private final AccountRepository repository;
 
-	@Value("${containerized.app.name}")
-	private String myAppName;
-
-	@GetMapping("/app-name")
-	public String getContainerizedAppName() {
-		return myAppName;
-	}
+//	@Value("${containerized.app.name}")
+//	private String myAppName;
+//
+//	@GetMapping("/app-name")
+//	public String getContainerizedAppName() {
+//		return myAppName;
+//	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Account> get(@PathVariable("id") Integer id)

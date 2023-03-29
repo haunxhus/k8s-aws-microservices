@@ -22,6 +22,17 @@ spring:
   cloud:
     kubernetes:
       enabled: false
+    stream:
+      function:
+        definition: paymentProcessor
+      bindings:
+        paymentProcessor-in-0:
+          destination: order-event
+        paymentProcessor-out-0:
+          destination: payment-event
+      kafka:
+        binder:
+          brokers: localhost:9092
 
 management:
   endpoints:

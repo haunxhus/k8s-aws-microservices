@@ -19,6 +19,18 @@ spring:
   zipkin:
     base-url: http://zipkin:9411
     #base-url: http://localhost:9411
+  cloud:
+    stream:
+      function:
+        definition: orderSupplier;paymentEventConsumer
+      bindings:
+        orderSupplier-out-0:
+          destination: order-event
+        paymentEventConsumer-in-0:
+          destination: payment-event
+      kafka:
+        binder:
+          brokers: localhost:9092
 
 management:
   endpoints:
