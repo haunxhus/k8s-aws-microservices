@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-service-import-export
+  namespace: k8s-containerized-services
+  labels:
+    app: k8s-service-import-export
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: k8s-service-import-export
+  template:
+    metadata:
+      labels:
+        app: k8s-service-import-export
+    spec:
+      #loadBalancerClass: nil 
+      containers:
+        - name: containerized-import-export
+          image: containerized-import-export
+          #imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+            #name: service-accounts
+#          livenessProbe:
+#            httpGet:
+#              path: /health
+#              port: 8080
+#              scheme: HTTP
+#            initialDelaySeconds: 180
+#          readinessProbe:
+#            httpGet:
+#              path: /health
+#              port: 8080
+#              scheme: HTTP
+#            initialDelaySeconds: 10
+
+          #args:
+          #  - "-apptype=accounts"

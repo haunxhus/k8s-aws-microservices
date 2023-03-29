@@ -251,6 +251,40 @@ services:
     tty: true
 
 
+  # #################################################### containerized-import-export service #######################################################
+
+  containerized-import-export:
+    container_name: containerized-import-export
+    image: containerized-import-export
+    build:
+      context: .
+      dockerfile: ./containerized-import-export/Dockerfile
+    #    networks:
+    #      - e-network
+    volumes:
+      - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
+    depends_on:
+      logstash:
+        condition: service_started
+      zipkin:
+        condition: service_started
+      discovery:
+        condition: service_started
+    entrypoint: [ "./wait-for-services.sh", "discovery", "8080", "java", "-jar", "containerized-import-export-0.0.1-SNAPSHOT.jar" ]
+    environment:
+      - MINIO_ENDPOINT=http://minio:9000/
+      - MINIO_ACCESS_KEY=JUEfzzdjg69PPSKk
+      - MINIO_SECRET_KEY=hjDIQI5MqIXKYTFcYmFHsS0eFgUnpNAy
+      - MINIO_UPLOAD_PART_SIZE=5242880
+      - MINIO_DOWNLOAD_EXPIRY_TIME=600
+      - APPLICATION_MODE_DEBUG=false
+    ports:
+      - "8080:8080"
+    restart: on-failure
+    stdin_open: true
+    tty: true
+
+
  # #################################################### containerized-main service #######################################################
 
   containerized-main:
