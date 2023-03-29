@@ -78,6 +78,17 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 		</dependency>
 
+        <!-- KAFKA -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <!-- REDIS -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
 		<!-- CODE GENERATOR -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
