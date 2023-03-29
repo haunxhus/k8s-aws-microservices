@@ -21,14 +21,14 @@ mvn clean íntall -DskipTests
 
 mvn package
 
-docker build -t minio-connection .
+docker build -t containerized-import-export .
 ```
 
 - Run
 ```
 docker run -d \
    -p 8080:8080 \
-   --name minio-connection \
+   --name containerized-import-export \
    --net=bridge \
    -e "MINIO_ENDPOINT=MINIO_ENDPOINT" \
    -e "MINIO_ACCESS_KEY=MINIO_ACCESS_KEY" \
