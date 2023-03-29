@@ -18,3 +18,4 @@ data:
     spring:
       profiles: kubernetes
     containerized.app.name=k8s-containerized-accounts.in.configmap.profile.kubernetes
+    
