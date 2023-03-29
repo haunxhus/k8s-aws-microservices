@@ -19,6 +19,17 @@ spring:
   zipkin:
     base-url: http://zipkin:9411
     #base-url: http://localhost:9411
+  cache:
+    type: redis
+  redis:
+    host: redis
+    port: 6379
+
+  kafka:
+    producer:
+      bootstrap-servers: kafka:29092
+    topic:
+      topic-send-product: send-product
 
 management:
   endpoints:
