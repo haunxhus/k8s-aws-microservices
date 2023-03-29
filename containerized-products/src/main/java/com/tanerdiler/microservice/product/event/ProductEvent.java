@@ -10,3 +10,4 @@ public class ProductEvent {
     private Double price;
     private String status;
 }
+
