@@ -270,7 +270,7 @@ services:
         condition: service_started
       discovery:
         condition: service_started
-    entrypoint: [ "./wait-for-services.sh", "discovery", "8080", "java", "-jar", "containerized-import-export-0.0.1-SNAPSHOT.jar" ]
+    entrypoint: [ "./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-import-export-0.0.1-SNAPSHOT.jar" ]
     environment:
       - MINIO_ENDPOINT=http://minio:9000/
       - MINIO_ACCESS_KEY=JUEfzzdjg69PPSKk

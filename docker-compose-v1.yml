@@ -226,6 +226,31 @@ services:
 #    tty: true
 #
 #
+  # #################################################### containerized-main service #######################################################
+
+#  containerized-import-export:
+#    container_name: containerized-import-export
+#    image: containerized-import-export
+#    build:
+#      context: .
+#      dockerfile: ./containerized-import-export/Dockerfile
+#    networks:
+#      - e-network
+#    volumes:
+#      - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
+#    depends_on:
+#      - logstash
+#      - zipkin
+#      - discovery
+#    entrypoint: [ "./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-import-export-0.0.1-SNAPSHOT" ]
+#    ports:
+#      - 8080:8080
+#    restart: on-failure
+#    stdin_open: true
+#    tty: true
+
+
+  #
 # # #################################################### containerized-main service #######################################################
 #
 #  containerized-main:
