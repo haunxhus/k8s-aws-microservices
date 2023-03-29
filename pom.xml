@@ -67,6 +67,16 @@
 			<artifactId>logstash-logback-encoder</artifactId>
 			<version>${logtash-logback-encoder.version}</version>
 		</dependency>
+        <!-- KAFKA -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <!-- REDIS -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
 		<!-- TESTING -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
