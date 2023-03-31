@@ -8,7 +8,7 @@ metadata:
     environment: develop
     team: vmo-du5-java
 spec:
-  replicas: 3
+  replicas: 5
   progressDeadlineSeconds: 660 # 11 minutes, default is 10 minutes
   revisionHistoryLimit: 12
   strategy:
@@ -58,12 +58,14 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 10
             failureThreshold: 3
+
           livenessProbe:
             tcpSocket:
               port: 2222
             initialDelaySeconds: 5
             periodSeconds: 10
-            failureThreshold: 2
+            failureThreshold: 3
+
           startupProbe:
             tcpSocket:
               port: 2222

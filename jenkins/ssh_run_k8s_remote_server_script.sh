@@ -57,22 +57,30 @@ if [ ${#files[@]} -gt 0 ]; then
 	
 	sudo ssh -v -o StrictHostKeyChecking=no -i "$JENKIN_SSH_KEY_PATH" "$REMOTE_USER"@$REMOTE_IP << EOSSH1
 	echo "current location $(pwd)"
-	echo "list directory"
+	echo "######### Create folder $REMOTE_HOME_PATH/microservice-k8s-tar/ if it is not exist"
 	if [[ ! -d $REMOTE_HOME_PATH/microservice-k8s-tar/ ]]; then
 		mkdir $REMOTE_HOME_PATH/microservice-k8s-tar/
 	fi
+
+	echo "######### Empty folder $REMOTE_HOME_PATH/microservice-k8s-tar/$COMMIT_HASH/* if it is existed"
+	if [[ -d $REMOTE_HOME_PATH/microservice-k8s-tar/$COMMIT_HASH/ ]]; then
+		sudo rm -rf  $REMOTE_HOME_PATH/microservice-k8s-tar/$COMMIT_HASH/*
+	fi
+	
 EOSSH1
 	
+	#ref: https://linuxize.com/post/how-to-use-scp-command-to-securely-transfer-files/
+	#ref: https://linux.die.net/man/1/scp
 	set -eo pipefail
-	sudo scp -r "$HOME"/k8s-example-tar-folder/ "$REMOTE_USER"@$REMOTE_IP:"$REMOTE_HOME_PATH"/microservice-k8s-tar/
-	sudo scp -r "$PWD"/jenkins/containerized_build_k8s_scripts.sh "$REMOTE_USER"@$REMOTE_IP:"$REMOTE_HOME_PATH"/containerized_build_k8s_scripts.sh
+	sudo scp -v -o StrictHostKeyChecking=no -i "$JENKIN_SSH_KEY_PATH" -r "$HOME"/k8s-example-tar-folder/ "$REMOTE_USER"@$REMOTE_IP:"$REMOTE_HOME_PATH"/microservice-k8s-tar/
+	sudo scp -v -o StrictHostKeyChecking=no -i "$JENKIN_SSH_KEY_PATH" -r "$PWD"/jenkins/containerized_build_k8s_scripts.sh "$REMOTE_USER"@$REMOTE_IP:"$REMOTE_HOME_PATH"/containerized_build_k8s_scripts.sh
 
-#https://qirolab.com/posts/how-to-run-command-using-ssh-on-remote-machine-1602429142
+#ref: https://qirolab.com/posts/how-to-run-command-using-ssh-on-remote-machine-1602429142
 	sudo ssh -v -o StrictHostKeyChecking=no -i $JENKIN_SSH_KEY_PATH $REMOTE_USER@$REMOTE_IP << EOSSH
-	echo "current location $(pwd)"
-	echo "list directory"
+	echo ""################### current location $(pwd)"
+	echo ""################### list directory"
 	sudo ls -la
-	echo "What is my name: $USER"
+	echo "################### What is my name: $USER"
 	sudo chmod +x containerized_build_k8s_scripts.sh
 	./containerized_build_k8s_scripts.sh $CURRENT_HASH $VERSION
 	sudo rm containerized_build_k8s_scripts.sh
