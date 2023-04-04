@@ -35,18 +35,18 @@ spec:
           readinessProbe:
             tcpSocket:
               port: 8761
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            failureThreshold: 3
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            failureThreshold: 7
           livenessProbe:
             tcpSocket:
               port: 8761
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            failureThreshold: 2
+            initialDelaySeconds: 40
+            periodSeconds: 40
+            failureThreshold: 8
           startupProbe:
             tcpSocket:
               port: 8761
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            failureThreshold: 2
+            initialDelaySeconds: 35
+            periodSeconds: 25
+            failureThreshold: 10

@@ -8,8 +8,7 @@ mvn --version
 #mvn -Dmaven.test.failure.ignore=true clean package
 
 
-# improvement 
-
+# improvement
 if [ -z "$GIT_COMMIT" ]; then
     echo "No current commit... !"
     mvn -Dmaven.test.failure.ignore=false clean package

@@ -51,26 +51,31 @@ spec:
 #              port: 2222
 #              scheme: HTTP
 #            initialDelaySeconds: 10
-          readinessProbe:
+
+          ## Readiness probes: The kubelet uses readiness probes to know when a container is ready to start accepting traffic. 
+          ## Pod is considered ready when all of its containers are ready.
+          readinessProbe: # Readiness probes are configured similarly to liveness probes.
             httpGet:
               path: /account/actuator/health
               port: 2222
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            failureThreshold: 3
+            initialDelaySeconds: 60 # send the first readiness probe 60 seconds after the container starts
+            periodSeconds: 20 # If the probe succeeds, the Pod will be marked as ready. The kubelet will continue to run this check every 20 seconds.
+            failureThreshold: 6 # After a probe fails failureThreshold times in a row, Kubernetes considers that the overall check has failed
 
+          ## Liveness probes: The kubelet uses liveness probes to know when to restart a container. 
           livenessProbe:
             tcpSocket:
               port: 2222
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            failureThreshold: 3
-
+            initialDelaySeconds: 40 #should wait 40 seconds before performing the first probe
+            periodSeconds: 30 # should perform a liveness probe every 30s
+            failureThreshold: 6 # After a probe fails failureThreshold times in a row, Kubernetes considers that the overall check has failed
+          
+          ## Startup probes: The kubelet uses startup probes to know when a container application has started.
           startupProbe:
             tcpSocket:
               port: 2222
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            failureThreshold: 5
+            initialDelaySeconds: 35
+            periodSeconds: 20 
+            failureThreshold: 8 # After a probe fails failureThreshold times in a row, Kubernetes considers that the overall check has failed
           #args:
           #  - "-apptype=accounts"

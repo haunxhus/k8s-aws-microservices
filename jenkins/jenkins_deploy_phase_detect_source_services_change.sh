@@ -13,29 +13,28 @@ fi
 GIT_CURR_COMMIT=
 if [  "$2" ]; then
     GIT_CURR_COMMIT=$2
-    
+fi
+
+VERSION=local
+if [ "$3" ]; then
+    VERSION=$3
 fi
 
 GIT_PRE_COMMIT=
-if [ "$3" ]; then
-    GIT_PRE_COMMIT=$3
+if [ "$4" ]; then
+    GIT_PRE_COMMIT=$4
 fi
 
 SOURCE_BRANCH=
-if [ "$4" ]; then
-    SOURCE_BRANCH=$4
+if [ "$5" ]; then
+    SOURCE_BRANCH=$5
 fi
 
 TARGET_BRANCH=
-if [ "$5" ]; then
-    TARGET_BRANCH=$5
-fi
-
-
-VERSION=local
 if [ "$6" ]; then
-    VERSION=$6
+    TARGET_BRANCH=$6
 fi
+
 
 
 echo "GIT_CURR_COMMIT=$GIT_CURR_COMMIT"
@@ -85,16 +84,19 @@ function build_docker_image {
 # -- $service: This limits the comparison to only the changes in the $service directory.
 #
 #
-if [  -n "${ghprbTargetBranch}" ] || [ "$GIT_PRE_COMMIT" != "$GIT_CURR_COMMIT" ]; then
+# check if a variable is not null using -n
+if [  -n "${TARGET_BRANCH}" ] || [ "$GIT_PRE_COMMIT" != "$GIT_CURR_COMMIT" ]; then
 	set -eo pipefail
 	CHANGED_FILE_FOLDER=
 	echo "########### detect GIT_PRE_COMMIT and GIT_CURR_COMMIT is differences or not. If not using another command. "
 	if [[ -n "${GIT_PRE_COMMIT}" && -n "${GIT_CURR_COMMIT}" && "$GIT_PRE_COMMIT" != "$GIT_CURR_COMMIT" ]]; then
+	  echo "####### Valid command: git diff --name-only $GIT_PRE_COMMIT $GIT_CURR_COMMIT $DIR_PATH";
 		if git diff --name-only $GIT_PRE_COMMIT $GIT_CURR_COMMIT "$DIR_PATH"; then
 		  echo "############# running command: git diff --name-only $GIT_PRE_COMMIT $GIT_CURR_COMMIT $DIR_PATH"
 			CHANGED_FILE_FOLDER=$(git diff --name-only $GIT_PRE_COMMIT $GIT_CURR_COMMIT "$DIR_PATH")
 		fi
 	else
+	   echo "####### Valid command: git diff --name-only $SOURCE_BRANCH..$TARGET_BRANCH $DIR_PATH";
 		if git diff --name-only $SOURCE_BRANCH..$TARGET_BRANCH "$DIR_PATH"; then
 			echo "############# running command: git diff --name-only $SOURCE_BRANCH..$TARGET_BRANCH $DIR_PATH"
 			CHANGED_FILE_FOLDER=$(git diff --name-only $SOURCE_BRANCH..$TARGET_BRANCH "$DIR_PATH")

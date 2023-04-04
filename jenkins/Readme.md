@@ -89,12 +89,12 @@
 	   sudo mkdir jenkins
 	   
 	2. create ssh key pairs in this folder
-	   sudo ssh-keygen -f $HOME/jenkins  -t ed25519 -b 4096 -N ''
+	   sudo ssh-keygen -f /home/jenkins  -t ed25519 -b 4096 -N ''
 	   
 	3. copy data from file <key_name>.pub then add to authorized_keys k8s server.
 	
 	4. Change file permission to jenkins user (include jenkins folder)
-	   sudo chown -R jenkins:jenkins $HOME/jenkins
+	   sudo chown -R jenkins:jenkins /home/jenkins
 	
 	5. Testing connection is worked or not: 
 		 ssh -T remote_host@remote_user

@@ -132,12 +132,13 @@ if test -d /lib/systemd/system/ && test -e /lib/systemd/system/jenkins.service &
 	echo "################################# jenkins was installed ##############################"
 	sudo systemctl status jenkins
 else
+	# https://www.jenkins.io/blog/2023/03/27/repository-signing-keys-changing/
 	echo "################################### installing jenkins #################################################################"
-	curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee \
-	  /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+	curl -fsSL https://pkg.jenkins.io/debian/jenkins.io-2023.key | sudo tee \
+  		/usr/share/keyrings/jenkins-keyring.asc > /dev/null
 	echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
-	  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
-	  /etc/apt/sources.list.d/jenkins.list > /dev/null
+  		https://pkg.jenkins.io/debian binary/ | sudo tee \
+  		/etc/apt/sources.list.d/jenkins.list > /dev/null
 	sudo apt-get update
 	sudo apt-get install jenkins
 	
@@ -197,7 +198,7 @@ else
 	 unset File
 fi
 # need to restart system and login again to apply all setting to current system.
-echo "################################### sleeling 40, preparing for reboot #################################################################"
+echo "################################### sleeling 15, preparing for reboot #################################################################"
 sleep 15
 sudo reboot;
 

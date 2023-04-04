@@ -110,15 +110,16 @@ unset PREVIOUS_BUILD_COMMIT_HASH;
 
 
 
-
-if [  ! \( -z "${ghprbTargetBranch}" \) ] || [ "$GIT_PREVIOUS_SUCCESSFUL_COMMIT" != "$GIT_COMMIT" ]; then
+# -z option is used to check whether a string variable is null
+# check if a variable is not null using -n
+if [ -n "${ghprbTargetBranch}" ] || [ -n "$GIT_PREVIOUS_SUCCESSFUL_COMMIT" ]; then
 	 # 1 dir path workplace
 	 # 2 current git commit
 	 # 3 previous git commit 
 	 # 4 image docker version
 	 #
 	chmod +x $PWD/jenkins/jenkins_deploy_phase_detect_source_services_change.sh
-	bash $PWD/jenkins/jenkins_deploy_phase_detect_source_services_change.sh $PWD $GIT_COMMIT $GIT_PREVIOUS_SUCCESSFUL_COMMIT $ghprbSourceBranch $ghprbTargetBranch $VERSION 
+	bash $PWD/jenkins/jenkins_deploy_phase_detect_source_services_change.sh $PWD $GIT_COMMIT $VERSION $GIT_PREVIOUS_SUCCESSFUL_COMMIT $ghprbSourceBranch $ghprbTargetBranch
 	
 	# keep success hash commit to file
 	echo "$CURRENT_HASH" > $HOME/git-hist/$CURRENT_BRANCH_NAME_FORMAT_AS_FILE_NAME
