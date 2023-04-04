@@ -38,6 +38,16 @@ if [ "$6" ]; then
   VERSION=$6
 fi
 
+
+# automating connect to server using sshpass: sshpass  is  a  utility  designed for running ssh using the mode referred to as "keyboard-
+# interactive" password authentication, but in non-interactive mode.
+# Syntax: sshpass [-ffilename|-dnum|-ppassword|-e] [options] command arguments
+# Refer: https://manpages.ubuntu.com/manpages/trusty/man1/sshpass.1.html
+#        https://www.howtoinstall.me/ubuntu/18-04/sshpass/
+#        https://www.cyberciti.biz/faq/noninteractive-shell-script-ssh-password-provider/
+# Example: sshpass -p '$PASSWORD' ssh -o StrictHostKeyChecking=no $USERNAME@$SERVERHOST 
+#
+
 echo " ##################################### SSH to remote server $REMOTE_USER@$REMOTE_IP ###########################################";
 
 #ssh -vvv -i /home/jenkins/id_rsa vienlv@34.126.75.224
@@ -53,7 +63,7 @@ shopt -s nullglob dotglob     # To include hidden files
 files=("$HOME"/k8s-example-tar-folder/$CURRENT_HASH/*)
 if [ ${#files[@]} -gt 0 ]; then 
 	
-	echo "Starting SSH...."
+	echo "Starting SSH to $REMOTE_USER@$REMOTE_IP...."
 	
 	sudo ssh -v -o StrictHostKeyChecking=no -i "$JENKIN_SSH_KEY_PATH" "$REMOTE_USER"@$REMOTE_IP << EOSSH1
 	echo "current location $(pwd)"
@@ -62,9 +72,14 @@ if [ ${#files[@]} -gt 0 ]; then
 		mkdir $REMOTE_HOME_PATH/microservice-k8s-tar/
 	fi
 
-	echo "######### Empty folder $REMOTE_HOME_PATH/microservice-k8s-tar/$COMMIT_HASH/* if it is existed"
-	if [[ -d $REMOTE_HOME_PATH/microservice-k8s-tar/$COMMIT_HASH/ ]]; then
-		sudo rm -rf  $REMOTE_HOME_PATH/microservice-k8s-tar/$COMMIT_HASH/*
+	echo "######### Empty folder $REMOTE_HOME_PATH/microservice-k8s-tar/$CURRENT_HASH/* if it is existed"
+	if [[ -d $REMOTE_HOME_PATH/microservice-k8s-tar/$CURRENT_HASH/ ]]; then
+		sudo rm -rf  $REMOTE_HOME_PATH/microservice-k8s-tar/$CURRENT_HASH/*
+	fi
+
+	echo "######### Remove sh file $REMOTE_HOME_PATH/containerized_build_k8s_scripts.sh if it is existed"
+	if [ -e $REMOTE_HOME_PATH/containerized_build_k8s_scripts.sh ]; then
+		sudo rm $REMOTE_HOME_PATH/containerized_build_k8s_scripts.sh
 	fi
 	
 EOSSH1
