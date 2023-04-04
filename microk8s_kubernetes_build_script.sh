@@ -81,11 +81,24 @@ sudo $K8S_TOOL_NAME ctr image import $HOME/microservice-k8s-tar/containerized-ac
 sudo docker save containerized-discovery > $HOME/microservice-k8s-tar/containerized-discovery.tar
 sudo $K8S_TOOL_NAME ctr image import $HOME/microservice-k8s-tar/containerized-discovery.tar
 
-sudo docker save containerized-products > $HOME/microservice-k8s-tar/containerized-products.tar
-sudo $K8S_TOOL_NAME ctr image import $HOME/microservice-k8s-tar/containerized-products.tar
+# ######### delete services, deployments, pods, ingress if exits in 'k8s-containerized-services' and 'ingress-nginx' namespaces
+sudo microk8s kubectl delete --all services --namespace=k8s-containerized-services
+sudo microk8s kubectl delete --all deployments --namespace=k8s-containerized-services
+sudo microk8s kubectl delete --all pods --namespace=k8s-containerized-services
+sudo microk8s kubectl delete --all ingress-nginx --namespace=k8s-containerized-services
+sudo microk8s kubectl delete --all ingress --namespace=k8s-containerized-services
+sudo microk8s kubectl delete --all configmap --namespace=k8s-containerized-services
+sudo microk8s kubectl delete namespace k8s-containerized-services
 
-sudo docker save zipkin-server > $HOME/microservice-k8s-tar/zipkin-server.tar
-sudo $K8S_TOOL_NAME ctr image import $HOME/microservice-k8s-tar/zipkin-server.tar
+#sudo microk8s kubectl delete --all services --namespace=ingress-nginx
+#sudo microk8s kubectl delete --all deployments --namespace=ingress-nginx
+#sudo microk8s kubectl delete --all pods --namespace=ingress-nginx
+#sudo microk8s kubectl delete --all pods --namespace=ingress
+
+#sudo microk8s kubectl delete --all ingress --namespace=ingress-nginx
+#sudo microk8s kubectl delete --all ingress --namespace=ingress
+#sudo microk8s kubectl delete namespace ingress-nginx
+#sudo microk8s kubectl delete namespace ingress
 
 sudo docker save containerized-gateway > $HOME/microservice-k8s-tar/containerized-gateway.tar
 sudo $K8S_TOOL_NAME ctr image import $HOME/microservice-k8s-tar/containerized-gateway.tar
