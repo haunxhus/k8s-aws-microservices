@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: k8s-containerized-services
+  name: k8s-service-config-server
+  labels:
+    app: k8s-service-config-server
+    environment: develop
+    team: vmo-du5-java
+spec:
+  replicas: 3
+  progressDeadlineSeconds: 660 # 11 minutes, default is 10 minutes
+  revisionHistoryLimit: 12
+  strategy:
+    type: RollingUpdate # default
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: k8s-service-config-server
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: k8s-service-config-server
+    spec:
+      containers:
+        - name: containerized-config-server
+          #image: linhpv5555/containerized-config-server:latest # docker hub
+          image: containerized-config-server:v1.0.0 # locally
+          #imagePullPolicy: Never
+          ports:
+            - containerPort: 8888
+          readinessProbe:
+            tcpSocket:
+                port: 8888
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            failureThreshold: 6
+          livenessProbe:
+            tcpSocket:
+              port: 8888
+            initialDelaySeconds: 40
+            periodSeconds: 40
+            failureThreshold: 8
+          startupProbe:
+            tcpSocket:
+              port: 8888
+            initialDelaySeconds: 35
+            periodSeconds: 25
+            failureThreshold: 10

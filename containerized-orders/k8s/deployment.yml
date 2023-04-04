@@ -5,8 +5,18 @@ metadata:
   name: k8s-service-orders
   labels:
     app: k8s-service-orders
+    environment: develop
+    team: vmo-du5-java
 spec:
-  replicas: 2
+  replicas: 3
+  minReadySeconds: 5
+  progressDeadlineSeconds: 660 # 11 minutes, default is 10 minutes
+  revisionHistoryLimit: 12
+  strategy:
+    type: RollingUpdate # default
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: k8s-service-orders
@@ -17,7 +27,28 @@ spec:
     spec:
       containers:
         - name: containerized-orders
-          image: linhpv5555/containerized-orders:latest
+          #image: linhpv5555/containerized-orders:latest # docker hub
+          image: containerized-orders:v1.0.0 # local
           #magePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 2226
+          readinessProbe:
+            httpGet:
+              path: /order/actuator/health
+              port: 2226
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            failureThreshold: 6
+          livenessProbe:
+            tcpSocket:
+              port: 2226
+            initialDelaySeconds: 40
+            periodSeconds: 40
+            failureThreshold: 8
+          startupProbe:
+            tcpSocket:
+              port: 2226
+            initialDelaySeconds: 35
+            periodSeconds: 25
+            failureThreshold: 10

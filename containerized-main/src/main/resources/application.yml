@@ -1,5 +1,7 @@
 server:
   port: ${PORT:2223}
+  servlet:
+    context-path: /backoffice
 
 spring:
   application:
@@ -20,7 +22,19 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    distribution:
+      percentiles-histogram.http.server.requests: false
+      percentiles.http.server.requests: 0.5, 0.9, 0.95, 0.99, 0.999
+      sla.http.server.requests: 500ms, 2000ms
 
 eureka:
   instance:
@@ -29,8 +43,8 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     serviceUrl:
-      defaultZone: http://discovery:8761/eureka/
-      #defaultZone: http://localhost:8761/eureka/
+      #defaultZone: http://discovery:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
        
 ribbon:
   eureka:

@@ -5,12 +5,18 @@ metadata:
   name: k8s-service-products
   labels:
     app: k8s-service-products
+    environment: develop
+    team: vmo-du5-java
 spec:
-  replicas: 1
+  replicas: 3
+  minReadySeconds: 5
   progressDeadlineSeconds: 660 # 11 minutes, default is 10 minutes
   revisionHistoryLimit: 12
   strategy:
     type: RollingUpdate # default
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: k8s-service-products
@@ -21,7 +27,28 @@ spec:
     spec:
       containers:
         - name: containerized-products
-          image: linhpv5555/containerized-products:latest
+          #image: linhpv5555/containerized-products:latest # docker hub
+          image: containerized-products:v1.0.0 # local
           #imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 2227
+          readinessProbe:
+            httpGet:
+              path: /product/actuator/health
+              port: 2227
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            failureThreshold: 6
+          livenessProbe:
+            tcpSocket:
+              port: 2227
+            initialDelaySeconds: 40
+            periodSeconds: 40
+            failureThreshold: 8
+          startupProbe:
+            tcpSocket:
+              port: 2227
+            initialDelaySeconds: 35
+            periodSeconds: 25
+            failureThreshold: 10

@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: containerized-accounts
+  config:
+    #import: optional:configserver:http://localhost:8888/
+    import: optional:configserver:http://containerized-config-server:8888/
+  cloud:
+    config:
+      profile: development
+      name: server-account
+# config in docker
+#      discovery:
+#        service-id: spring-config-server
+#        enabled: true

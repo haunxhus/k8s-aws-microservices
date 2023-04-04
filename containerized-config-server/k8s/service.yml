@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: containerized-config-server
+  namespace: k8s-containerized-services
+spec:
+  selector:
+    app: k8s-service-config-server
+  ports:
+    - protocol: TCP
+      port: 8888
+      targetPort: 8888

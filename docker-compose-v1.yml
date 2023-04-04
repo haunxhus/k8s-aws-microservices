@@ -2,8 +2,8 @@
 version: '3'
 
 networks:
-    e-network:
-        driver: bridge
+  e-network:
+    driver: bridge
 volumes:
   docker:
     driver: local
@@ -59,40 +59,40 @@ services:
       - 5044:5044
       - 12204:12204
 
-  # #################################################### zipkin service #######################################################
+      # #################################################### zipkin service #######################################################
 
- # zipkin:
- #   image: openzipkin/zipkin:latest
- #   container_name: zipkin
-    # Environment settings are defined here https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md#environment-variables
- #   environment:
- #   networks:
- #     - e-network
- #   depends_on:
- #     - logstash
- #   ports:
+      # zipkin:
+      #   image: openzipkin/zipkin:latest
+      #   container_name: zipkin
+      # Environment settings are defined here https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md#environment-variables
+      #   environment:
+      #   networks:
+      #     - e-network
+      #   depends_on:
+      #     - logstash
+      #   ports:
       # Port used for the Zipkin UI and HTTP Api
- #     - 9411:9411
- #   restart: on-failure
+  #     - 9411:9411
+  #   restart: on-failure
 
   zipkin:
     container_name: zipkin
-    image: zipkin-server
+    image: zipkin-server:v1.0.0
     build:
-        context: .
-        dockerfile: ./zipkin-server/Dockerfile
+      context: .
+      dockerfile: ./zipkin-server/Dockerfile
     networks:
-       - e-network
+      - e-network
     volumes:
       - ./zipkin-server:/usr/share/zipkin-server
     depends_on:
       - logstash
     entrypoint: ["./wait-for-services.sh", "logstash", "5000", "java", "-jar", "zipkin-server.jar"]
     ports:
-       - 9411:9411
+      - 9411:9411
     restart: on-failure
 
- # #################################################### kibana service #######################################################
+  # #################################################### kibana service #######################################################
 
   kibana:
     #image: docker.elastic.co/kibana/kibana:7.8.0
@@ -109,11 +109,11 @@ services:
     networks:
       - e-network
 
- # #################################################### containerized-discovery service #######################################################
+  # #################################################### containerized-discovery service #######################################################
 
   discovery:
     container_name: containerized-discovery
-    image: containerized-discovery
+    image: containerized-discovery:v1.0.0
     build:
       context: .
       # in ubuntu environment must have ./
@@ -124,18 +124,41 @@ services:
     depends_on:
       - zipkin
       - logstash
-   # command: ["wait-for-services.sh", "zipkin", "9411", "java",  "-jar", "containerized-discovery.jar"]
+    # command: ["wait-for-services.sh", "zipkin", "9411", "java",  "-jar", "containerized-discovery.jar"]
     ports:
       - 8761:8761
     restart: on-failure
     stdin_open: true # connect docker container by shell: docker run -i
     tty: true # connect docker container by shell:        docker run -i
 
- # #################################################### containerized-products service #######################################################
+  # ################################################ containerized-config-server ############################################################
+
+  containerized-config-server:
+    container_name: containerized-config-server
+    image: containerized-config-server:v1.0.0
+    build:
+      context: .
+      dockerfile: ./containerized-config-server/Dockerfile
+    depends_on:
+      - logstash
+      - zipkin
+      - discovery
+    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-config-server.jar"]
+    networks:
+      - e-network
+    volumes:
+      - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
+    ports:
+      - 8888:8888
+    restart: on-failure
+    stdin_open: true
+
+
+    # #################################################### containerized-products service #######################################################
 
   containerized-products:
     container_name: containerized-products
-    image: containerized-products
+    image: containerized-products:v1.0.0
     build:
       context: .
       dockerfile: ./containerized-products/Dockerfile
@@ -143,22 +166,24 @@ services:
       - e-network
     volumes:
       - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
+      - ./wait-for-multi-services.sh:/usr/local/bin/wait-for-multi-services.sh
     depends_on:
       - logstash
       - zipkin
       - discovery
-    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-products.jar"]
+      - containerized-config-server
+    entrypoint: ["./wait-for-multi-services.sh", "discovery", "8761", "containerized-config-server", "8888", "java", "-jar", "containerized-products.jar"]
     ports:
       - 2227:2227
     restart: on-failure
     stdin_open: true
     tty: true
 
- # #################################################### containerized-gateway service #######################################################
+  # #################################################### containerized-gateway service #######################################################
 
   containerized-gateway:
     container_name: containerized-gateway
-    image: containerized-gateway
+    image: containerized-gateway:v1.0.0
     build:
       context: .
       dockerfile: ./containerized-gateway/Dockerfile
@@ -166,24 +191,24 @@ services:
       - e-network
     volumes:
       - "./wait-for-services.sh:/usr/local/bin/wait-for-services.sh:ro" # :ro, ro = read only
-    environment:
-      - ISSUER_HOST=containerized-authorization-server #this env must be matched with the containerized-authorization-server service
+      - "./wait-for-multi-services.sh:/usr/local/bin/wait-for-multi-services.sh"
     depends_on:
       - logstash
       - zipkin
       - discovery
-    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-gateway.jar"]
+      - containerized-config-server
+    entrypoint: ["./wait-for-multi-services.sh", "discovery", "8761", "containerized-config-server", "8888", "java", "-jar", "containerized-gateway.jar"]
     ports:
       - 8762:8762
     restart: on-failure
     stdin_open: true
     tty: true
 
- # #################################################### containerized-accounts service #######################################################
+  # #################################################### containerized-accounts service #######################################################
 
   containerized-accounts:
     container_name: containerized-accounts
-    image: containerized-accounts
+    image: containerized-accounts:v1.0.0
     build:
       context: .
       dockerfile: ./containerized-accounts/Dockerfile
@@ -191,11 +216,13 @@ services:
       - e-network
     volumes:
       - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
+      - ./wait-for-multi-services.sh:/usr/local/bin/wait-for-multi-services.sh
     depends_on:
       - logstash
       - zipkin
       - discovery
-    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-accounts.jar"]
+      - containerized-config-server
+    entrypoint: ["./wait-for-multi-services.sh", "discovery", "8761", "containerized-config-server", "8888", "java", "-jar", "containerized-accounts.jar"]
     ports:
       - 2222:2222
     restart: on-failure
@@ -204,11 +231,11 @@ services:
 
 
 
- # #################################################### containerized-orders service #######################################################
+  # #################################################### containerized-orders service #######################################################
 
   containerized-orders:
     container_name: containerized-orders
-    image: containerized-orders
+    image: containerized-orders:v1.0.0
     build:
       context: .
       dockerfile: ./containerized-orders/Dockerfile
@@ -216,35 +243,38 @@ services:
       - e-network
     volumes:
       - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
+      - ./wait-for-multi-services.sh:/usr/local/bin/wait-for-multi-services.sh
     depends_on:
       - logstash
       - zipkin
       - discovery
-    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-orders.jar"]
+      - containerized-config-server
+    entrypoint: ["./wait-for-multi-services.sh", "discovery", "8761", "containerized-config-server", "8888", "java", "-jar", "containerized-orders.jar"]
     ports:
       - 2226:2226
     restart: on-failure
     stdin_open: true
     tty: true
 
-
- # #################################################### containerized-main service #######################################################
+  # #################################################### containerized-main service #######################################################
 
   containerized-main:
     container_name: containerized-main
-    image: containerized-main
+    image: containerized-main:v1.0.0
     build:
       context: .
       dockerfile: ./containerized-main/Dockerfile
     networks:
       - e-network
     volumes:
-      - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
+      - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh:ro#, ro = read only
+      - ./wait-for-multi-services.sh:/usr/local/bin/wait-for-multi-services.sh
     depends_on:
       - logstash
       - zipkin
       - discovery
-    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-main.jar"]
+      - containerized-config-server
+    entrypoint: ["./wait-for-multi-services.sh", "discovery", "8761", "containerized-config-server", "8888",  "java", "-jar", "containerized-main.jar"]
     ports:
       - 2223:2223
     restart: on-failure
@@ -267,9 +297,9 @@ services:
       - DB_NAME=user_registration
       - DB_PASSWORD=vmodev
       - DB_USERNAME=vmodev
-#    volumes:
-#      - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
-#    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-authorization-server.jar"]
+    #    volumes:
+    #      - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
+    #    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-authorization-server.jar"]
     entrypoint: ["java", "-jar", "containerized-authorization-server.jar"]
     ports:
       - "9000:9000"
@@ -283,14 +313,14 @@ services:
     container_name: mysql8
     image: mysql:8.0
     command: --default-authentication-plugin=mysql_native_password
-#    command: mysqld --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    #    command: mysqld --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     networks:
       - e-network
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: user_registration
-#      MYSQL_USER: vmodev
-#      MYSQL_PASSWORD: vmodev
+      #      MYSQL_USER: vmodev
+      #      MYSQL_PASSWORD: vmodev
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     ports:
       - "3306:3306"

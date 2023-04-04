@@ -13,39 +13,47 @@ spring:
   application:
     name: containerized-gateway
   logstash:
-#    server: logstash
+    #    server: logstash
     server: localhost
     port: 5000
   zipkin:
     base-url: http://zipkin:9411
-#    base-url: http://localhost:9411
+  #    base-url: http://localhost:9411
   cloud:
     gateway:
       routes:
         - id: containerized-main
-#          uri: lb://containerized-main
+          #          uri: lb://containerized-main
           uri: http://containerized-main:2223
-#          uri: http://localhost:2223
+          #          uri: http://localhost:2223
           predicates:
-          - Path=/backoffice/**
+            - Path=/gateway/backoffice/**
         - id: containerized-accounts
-#          uri: lb://containerized-accounts
+          #          uri: lb://containerized-accounts
           uri: http://containerized-accounts:2222
-#          uri: http://localhost:2222
+          #          uri: http://localhost:2222
           predicates:
-          - Path=/account/**
+            - Path=/gateway/account/**
         - id: containerized-orders
-#          uri: lb://containerized-orders
+          #          uri: lb://containerized-orders
           uri: http://containerized-orders:2226
-#          uri: http://localhost:2226
+          #          uri: http://localhost:2226
           predicates:
-          - Path=/order/**
+            - Path=/gateway/order/**
         - id: containerized-products
-#          uri: lb://containerized-products
+          #          uri: lb://containerized-products
           uri: http://containerized-products:2227
-#          uri: http://localhost:2227
+          #          uri: http://localhost:2227
           predicates:
-          - Path=/product/**
+            - Path=/gateway/product/**
+        - id: containerized-authorization-server
+          #           uri: lb://containerized-authorization-server
+          uri: http://containerized-authorization-server:9000
+          #           uri: http://localhost:9000
+          predicates:
+            - Path=/auth/**
+      default-filters:
+        - RewritePath=/gateway/(?<remaining>.*), /$\{remaining}
 
 #        - id: containerized-authorization-server
 ##          uri: lb://containerized-authorization-server
@@ -59,7 +67,9 @@ management:
     web:
       exposure:
         include: "*"
-
+  endpoint:
+    health:
+      show-details: always
   metrics:
     distribution:
       percentiles-histogram:

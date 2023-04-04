@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/backoffice/api/v1/backoffice")
+@RequestMapping("/api/v1/backoffice")
 @RequiredArgsConstructor
 public class BackofficeController {
 	

@@ -4,3 +4,5 @@ metadata:
   name: k8s-containerized-services
   labels:
     name: k8s-containerized-services
+    environment: develop
+    team: vmo-du5-java

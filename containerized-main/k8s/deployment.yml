@@ -5,8 +5,18 @@ metadata:
   name: k8s-service-main
   labels:
     app: k8s-service-main
+    environment: develop
+    team: vmo-du5-java
 spec:
-  replicas: 2
+  replicas: 4
+  minReadySeconds: 5
+  progressDeadlineSeconds: 660 # 11 minutes, default is 10 minutes
+  revisionHistoryLimit: 12
+  strategy:
+    type: RollingUpdate # default
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: k8s-service-main
@@ -15,9 +25,47 @@ spec:
       labels:
         app: k8s-service-main
     spec:
+      #volumes:
+      #- name: atlas-project
+      #  secret:
+      #    secretName: atlas-project
+      #initContainers:
+      #- name: init-k8s-service-discovery
+      #  image: containerized-discovery:v1.0.0 
+      #  imagePullPolicy: IfNotPresent
+      #  args: ['sh', '-c', 'until getent hosts k8s-service-discovery; do echo waiting for k8s-service-discovery; sleep 1; done;']   
+        #  args: ['sh', '-c', 'while [[ $(microk8s kubectl get pods -l app=k8s-service-discovery -n k8s-containerized-services -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "waiting for pod" && sleep 1; done']   
+      #- name: init-k8s-service-config-server
+      #  image: containerized-config-server:v1.0.0
+      #  imagePullPolicy: IfNotPresent
+      #  args: ['sh', '-c', 'until getent hosts k8s-service-config-server; do echo waiting for k8s-service-config-server; sleep 1; done;']
+        #volumeMounts:
+        #- name: atlas-project
+        #  mountPath: "/etc/atlas" 
       containers:
         - name: containerized-main
-          image: linhpv5555/containerized-main:latest
+          #image: linhpv5555/containerized-main:latest # docker hub
+          image: containerized-main:v1.0.0 # locally
           #imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 2223
+          readinessProbe:
+            httpGet:
+              path: /backoffice/actuator/health
+              port: 2223
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            failureThreshold: 6
+          livenessProbe:
+            tcpSocket:
+              port: 2223
+            initialDelaySeconds: 40
+            periodSeconds: 40
+            failureThreshold: 8
+          startupProbe:
+            tcpSocket:
+              port: 2223
+            initialDelaySeconds: 35
+            periodSeconds: 25
+            failureThreshold: 10

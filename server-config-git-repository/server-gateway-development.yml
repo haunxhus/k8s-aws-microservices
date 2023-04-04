@@ -1,0 +1,99 @@
+server:
+  port: ${PORT:8762}
+
+spring:
+  application:
+    name: containerized-gateway
+  logstash:
+    server: logstash
+    #server: localhost
+    port: 5000
+  zipkin:
+    base-url: http://zipkin:9411
+    #base-url: http://localhost:9411
+  #cloud:
+  #  gateway:
+  #    discovery:
+  #      locator:
+  #        enabled: true
+  #        lower-case-service-id: true
+  #    routes:
+  #      - id: containerized-main
+  #        uri: lb://containerized-main
+  #        predicates:
+  #          - Path=/backoffice/**
+  #      - id: containerized-accounts
+  #        uri: lb://containerized-accounts
+  #        predicates:
+  #          - Path=/account/**
+  #      - id: containerized-orders
+  #        uri: lb://containerized-orders
+  #        predicates:
+  #          - Path=/order/**
+  #      - id: containerized-products
+  #        uri: lb://containerized-products
+  #        predicates:
+  #          - Path=/product/**
+  # https://stackoverflow.com/questions/70665413/how-to-add-a-api-v1-prefix-to-uri-in-spring-cloud-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: containerized-main
+          uri: lb://containerized-main
+          predicates:
+            - Path=/gateway/backoffice/**
+        - id: containerized-accounts
+          uri: lb://containerized-accounts
+          predicates:
+            - Path=/gateway/account/**
+        - id: containerized-orders
+          uri: lb://containerized-orders
+          predicates:
+            - Path=/gateway/order/**
+        - id: containerized-products
+          uri: lb://containerized-products
+          predicates:
+            - Path=/gateway/product/**
+      default-filters:
+        - RewritePath=/gateway/(?<remaining>.*), /$\{remaining}
+# https://stackoverflow.com/questions/54117061/springcloudgateway-log-incoming-request-url-and-corresponding-route-uri
+logging:
+  level:
+    org.springframework.cloud.gateway.handler.RoutePredicateHandlerMapping: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+  metrics:
+    distribution:
+      percentiles-histogram.http.server.requests: false
+      percentiles.http.server.requests: 0.5, 0.9, 0.95, 0.99, 0.999
+      sla.http.server.requests: 500ms, 2000ms
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://discovery:8761/eureka/
+      #defaultZone: http://localhost:8761/eureka/
+
+# Increase the Hystrix timeout to 60s (globally)
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
