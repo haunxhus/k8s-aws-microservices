@@ -18,8 +18,8 @@ FROM openjdk:11
 # check sql must started then running my application
 RUN apt-get -q update && apt-get -qy install netcat && apt-get clean
 
-ADD wait-for-services.sh /wait-for-services.sh
-RUN chmod 755 /wait-for-services.sh
+ADD wait-for-multi-services.sh /wait-for-multi-services.sh
+RUN chmod 755 /wait-for-multi-services.sh
 
 #step 1, will run combine from maven and oracle
 COPY --from=maven_construct /tmp/target/*.jar containerized-products.jar
@@ -28,4 +28,3 @@ EXPOSE 2227
 
 #step 4, default command, final step: build application
 ENTRYPOINT ["java",  "-jar", "containerized-products.jar"]
-
