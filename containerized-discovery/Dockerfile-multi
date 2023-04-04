@@ -29,6 +29,7 @@ COPY --from=maven_construct /tmp/target/*.jar containerized-discovery.jar
 
 #step 4, default command, final step: build application
 ENTRYPOINT ["/wait-for-services.sh", "zipkin", "9411", "java",  "-jar", "containerized-discovery.jar"]
+
 #ENTRYPOINT ["java",  "-jar", "containerized-discovery.jar"]
 
 #CMD /wait-for-services.sh zipkin 9411

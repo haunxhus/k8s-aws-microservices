@@ -131,7 +131,6 @@ services:
     stdin_open: true # connect docker container by shell: docker run -i
     tty: true # connect docker container by shell:        docker run -i
 
-
   # ################################################ containerized-config-server ############################################################
 
   containerized-config-server:
@@ -256,7 +255,6 @@ services:
     restart: on-failure
     stdin_open: true
     tty: true
-
 
   # #################################################### containerized-main service #######################################################
 

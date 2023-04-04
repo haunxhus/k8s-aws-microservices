@@ -55,6 +55,13 @@ spring:
       default-filters:
         - RewritePath=/gateway/(?<remaining>.*), /$\{remaining}
 
+#        - id: containerized-authorization-server
+##          uri: lb://containerized-authorization-server
+#          uri: http://containerized-authorization-server:9000
+##          uri: http://localhost:9000
+#          predicates:
+#          - Path=/auth/**
+
 management:
   endpoints:
     web:
