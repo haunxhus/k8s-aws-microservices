@@ -4,7 +4,7 @@ services:
     image: containerized-main
     container_name: containerized-main
     build:
-      context: ../ 
+      context: ../
       dockerfile: ./containerized-main/Dockerfile
     ports:
       - "2222:2222"

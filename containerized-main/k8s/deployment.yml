@@ -34,14 +34,14 @@ spec:
       #  image: containerized-discovery:v1.0.0 
       #  imagePullPolicy: IfNotPresent
       #  args: ['sh', '-c', 'until getent hosts k8s-service-discovery; do echo waiting for k8s-service-discovery; sleep 1; done;']   
-        #  args: ['sh', '-c', 'while [[ $(microk8s kubectl get pods -l app=k8s-service-discovery -n k8s-containerized-services -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "waiting for pod" && sleep 1; done']   
+      #  args: ['sh', '-c', 'while [[ $(microk8s kubectl get pods -l app=k8s-service-discovery -n k8s-containerized-services -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "waiting for pod" && sleep 1; done']
       #- name: init-k8s-service-config-server
       #  image: containerized-config-server:v1.0.0
       #  imagePullPolicy: IfNotPresent
       #  args: ['sh', '-c', 'until getent hosts k8s-service-config-server; do echo waiting for k8s-service-config-server; sleep 1; done;']
-        #volumeMounts:
-        #- name: atlas-project
-        #  mountPath: "/etc/atlas" 
+      #volumeMounts:
+      #- name: atlas-project
+      #  mountPath: "/etc/atlas"
       containers:
         - name: containerized-main
           #image: linhpv5555/containerized-main:latest # docker hub

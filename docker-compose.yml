@@ -19,8 +19,8 @@ services:
 #    networks:
 #      - e-network
     ports:
-      - 9200:9200
-      - 9300:9300
+      - "9200:9200"
+      - "9300:9300"
     ulimits:
       memlock:
         soft: -1
@@ -368,7 +368,7 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
-      - 2181:2181
+      - "2181:2181"
     networks:
       - e-network
 
@@ -377,7 +377,7 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - 29092:29092
+      - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -391,7 +391,7 @@ services:
     container_name: redis
     image: redis:latest
     ports:
-      - 6379:6379
+      - "6379:6379"
     networks:
       - e-network
 
@@ -401,6 +401,6 @@ services:
     environment:
       - REDIS_HOSTS=local:redis:6379
     ports:
-      - 8081:8081
+      - "8081:8081"
     networks:
       - e-network
