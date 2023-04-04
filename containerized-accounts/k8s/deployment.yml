@@ -39,18 +39,18 @@ spec:
             #Configure liveness and readiness probes
             #To configure health checks for your pods, you can use Kubernetes liveness and readiness probes.
             # https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
-#          livenessProbe:
-#            httpGet:
-#              path: /health
-#              port: 8080
-#              scheme: HTTP
-#            initialDelaySeconds: 180
-#          readinessProbe:
-#            httpGet:
-#              path: /health
-#              port: 2222
-#              scheme: HTTP
-#            initialDelaySeconds: 10
+          #          livenessProbe:
+          #            httpGet:
+          #              path: /health
+          #              port: 8080
+          #              scheme: HTTP
+          #            initialDelaySeconds: 180
+          #          readinessProbe:
+          #            httpGet:
+          #              path: /health
+          #              port: 2222
+          #              scheme: HTTP
+          #            initialDelaySeconds: 10
 
           ## Readiness probes: The kubelet uses readiness probes to know when a container is ready to start accepting traffic. 
           ## Pod is considered ready when all of its containers are ready.
@@ -75,7 +75,7 @@ spec:
             tcpSocket:
               port: 2222
             initialDelaySeconds: 35
-            periodSeconds: 20 
+            periodSeconds: 20
             failureThreshold: 8 # After a probe fails failureThreshold times in a row, Kubernetes considers that the overall check has failed
           #args:
           #  - "-apptype=accounts"

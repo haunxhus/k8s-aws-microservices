@@ -13,10 +13,7 @@ kubectl get pods | grep k8s-service | awk '{print $1}' | xargs kubectl delete po
 kubectl create -f k8s/namespace.yml
 kubectl config view
 kubectl config set-context dev --namespace=k8s-containerized-services \
-  --cluster= docker-desktop\
-  --user=docker-desktop
-
-
+  --cluster= docker-desktop --user=docker-desktop
 
 kubectl create -f containerized-logstash/k8s/configmap.yml
 kubectl create -f containerized-logstash/k8s/deployment.yml

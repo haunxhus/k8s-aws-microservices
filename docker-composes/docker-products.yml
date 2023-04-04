@@ -9,5 +9,5 @@ services:
     ports:
       - "2227:2227"
     restart: on-failure
-    stdin_open: true 
+    stdin_open: true
     tty: true

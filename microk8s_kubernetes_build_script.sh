@@ -12,7 +12,6 @@ sudo docker compose -f docker-compose-v1.yml build
 #  --docker-password=DOCKER_PASSWORD \
 #  --docker-email=DOCKER_EMAIL
 
-
 #sudo docker build -t containerized-gateway containerized-gateway/ .
 #sudo docker build -t containerized-accounts containerized-accounts/ .
 #sudo docker build -t containerized-products containerized-products/ .
@@ -32,22 +31,22 @@ sudo docker compose -f docker-compose-v1.yml build
 ######################### push to docker hub, first you need to login first #####################################
 #sudo docker tag containerized-orders:v1.0.0 linhpv5555/containerized-orders:v1.0.0
 #sudo docker push linhpv5555/containerized-orders:v1.0.0
- 
+
 #sudo docker tag containerized-main:v1.0.0 linhpv5555/containerized-main:v1.0.0
 #sudo docker push linhpv5555/containerized-main:v1.0.0
- 
+
 #sudo docker tag containerized-accounts:v1.0.0 linhpv5555/containerized-accounts:v1.0.0
 #sudo docker push linhpv5555/containerized-accounts:v1.0.0
- 
+
 #sudo docker tag containerized-discovery:v1.0.0 linhpv5555/containerized-discovery:v1.0.0
 #sudo docker push linhpv5555/containerized-discovery:v1.0.0
-  
+
 #sudo docker tag containerized-products:v1.0.0 linhpv5555/containerized-products:v1.0.0
 #sudo docker push linhpv5555/containerized-products:v1.0.0
- 
+
 #sudo docker tag zipkin-server:v1.0.0 linhpv5555/zipkin-server:v1.0.0
 #sudo docker push linhpv5555/zipkin-server:v1.0.0
-  
+
 #sudo docker tag containerized-gateway:v1.0.0 linhpv5555/containerized-gateway:v1.0.0
 #sudo docker push linhpv5555/containerized-gateway:v1.0.0
 
@@ -61,54 +60,38 @@ if [ "$1" ]; then
   CONTAINTER_NAMESPACES=$1
 fi
 
-
-
 #################### 2, Commands with using localy docker ##############################################################
 if ! [ -d "$HOME/microservice-k8s-tar" ]; then
-	mkdir $HOME/microservice-k8s-tar 
+  mkdir $HOME/microservice-k8s-tar
 fi
 
 # import docker image to local registry of $K8S_TOOL_NAME
-sudo docker save containerized-orders > $HOME/microservice-k8s-tar/containerized-orders.tar
+sudo docker save containerized-orders >$HOME/microservice-k8s-tar/containerized-orders.tar
 sudo $K8S_TOOL_NAME ctr image import $HOME/microservice-k8s-tar/containerized-orders.tar
 
-sudo docker save containerized-main > $HOME/microservice-k8s-tar/containerized-main.tar
+sudo docker save containerized-main >$HOME/microservice-k8s-tar/containerized-main.tar
 sudo $K8S_TOOL_NAME ctr image import $HOME/microservice-k8s-tar/containerized-main.tar
 
-sudo docker save containerized-accounts > $HOME/microservice-k8s-tar/containerized-accounts.tar
+sudo docker save containerized-accounts >$HOME/microservice-k8s-tar/containerized-accounts.tar
 sudo $K8S_TOOL_NAME ctr image import $HOME/microservice-k8s-tar/containerized-accounts.tar
 
-sudo docker save containerized-discovery > $HOME/microservice-k8s-tar/containerized-discovery.tar
+sudo docker save containerized-discovery >$HOME/microservice-k8s-tar/containerized-discovery.tar
 sudo $K8S_TOOL_NAME ctr image import $HOME/microservice-k8s-tar/containerized-discovery.tar
 
-# ######### delete services, deployments, pods, ingress if exits in 'k8s-containerized-services' and 'ingress-nginx' namespaces
-sudo microk8s kubectl delete --all services --namespace=k8s-containerized-services
-sudo microk8s kubectl delete --all deployments --namespace=k8s-containerized-services
-sudo microk8s kubectl delete --all pods --namespace=k8s-containerized-services
-sudo microk8s kubectl delete --all ingress-nginx --namespace=k8s-containerized-services
-sudo microk8s kubectl delete --all ingress --namespace=k8s-containerized-services
-sudo microk8s kubectl delete --all configmap --namespace=k8s-containerized-services
-sudo microk8s kubectl delete namespace k8s-containerized-services
+sudo docker save containerized-products >$HOME/microservice-k8s-tar/containerized-products.tar
+sudo $K8S_TOOL_NAME ctr image import $HOME/microservice-k8s-tar/containerized-products.tar
 
-#sudo microk8s kubectl delete --all services --namespace=ingress-nginx
-#sudo microk8s kubectl delete --all deployments --namespace=ingress-nginx
-#sudo microk8s kubectl delete --all pods --namespace=ingress-nginx
-#sudo microk8s kubectl delete --all pods --namespace=ingress
+sudo docker save zipkin-server >$HOME/microservice-k8s-tar/zipkin-server.tar
+sudo $K8S_TOOL_NAME ctr image import $HOME/microservice-k8s-tar/zipkin-server.tar
 
-#sudo microk8s kubectl delete --all ingress --namespace=ingress-nginx
-#sudo microk8s kubectl delete --all ingress --namespace=ingress
-#sudo microk8s kubectl delete namespace ingress-nginx
-#sudo microk8s kubectl delete namespace ingress
-
-sudo docker save containerized-gateway > $HOME/microservice-k8s-tar/containerized-gateway.tar
+sudo docker save containerized-gateway >$HOME/microservice-k8s-tar/containerized-gateway.tar
 sudo $K8S_TOOL_NAME ctr image import $HOME/microservice-k8s-tar/containerized-gateway.tar
 
-sudo docker save containerized-config-server > $HOME/microservice-k8s-tar/containerized-config-server.tar
+sudo docker save containerized-config-server >$HOME/microservice-k8s-tar/containerized-config-server.tar
 sudo $K8S_TOOL_NAME ctr image import $HOME/microservice-k8s-tar/containerized-config-server.tar
 
 # show list images in $K8S_TOOL_NAME after import
 sudo $K8S_TOOL_NAME ctr images ls
-
 
 # sudo $K8S_TOOL_NAME kubectl get pods | grep k8s-service | awk '{print $1}' | xargs sudo $K8S_TOOL_NAME kubectl delete pod
 
@@ -131,7 +114,6 @@ sudo $K8S_TOOL_NAME kubectl delete namespace $CONTAINTER_NAMESPACES
 #sudo $K8S_TOOL_NAME kubectl delete namespace ingress-nginx
 #sudo $K8S_TOOL_NAME kubectl delete namespace ingress
 
-
 #$K8S_TOOL_NAME kubectl create namespace $CONTAINTER_NAMESPACES
 sudo $K8S_TOOL_NAME kubectl create -f k8s/namespace.yml
 sudo $K8S_TOOL_NAME kubectl config view
@@ -153,7 +135,7 @@ sudo $K8S_TOOL_NAME kubectl create -f containerized-logstash/k8s/deployment.yml
 sudo $K8S_TOOL_NAME kubectl create -f containerized-logstash/k8s/service.yml
 
 # ################################# zipkin-server ##################################################
-sudo $K8S_TOOL_NAME kubectl wait pods -n $CONTAINTER_NAMESPACES -l app=k8s-service-logstash  --for=jsonpath='{.status.phase}'=Running --timeout=180s
+sudo $K8S_TOOL_NAME kubectl wait pods -n $CONTAINTER_NAMESPACES -l app=k8s-service-logstash --for=jsonpath='{.status.phase}'=Running --timeout=180s
 sleep 30
 sudo $K8S_TOOL_NAME kubectl create -f zipkin-server/k8s/deployment.yml
 sudo $K8S_TOOL_NAME kubectl create -f zipkin-server/k8s/service.yml
@@ -224,20 +206,20 @@ sleep 30
 
 LOCALHOST=127.0.0.1
 #https://unix.stackexchange.com/questions/149419/how-to-check-whether-a-particular-port-is-open-on-a-machine-from-a-shell-script
-if nc -vz $LOCALHOST 8762 >/dev/null ; then
-    echo "this port 8762 is occupied."
+if nc -vz $LOCALHOST 8762 >/dev/null; then
+  echo "this port 8762 is occupied."
 else
-    echo "this port 8762 not running"
-	sudo $K8S_TOOL_NAME kubectl port-forward -n $CONTAINTER_NAMESPACES service/containerized-gateway 8762:8762 --address 0.0.0.0 &
+  echo "this port 8762 not running"
+  sudo $K8S_TOOL_NAME kubectl port-forward -n $CONTAINTER_NAMESPACES service/containerized-gateway 8762:8762 --address 0.0.0.0 &
 fi
 
 #curl localhost:8762/backoffice/api/v1/backoffice/orders
 
-if nc -vz $LOCALHOST 10443 >/dev/null ; then
-	 echo "this port 10443 is occupied."
-else 
-     echo "this port 10443 not running"
-	 sudo $K8S_TOOL_NAME kubectl port-forward -n kube-system service/kubernetes-dashboard 10443:443 --address 0.0.0.0 &
+if nc -vz $LOCALHOST 10443 >/dev/null; then
+  echo "this port 10443 is occupied."
+else
+  echo "this port 10443 not running"
+  sudo $K8S_TOOL_NAME kubectl port-forward -n kube-system service/kubernetes-dashboard 10443:443 --address 0.0.0.0 &
 fi
 
 # ################################# ingress k8s ##################################################
