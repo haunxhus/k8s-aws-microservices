@@ -1,0 +1,162 @@
+
+*) some ref:
+ https://medium.com/javarevisited/deploying-a-spring-boot-application-on-kubernetes-using-jenkins-672961425a42
+ 
+ https://medium.com/javarevisited/deploying-a-springboot-application-in-docker-using-jenkins-cicd-2489bfe752c3
+ 
+ https://stackoverflow.com/questions/25755061/how-do-i-create-tag-with-certain-commits-and-push-it-to-origin
+  
+ https://www.blazemeter.com/blog/how-to-integrate-your-github-repository-to-your-jenkins-project
+ 
+ https://stackoverflow.com/questions/32108380/jenkins-how-to-build-a-specific-branch
+
+ https://www.jenkins.io/doc/book/pipeline/
+
+ https://stackoverflow.com/questions/55260365/execute-commands-on-remote-host-in-a-jenkinsfile
+
+ https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/Jenkins-with-GitHub-Integration-Guide
+
+
+*) ssh to remote server with debuglog : ssh -v(-vv|-vvv) user@remoteIp
+https://www.tecmint.com/enable-debugging-mode-in-ssh/
+
+
+*) https://www.edureka.co/community/71311/how-to-configure-maven-in-jenkins
+
+
+*) git init /var/lib/jenkins/workspace/k8s-example-vmo
+ 
+ *) config github repo url with personal access token:
+ - https://stackoverflow.com/questions/61105368/how-to-use-github-personal-access-token-in-jenkins
+ - https://<access token>@github.com/<user-name>/<repo-name>.git
+ 
+ 
+ *) error: mvn not found https://stackoverflow.com/questions/61128268/jenkins-pipeline-mvn-command-not-found
+ tools { 
+    maven 'name in global config maven. ex: maven.3.6.3' 
+    jdk 'name in global config jdk. ex: java 13' 
+ }
+ 
+ *) config webhook to jenkins: https://dzone.com/articles/adding-a-github-webhook-in-your-jenkins-pipeline
+ 
+ 
+ *) mvn not found when choose free style project jenkins: https://stackoverflow.com/questions/45777031/maven-not-found-in-jenkins
+	 #!/bin/bash
+	 
+	 export MAVEN_HOME=/opt/apache-maven-3.6.3
+	 export PATH=$PATH:$MAVEN_HOME/bin
+	 mvn --version
+	 mvn -Dmaven.test.failure.ignore=true clean package
+ 
+ 
+ *) build docker image from docker file: https://codefresh.io/docs/docs/example-catalog/ci-examples/build-an-image-specify-dockerfile-location/
+	sudo docker build . -t containerized-discovery-$GIT_COMMIT:v1.0.0 -f containerized-discovery/Dockerfile
+	if [ ! -d $HOME/k8s-example-tar-folder ]; then
+	  echo "$HOME/k8s-example-tar-folder does not exist."
+	  mkdir $HOME/k8s-example-tar-folder
+	fi
+	sudo docker save containerized-discovery-$GIT_COMMIT:v1.0.0 > $HOME/k8s-example-tar-folder/containerized-discovery-$GIT_COMMIT:v1.0.0.tar
+
+
+  => check /var/lib/jenkins/k8s-example-tar-folder
+  
+  
+ *) move file to remote server:
+ #sudo usermod -a -G groupname username
+ sudo usermod -a -G vienlv jenkins
+ # check groups have user's : groups username
+ #https://askubuntu.com/questions/488485/allowing-a-group-read-write-access-to-a-directory
+ chmod g+rw $HOME/.ssh/authorized_keys
+ chmod g+rw $HOME/.ssh/config
+ chmod g+rw $HOME/.ssh/known_hosts
+ chmod g+rwx $HOME/.ssh/
+ 
+ sudo scp /var/lib/jenkins/k8s-example-tar-folder/containerized-discovery-5eead8f264e217c7183cde558228e91e3b0684eb:v1.0.0.tar vienlv@34.126.75.224:/home/vienlv/microservice-k8s-tar/
+ sudo scp $HOME/k8s-example-tar-folder/containerized-discovery-$GIT_COMMIT:v1.0.0.tar vienlv@34.126.75.224:/home/vienlv/microservice-k8s-tar/
+ 
+ 
+ *) check any sub-folder is has newest commit using shell script: chatgpt
+ 
+current_hash=$(git rev-parse HEAD)
+current_hash=${current_hash:0:7}
+echo "current hash $current_hash"
+# Define a function to check if a file has the newest commit
+function has_newest_commit {
+  newest_hash=$(git log --pretty=format:'%h' -n 1 -- "$1")
+  #echo "newest hash $newest_hash"
+  if [[ "$current_hash" == "$newest_hash" ]]; then
+    return $(true)
+  fi
+  return $(false)
+}
+
+# Define a function to check if a folder has the newest commit
+function check_folder {
+  # Check if any file or child folder has the newest commit
+  for item in *; do
+    #echo "check $item"
+    if has_newest_commit "$item"; then
+      return $(true)
+    fi
+    if [[ -d "$item" ]]; then
+	  #echo "go to child folder $item"
+	  cd $item
+      if check_folder "$item"; then
+        return $(true)
+      fi
+	  cd ..
+    fi
+  done
+  return $(false)
+}
+
+# Loop through each subdirectory
+for folder in */; do
+  # Move into the subdirectory
+  echo "move to $folder"
+  cd "$folder"
+  
+  # Check if the subdirectory has the newest commit
+  if check_folder "."; then
+    echo "$folder is up to date"
+  else
+    echo "$folder is not up to date"
+  fi
+
+  # Move back to the parent directory
+  cd ..
+done
+
+*) mvn clean install in another folder: https://stackoverflow.com/questions/6478536/how-to-run-maven-from-another-directory-without-cd-to-project-dir
+
+*) config ssh in jenkins: 
+	https://jaehoo.wordpress.com/2019/06/11/jenkins-execute-script-over-ssh/
+	
+*) config ssh with StrictHostKeyChecking=no: https://stackoverflow.com/questions/38545383/deploying-from-jenkins-server-to-another-server-host-key-verification-failed
+                                             https://linuxhint.com/ssh-stricthostkeychecking/
+											 
+											 
+											 
+*) https://hevodata.com/learn/jenkins-github-webhook/
+   https://www.blazemeter.com/blog/how-to-integrate-your-github-repository-to-your-jenkins-project
+   
+   
+*) build step with feature:
+
+	#!/bin/bash
+	
+	export MAVEN_HOME=/opt/apache-maven-3.6.3
+	export PATH=$PATH:$MAVEN_HOME/bin
+	mvn --version
+	
+	echo "Current branch ${GIT_BRANCH}";
+	#/bin/bash -xe ./jenkins/jenkins_freestyle_project_build_step.sh
+	if [[ "${GIT_BRANCH}" == *"feature"* ]]; then 
+		mvn -Dmaven.test.failure.ignore=false clean package
+	else 
+		/bin/bash -xe ./jenkins/jenkins_freestyle_project_build_step.sh vienlv 34.124.237.137 /home/vienlv /home/jenkins/id_rsa
+	fi
+	
+*) config send email from jenkins: https://www.edureka.co/blog/email-notification-in-jenkins/
+
+*) Check pull request from github to jenkins: https://devopscube.com/jenkins-build-trigger-github-pull-request/

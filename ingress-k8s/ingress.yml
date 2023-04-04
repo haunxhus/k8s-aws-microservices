@@ -7,7 +7,7 @@ metadata:
     ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/proxy-body-size: 800m
     # nginx.ingress.kubernetes.io/upstream-hash-by: "$request_uri" # load-balancing method
-    nginx.ingress.kubernetes.io/enable-cors: "true"
+    # nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
     #kubernetes.io/ingress.class: "nginx" # is the same with  config ingressClassName: nginx
     #kubernetes.io/ingress.class: ingress-nginx
@@ -25,10 +25,20 @@ metadata:
 #
 #Rolling updates: To perform a rolling update of your deployment, you can use the rollingUpdate strategy in your deployment configuration. This ensures that new pods are gradually introduced into the routing pool, while old pods are gradually removed.
     # Enable session affinity or sticky sessions
-    nginx.ingress.kubernetes.io/affinity: "cookie"
+    #nginx.ingress.kubernetes.io/affinity: "cookie" => this config turn off loadbalancing in ingress
     nginx.ingress.kubernetes.io/connection-draining: "true"
-    nginx.ingress.kubernetes.io/session-cookie-name: "route"
+    #nginx.ingress.kubernetes.io/session-cookie-name: "route" => this config turn off loadbalancing in ingress
+    nginx.ingress.kubernetes.io/load-balance: "round_robin" #ewma
     nginx.ingress.kubernetes.io/connection-draining-timeout: "40s"
+    
+#Canary deployment is a technique for deploying new versions of an application gradually and with reduced risk
+#To implement canary deployment in Kubernetes, you can use tools like Istio or Linkerd, which provide traffic routing and load balancing capabilities that can be used to direct traffic to different versions of your application. 
+#You can also use Ingress controllers with canary deployment annotations to direct traffic to different versions of your application based on specific criteria  
+    #nginx.ingress.kubernetes.io/canary: "true"
+    #nginx.ingress.kubernetes.io/canary-by-header: "user-agent"
+    #nginx.ingress.kubernetes.io/canary-by-header-value: "canary"
+    #nginx.ingress.kubernetes.io/canary-weight: "50"
+    
 spec:
   ingressClassName: nginx
   defaultBackend:

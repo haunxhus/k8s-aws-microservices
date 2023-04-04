@@ -11,3 +11,4 @@ spec:
     - protocol: TCP
       port: 8761
       targetPort: 8761
+      nodePort: 30814

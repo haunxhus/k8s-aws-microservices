@@ -307,7 +307,7 @@
 			- Script:	
 					
 				#!/bin/bash
-
+				
 				export MAVEN_HOME=/opt/apache-maven-3.6.3
 				export PATH=$PATH:$MAVEN_HOME/bin
 				mvn --version
@@ -332,6 +332,7 @@
 
 				echo "GIT sha1 ${sha1}";
 
+				# check is pull request
 				if [[ -n "${ghprbSourceBranch}" ]]; then
 					if [[ "${ghprbTargetBranch}" == *"develop"* || "${ghprbTargetBranch}" == *"master"* ]]; then
 						git fetch;
@@ -339,14 +340,24 @@
 						/bin/bash -xe ./jenkins/jenkins_pr_freestyle_project_test_purpose_phase_build_step.sh
 					fi
 				else 
+				# check when have commit to develop or master, build it
 					if [[ "${GIT_BRANCH}" == *"develop"* || "${GIT_BRANCH}" == *"master"* ]]; then
-						 git fetch;
-						 git pull origin ${GIT_BRANCH};
-						/bin/bash -xe ./jenkins/jenkins_freestyle_project_deploy_phase_build_step.sh vienlv 34.124.237.137 /home/vienlv /home/jenkins/id_rsa
+						git fetch;
+						IFS='/' read -ra BRANCH <<< "${GIT_BRANCH}"
+						git pull origin "${BRANCH[1]}";
+						/bin/bash -xe ./jenkins/jenkins_freestyle_project_deploy_phase_build_step.sh vienlv 34.124.147.88 /home/vienlv /home/jenkins/id_rsa
 					fi
 				fi
 		
-			- Note: You can add more build step as you want.
+			- Note: 
+				+ You can add more build step as you want.
+				+ ./jenkins/jenkins_pr_freestyle_project_test_purpose_phase_build_step.sh : this script using for test purpose when users create pull request
+				+ ./jenkins/jenkins_freestyle_project_deploy_phase_build_step.sh <remote_user> <remote_ip> <remote_working_space> <client_private_ssh_key>
+					. remote_user: remote server user using in this ssh section
+					. remote_ip: remote server ip using in this ssh section
+					. remote_working_space: working space for ssh section
+					. client_private_ssh_key: private key from current server (client server)
+
 			
 		6. In `Post-build Actions`: chose any event you want like send `E-mail Notification` to user.,...
 		

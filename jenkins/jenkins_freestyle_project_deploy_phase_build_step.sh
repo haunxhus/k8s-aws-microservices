@@ -385,8 +385,8 @@ echo "####################################################### step 3 ###########
 echo "$CURRENT_HASH" > $HOME/git-hist/$CURRENT_BRANCH_NAME_FORMAT_AS_FILE_NAME
 unset CURRENT_BRANCH_NAME_FORMAT_AS_FILE_NAME;
 
-/bin/bash -xe ./ssh_run_k8s_remote_server_script.sh $REMOTE_USER $REMOTE_IP $REMOTE_HOME_PATH $JENKIN_SSH_KEY_PATH $CURRENT_HASH $VERSION
-
+/bin/bash -xe $PWD/jenkins/ssh_run_k8s_remote_server_script.sh $REMOTE_USER $REMOTE_IP $REMOTE_HOME_PATH $JENKIN_SSH_KEY_PATH $CURRENT_HASH $VERSION
+    
 unset CURRENT_HASH;
 unset VERSION;
 unset CURRENT_BRANCH_NAME;
