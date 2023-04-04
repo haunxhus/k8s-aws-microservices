@@ -5,8 +5,18 @@ metadata:
   namespace: k8s-containerized-services
   labels:
     app: k8s-service-gateway
+    environment: develop
+    team: vmo-du5-java
 spec:
-  replicas: 1
+  replicas: 2
+  minReadySeconds: 5
+  progressDeadlineSeconds: 660 # 11 minutes, default is 10 minutes
+  revisionHistoryLimit: 12
+  strategy:
+    type: RollingUpdate # default
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: k8s-service-gateway
@@ -17,7 +27,27 @@ spec:
     spec:
       containers:
         - name: containerized-gateway
-          image: linhpv5555/containerized-gateway:latest
-          #imagePullPolicy: Never
+          #image: linhpv5555/containerized-gateway:latest # docker hub
+          image: containerized-gateway:v1.0.0 # locally
+          imagePullPolicy: IfNotPresent # the image is pulled only if it is not already present locally.
           ports:
             - containerPort: 8762
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8762
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            failureThreshold: 6
+          livenessProbe:
+            tcpSocket:
+              port: 8762
+            initialDelaySeconds: 40
+            periodSeconds: 40
+            failureThreshold: 8
+          startupProbe:
+            tcpSocket:
+              port: 8762
+            initialDelaySeconds: 35
+            periodSeconds: 26
+            failureThreshold: 10

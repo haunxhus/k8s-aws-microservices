@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: containerized-config-server
+  profiles:
+    active: local,development,production
+  cloud:
+    config:
+      server:
+        # config git repo to fetch configuration files
+        git:
+          uri: https://github.com/phamvanlinh20111993/k8s-example-server-configs.git
+          # uri: file:///C:\Users\Admin\Documents\k8s-examples\k8s-example\server-configs-git-repository\
+          # folder contains all of yml, properties files
+          search-paths: k8s-example-server-configs/
+          # git username
+          username: phamvanlinh20111993
+          # git token
+          password: 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
+          # git branch will be fetch configuration files
+          # default-label: feature/server-config-storage-daitt
+          default-label: main
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://discovery:8761/eureka/
+      # defaultZone: http://localhost:8761/eureka/
+
+server:
+  port: 8888
+management:
+  # disable spring security on management end points
+  security:
+    enabled: false
+  # actuator port
+  server:
+    port: 8999

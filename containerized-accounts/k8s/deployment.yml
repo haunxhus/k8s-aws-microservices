@@ -5,24 +5,40 @@ metadata:
   namespace: k8s-containerized-services
   labels:
     app: k8s-service-accounts
+    environment: develop
+    team: vmo-du5-java
 spec:
-  replicas: 3
+  replicas: 5
+  progressDeadlineSeconds: 660 # 11 minutes, default is 10 minutes
+  revisionHistoryLimit: 12
+  strategy:
+    type: RollingUpdate # default
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: k8s-service-accounts
+  minReadySeconds: 5
   template:
     metadata:
       labels:
         app: k8s-service-accounts
     spec:
       #loadBalancerClass: nil 
+      # https://stackoverflow.com/questions/40366192/kubernetes-how-to-make-deployment-to-update-image
+      terminationGracePeriodSeconds: 30
       containers:
         - name: containerized-accounts
-          image: linhpv5555/containerized-accounts:latest
-          #imagePullPolicy: Never
+          #image: linhpv5555/containerized-accounts:latest # docker hub
+          image: containerized-accounts:v1.0.0 # locally
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 2222
             #name: service-accounts
+            #Configure liveness and readiness probes
+            #To configure health checks for your pods, you can use Kubernetes liveness and readiness probes.
+            # https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 #          livenessProbe:
 #            httpGet:
 #              path: /health
@@ -32,9 +48,34 @@ spec:
 #          readinessProbe:
 #            httpGet:
 #              path: /health
-#              port: 8080
+#              port: 2222
 #              scheme: HTTP
 #            initialDelaySeconds: 10
 
+          ## Readiness probes: The kubelet uses readiness probes to know when a container is ready to start accepting traffic. 
+          ## Pod is considered ready when all of its containers are ready.
+          readinessProbe: # Readiness probes are configured similarly to liveness probes.
+            httpGet:
+              path: /account/actuator/health
+              port: 2222
+            initialDelaySeconds: 60 # send the first readiness probe 60 seconds after the container starts
+            periodSeconds: 20 # If the probe succeeds, the Pod will be marked as ready. The kubelet will continue to run this check every 20 seconds.
+            failureThreshold: 6 # After a probe fails failureThreshold times in a row, Kubernetes considers that the overall check has failed
+
+          ## Liveness probes: The kubelet uses liveness probes to know when to restart a container. 
+          livenessProbe:
+            tcpSocket:
+              port: 2222
+            initialDelaySeconds: 40 #should wait 40 seconds before performing the first probe
+            periodSeconds: 30 # should perform a liveness probe every 30s
+            failureThreshold: 6 # After a probe fails failureThreshold times in a row, Kubernetes considers that the overall check has failed
+          
+          ## Startup probes: The kubelet uses startup probes to know when a container application has started.
+          startupProbe:
+            tcpSocket:
+              port: 2222
+            initialDelaySeconds: 35
+            periodSeconds: 20 
+            failureThreshold: 8 # After a probe fails failureThreshold times in a row, Kubernetes considers that the overall check has failed
           #args:
           #  - "-apptype=accounts"
