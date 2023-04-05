@@ -17,7 +17,7 @@
         <java.version>17</java.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <logtash-logback-encoder.version>6.6</logtash-logback-encoder.version>
+<!--        <logtash-logback-encoder.version>6.6</logtash-logback-encoder.version>-->
         <jersey.apache.client4.version>1.19.4</jersey.apache.client4.version>
     </properties>
 
@@ -62,12 +62,12 @@
             <version>1.0.0</version>
         </dependency>
 
-<!--        &lt;!&ndash; LOGGING &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>net.logstash.logback</groupId>-->
-<!--            <artifactId>logstash-logback-encoder</artifactId>-->
-<!--            <version>${logtash-logback-encoder.version}</version>-->
-<!--        </dependency>-->
+        <!--        &lt;!&ndash; LOGGING &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>net.logstash.logback</groupId>-->
+        <!--            <artifactId>logstash-logback-encoder</artifactId>-->
+        <!--            <version>${logtash-logback-encoder.version}</version>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -81,10 +81,10 @@
             <version>${jersey.apache.client4.version}</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>-->
+        <!--        </dependency>-->
 
         <!-- Micrometer Prometheus registry  -->
         <dependency>

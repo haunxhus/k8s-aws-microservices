@@ -8,10 +8,10 @@ services:
   #     dockerfile: Dockerfile
   #   ports:
   #     - "8762:8762"
-    #links:
-    #  - discovery
-    #  - logstash
-    #  - zipkin
+  #links:
+  #  - discovery
+  #  - logstash
+  #  - zipkin
 
   # accounts:
   #   image: tanerdiler/service-accounts-api
@@ -21,10 +21,10 @@ services:
   #     dockerfile: Dockerfile
   #   ports:
   #     - "7500:2222"
-    #links:
-     # - discovery
-     # - logstash
-    #  - zipkin
+  #links:
+  # - discovery
+  # - logstash
+  #  - zipkin
 
   products:
     image: tanerdiler/service-products-api
@@ -34,13 +34,13 @@ services:
       dockerfile: Dockerfile
     ports:
       - "7501:2222"
-    #depends_on:
-    #  - discovery
-    #  - accounts
-    #links:
-     # - discovery
-     # - logstash
-     # - zipkin
+      #depends_on:
+      #  - discovery
+      #  - accounts
+      #links:
+      # - discovery
+      # - logstash
+      # - zipkin
 
   orders:
     image: tanerdiler/service-orders-api
@@ -50,9 +50,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "7502:2222"
-    #depends_on:
-    #  - discovery
-     # - products
+      #depends_on:
+      #  - discovery
+      # - products
     #links:
     #  - discovery
     #  - logstash
@@ -66,13 +66,13 @@ services:
       dockerfile: Dockerfile
     ports:
       - "7503:2222"
-    #depends_on:
-     # - discovery
-    #  - orders
-    #links:
-     # - discovery
-     # - logstash
-     # - accounts
-     # - products
-     # - orders
-     # - zipkin
+      #depends_on:
+      # - discovery
+      #  - orders
+      #links:
+      # - discovery
+      # - logstash
+      # - accounts
+      # - products
+      # - orders
+      # - zipkin
