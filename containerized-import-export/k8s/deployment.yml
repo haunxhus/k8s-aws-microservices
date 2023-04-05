@@ -23,18 +23,18 @@ spec:
           ports:
             - containerPort: 8080
             #name: service-accounts
-#          livenessProbe:
-#            httpGet:
-#              path: /health
-#              port: 8080
-#              scheme: HTTP
-#            initialDelaySeconds: 180
-#          readinessProbe:
-#            httpGet:
-#              path: /health
-#              port: 8080
-#              scheme: HTTP
-#            initialDelaySeconds: 10
+          #          livenessProbe:
+          #            httpGet:
+          #              path: /health
+          #              port: 8080
+          #              scheme: HTTP
+          #            initialDelaySeconds: 180
+          #          readinessProbe:
+          #            httpGet:
+          #              path: /health
+          #              port: 8080
+          #              scheme: HTTP
+          #            initialDelaySeconds: 10
 
           #args:
           #  - "-apptype=accounts"

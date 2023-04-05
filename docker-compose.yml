@@ -1,9 +1,9 @@
 
 version: '3.7'
 
-#networks:
-#    e-network:
-#        driver: bridge
+networks:
+  e-network:
+    driver: bridge
 volumes:
   docker:
     driver: local
@@ -16,11 +16,11 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3
     #image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
     container_name: elasticsearch
-#    networks:
-#      - e-network
+    networks:
+      - e-network
     ports:
-      - 9200:9200
-      - 9300:9300
+      - "9200:9200"
+      - "9300:9300"
     ulimits:
       memlock:
         soft: -1
@@ -43,8 +43,8 @@ services:
     image: docker.elastic.co/logstash/logstash:8.5.3
     #image: docker.elastic.co/logstash/logstash:7.8.0
     container_name: logstash
-#    networks:
-#      - e-network
+    networks:
+      - e-network
     restart: unless-stopped
     command: logstash -f /usr/share/logstash/pipeline
     depends_on:
@@ -90,8 +90,8 @@ services:
       elasticsearch:
         condition: service_started
     restart: on-failure
-#    networks:
-#      - e-network
+    networks:
+      - e-network
 
 
   # #################################################### zipkin #######################################################
@@ -102,8 +102,8 @@ services:
     build:
       context: .
       dockerfile: ./zipkin-server/Dockerfile
-#    networks:
-#      - e-network
+    networks:
+      - e-network
     volumes:
       - ./zipkin-server:/usr/share/zipkin-server
       - "${HOME}/.m2:/root/.m2"
@@ -126,8 +126,8 @@ services:
       # in ubuntu environment must have ./
       # dockerfile: ./containerized-discovery/Dockerfile
       dockerfile: ./containerized-discovery/Dockerfile
-#    networks:
-#      - e-network
+    networks:
+      - e-network
     depends_on:
       zipkin:
         condition: service_started
@@ -148,8 +148,8 @@ services:
     build:
       context: .
       dockerfile: ./containerized-products/Dockerfile
-#    networks:
-#      - e-network
+    networks:
+      - e-network
     volumes:
       - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
     depends_on:
@@ -174,8 +174,8 @@ services:
     build:
       context: .
       dockerfile: ./containerized-gateway/Dockerfile
-#    networks:
-#      - e-network
+    networks:
+      - e-network
     volumes:
       - "./wait-for-services.sh:/usr/local/bin/wait-for-services.sh:ro" # :ro, ro = read only
     environment:
@@ -204,8 +204,8 @@ services:
     build:
       context: .
       dockerfile: ./containerized-accounts/Dockerfile
-#    networks:
-#      - e-network
+    networks:
+      - e-network
     volumes:
       - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
     depends_on:
@@ -232,8 +232,8 @@ services:
     build:
       context: .
       dockerfile: ./containerized-orders/Dockerfile
-#    networks:
-#      - e-network
+    networks:
+      - e-network
     volumes:
       - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
     depends_on:
@@ -259,8 +259,8 @@ services:
     build:
       context: .
       dockerfile: ./containerized-import-export/Dockerfile
-    #    networks:
-    #      - e-network
+    networks:
+      - e-network
     volumes:
       - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
     depends_on:
@@ -293,8 +293,8 @@ services:
     build:
       context: .
       dockerfile: ./containerized-main/Dockerfile
-#    networks:
-#      - e-network
+    networks:
+      - e-network
     volumes:
       - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
     depends_on:
@@ -318,8 +318,8 @@ services:
     build:
       context: .
       dockerfile: ./containerized-authorization-server/Dockerfile
-#    networks:
-#      - e-network
+    networks:
+      - e-network
     environment:
       - ISSUER_HOST=containerized-authorization-server #this env must be matched with the containerized-gateway service
       - DB_HOST=mysql8
@@ -347,8 +347,8 @@ services:
     image: mysql:8.0
     command: --default-authentication-plugin=mysql_native_password
 #    command: mysqld --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-#    networks:
-#      - e-network
+    networks:
+      - e-network
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: user_registration
@@ -368,7 +368,7 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
-      - 2181:2181
+      - "2181:2181"
     networks:
       - e-network
 
@@ -377,7 +377,7 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - 29092:29092
+      - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -391,7 +391,7 @@ services:
     container_name: redis
     image: redis:latest
     ports:
-      - 6379:6379
+      - "6379:6379"
     networks:
       - e-network
 
@@ -401,6 +401,6 @@ services:
     environment:
       - REDIS_HOSTS=local:redis:6379
     ports:
-      - 8081:8081
+      - "8081:8081"
     networks:
       - e-network

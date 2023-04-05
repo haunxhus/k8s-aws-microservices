@@ -20,7 +20,7 @@ services:
         source: ./common/config/log/rsyslog_docker.conf
         target: /etc/rsyslog.d/rsyslog_docker.conf
     ports:
-      - 127.0.0.1:1514:10514
+      - "127.0.0.1:1514:10514"
     networks:
       - harbor
   registry:
@@ -241,8 +241,8 @@ services:
     networks:
       - harbor
     ports:
-      - 80:8080
-      - 443:8443
+      - "80:8080"
+      - "443:8443"
     depends_on:
       - registry
       - core

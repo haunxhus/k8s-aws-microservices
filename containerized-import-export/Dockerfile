@@ -1,4 +1,5 @@
-FROM openjdk:17
+FROM mcr.microsoft.com/openjdk/jdk:17-ubuntu
+RUN apt-get -q update && apt-get -qy install netcat && apt-get clean
 
 EXPOSE 8080
 
@@ -9,6 +10,6 @@ ENV MINIO_UPLOAD_PART_SIZE $MINIO_UPLOAD_PART_SIZE
 ENV MINIO_DOWNLOAD_EXPIRY_TIME $MINIO_DOWNLOAD_EXPIRY_TIME
 ENV APPLICATION_MODE_DEBUG $APPLICATION_MODE_DEBUG
 
-COPY ./target/containerized-import-export-0.0.1-SNAPSHOT.jar .
+COPY containerized-import-export/target/*.jar containerized-import-export.jar
 
-ENTRYPOINT ["java","-jar","containerized-import-export-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","containerized-import-export.jar"]

@@ -7,7 +7,7 @@ COPY /containerized-config-server/pom.xml /tmp/
 
 COPY /containerized-config-server/src /tmp/src/
 
-WORKDIR /tmp/	
+WORKDIR /tmp/
 
 RUN mvn clean package
 
@@ -28,4 +28,3 @@ EXPOSE 8888
 
 #step 4, default command, final step: build application
 ENTRYPOINT ["java",  "-jar", "containerized-config-server.jar"]
-
