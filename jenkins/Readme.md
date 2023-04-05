@@ -1,79 +1,82 @@
 *) requirement:
- - build k8s server:
-	- memory: min 16gi
-	- disk: min 60Gi
-	- os: ubuntu 18.04
-	- build basic sofwares: ../install_software_ubuntu_18.04.sh
-		+ run commands:     chmod +x install_software_ubuntu_18.04.sh
-		+                   ./install_software_ubuntu_18.04.sh
-		+ while bulding please read careful the instruction. ex: enter ip range.
-		
-	- setup microservice core base project:
-		+ clone project from github: https://github.com/haunxhus/k8s-aws-microservices
-		+ run script: microk8s_kubernetes_build_script.sh, following instruction below:
-		              - chmod +x microk8s_kubernetes_build_script.sh
-					  - ./microk8s_kubernetes_build_script.sh
-		 
-	- note:
-	    + we prefer using ubuntu 18.04 because we support write scripts to install basic softwares that save many time for you.
-	    + what install_software_ubuntu_18.04.sh do: install and setup envinroment help us do bussiness.
-		   -   1. java jdk 13.02
-		       2. maven 3.6.3
-			   3. newest docker 
-			   4. git 
-			   5. node 16.19.0 (no need for now - can remove it in script)
-			   6. npm (no need for now - can remove it in script)
-			   7. nginx (no need for now - can remove it in script)
-			   8. microk8s 
-			   9. tomcat 10.0.11 (no need for now - can remove it in script)
-			  10. mysql
-	
- - build jenkins server:
-   - memory: min 4gi
-   - disk: min 30gi
-   - os: ubuntu 18.04 
-   - build basic sofwares: ../install_jenkins_server_ubuntu18.04.sh
-       + run command:     chmod +x install_jenkins_server_ubuntu18.04.sh
-                         ./install_jenkins_server_ubuntu18.04.sh
-   - After succession install, check :
-	   + jenkins version: 2.387.1
-       + java version: java13.0.1	   
-	   + maven: 3.6.3
-	   + docker version: Docker version 23.0.1, build a5ee5b1
-	   + git version: git version 2.17.1
-	   
-   - note:
-       + we prefer using ubuntu 18.04 because we support write scripts to install basic softwares that save many time for you.
-	   + What does /install_jenkins_server_ubuntu18.04.sh script do:
-			- Install some basic softwares needed:
-				1. maven 3.6.3
-				2. newest docker 
-				3. git
-				4. jenkins
-			- setup some environment config to make jenkins run smoothly.
 
+- build k8s server:
+    - memory: min 16gi
+    - disk: min 60Gi
+    - os: ubuntu 18.04
+    - build basic sofwares: ../install_software_ubuntu_18.04.sh
+        + run commands:     chmod +x install_software_ubuntu_18.04.sh
+        +                   ./install_software_ubuntu_18.04.sh
+        + while bulding please read careful the instruction. ex: enter ip range.
+
+    - setup microservice core base project:
+        + clone project from github: https://github.com/haunxhus/k8s-aws-microservices
+        + run script: microk8s_kubernetes_build_script.sh, following instruction below:
+          - chmod +x microk8s_kubernetes_build_script.sh
+          - ./microk8s_kubernetes_build_script.sh
+
+    - note:
+        + we prefer using ubuntu 18.04 because we support write scripts to install basic softwares that save many time
+          for you.
+        + what install_software_ubuntu_18.04.sh do: install and setup envinroment help us do bussiness.
+            -
+                1. java jdk 13.02
+                2. maven 3.6.3
+                3. newest docker
+                4. git
+                5. node 16.19.0 (no need for now - can remove it in script)
+                6. npm (no need for now - can remove it in script)
+                7. nginx (no need for now - can remove it in script)
+                8. microk8s
+                9. tomcat 10.0.11 (no need for now - can remove it in script)
+                   10. mysql
+
+- build jenkins server:
+    - memory: min 4gi
+    - disk: min 30gi
+    - os: ubuntu 18.04
+    - build basic sofwares: ../install_jenkins_server_ubuntu18.04.sh
+        + run command:     chmod +x install_jenkins_server_ubuntu18.04.sh
+          ./install_jenkins_server_ubuntu18.04.sh
+    - After succession install, check :
+        + jenkins version: 2.387.1
+        + java version: java13.0.1
+        + maven: 3.6.3
+        + docker version: Docker version 23.0.1, build a5ee5b1
+        + git version: git version 2.17.1
+
+    - note:
+        + we prefer using ubuntu 18.04 because we support write scripts to install basic softwares that save many time
+          for you.
+        + What does /install_jenkins_server_ubuntu18.04.sh script do:
+            - Install some basic softwares needed:
+                1. maven 3.6.3
+                2. newest docker
+                3. git
+                4. jenkins
+            - setup some environment config to make jenkins run smoothly.
 
 *) Set up ssh server from k8s server:
-	- using script to install: ./ssh_script_server_config_ubuntu18.04.sh
-	- how to use: 	chmod +x ssh_script_server_config_ubuntu18.04.sh
-                    ./ssh_script_server_config_ubuntu18.04.sh {server_user} 
-			ex: 	./ssh_script_server_config_ubuntu18.04.sh vienlv	
-    - note: 
-		+ How this script work:
-		   1. install openssh-server if server dont have it.
-		   2. Change permission on .ssh folder. Create some files like config, known_hosts and authorized_keys if not exit;
-		   
+- using script to install: ./ssh_script_server_config_ubuntu18.04.sh
+- how to use:    chmod +x ssh_script_server_config_ubuntu18.04.sh
+./ssh_script_server_config_ubuntu18.04.sh {server_user}
+ex:    ./ssh_script_server_config_ubuntu18.04.sh vienlv
+- note:
++ How this script work:
+1. install openssh-server if server dont have it.
+2. Change permission on .ssh folder. Create some files like config, known_hosts and authorized_keys if not exit;
+
 		   3. {server_user} => add permission for user in /etc/sudoers file. If not exit  {server_user} argument, default current user.
 		   
 		   4. Config /etc/ssh/sshd_config to allow ssh withou password
 		   
 		+ The server_user is the user using for create a ssh session when login to server.
-	
+
 *) Set up ssh client from jenkin server:
-    - using script to install: 	./ssh_script_client_config_ubuntu18.04.sh
-	- how to use: 	chmod +x ssh_script_client_config_ubuntu18.04.sh
-                    ./ssh_script_client_config_ubuntu18.04.sh {remote_host} {remote_user}
-					
+- using script to install:    ./ssh_script_client_config_ubuntu18.04.sh
+- how to use:    chmod +x ssh_script_client_config_ubuntu18.04.sh
+./ssh_script_client_config_ubuntu18.04.sh {remote_host} {remote_user}
+
 	         ex: 	./ssh_script_client_config_ubuntu18.04.sh 34.126.75.224 vienlv	
 			 
     - note: 
@@ -82,12 +85,12 @@
 			- sudo echo '<your pulic key>' >> authorized_keys
 		+ in the jenkins server check connection is success or not:
 		    - ssh -T remote_host@remote_user
-	
-	
-*) Setup and testing ssh connection from jenkins server to k8s server: with jenkins (for default) user. The default workspace is jekins with $HOME=/var/lib/jenkins/
-	1. create a folder using for jenkins user
-	   sudo mkdir jenkins
-	   
+
+*) Setup and testing ssh connection from jenkins server to k8s server: with jenkins (for default) user. The default
+workspace is jekins with $HOME=/var/lib/jenkins/
+1. create a folder using for jenkins user
+sudo mkdir jenkins
+
 	2. create ssh key pairs in this folder
 	   sudo ssh-keygen -f /home/jenkins  -t ed25519 -b 4096 -N ''
 	   
@@ -99,13 +102,12 @@
 	5. Testing connection is worked or not: 
 		 ssh -T remote_host@remote_user
 
-
-
 *) Setup jenkins in server:
-	1. Access to jenkins server http://<your_ip>:8080/login, enter adminstrations password.
-	   - to get your default password, go to terminal and type this command: sudo vim /var/lib/jenkins/secrets/initialAdminPassword
-	   - get the password and paste to input in browser
-	   
+1. Access to jenkins server http://<your_ip>:8080/login, enter adminstrations password.
+- to get your default password, go to terminal and type this command: sudo vim
+/var/lib/jenkins/secrets/initialAdminPassword
+- get the password and paste to input in browser
+
 	2. Install plugin or custom by your choice.
 	
 	3. Setting new user, save back.
@@ -166,14 +168,15 @@
 	7. Create any commit and push to your project. Check your result. Click on the little arrow next to the job and choose ‘Console Output’.
 	
     8. Reference: https://www.blazemeter.com/blog/how-to-integrate-your-github-repository-to-your-jenkins-project
-	              
-			
-*) How jenkins_freestyle_project_deploy_phase_build_step.sh script work: 
-	- Purpose: using for deploy phase when developer's PR is merged to develop, master or test. Then we will build out product to approciate enviroment.
-	- Steps:
-		1. Check current revisions with previous revisions commit by using this command: (Jenkins already have variable envinroment $GIT_COMMIT => current commit of a branch and $GIT_PREVIOUS_COMMIT => the previous commit of last build)
-			`git diff --name-only $GIT_PRE_COMMIT $GIT_CURR_COMMIT $DIR_PATH`
-			
+
+*) How jenkins_freestyle_project_deploy_phase_build_step.sh script work:
+- Purpose: using for deploy phase when developer's PR is merged to develop, master or test. Then we will build out
+product to approciate enviroment.
+- Steps:
+1. Check current revisions with previous revisions commit by using this command: (Jenkins already have variable
+envinroment $GIT_COMMIT => current commit of a branch and $GIT_PREVIOUS_COMMIT => the previous commit of last build)
+`git diff --name-only $GIT_PRE_COMMIT $GIT_CURR_COMMIT $DIR_PATH`
+
 		2. After get files change, detect which project this files belong. 
 			- If the files is a config file like deployment.yml, service.yml, ... create folder config and store it.
 		    - If the files is belong spring boot project like java file, pom.yml... marked the project.
@@ -202,25 +205,25 @@
 			with last commit build (we store current commit to a file). Repeat step 2 to step 5
 
 *) How jenkins_pr_freestyle_project_test_purpose_phase_build_step.sh work:
-	- Purpose: Using for test phase when develop create PR. We have just checked java spring boot project is ok or not.
-	- Steps:
-		1. Check current revisions with previous revisions commit by using this command:
-			`git diff --name-only $GIT_PRE_COMMIT $GIT_CURR_COMMIT $DIR_PATH`
-			
+- Purpose: Using for test phase when develop create PR. We have just checked java spring boot project is ok or not.
+- Steps:
+1. Check current revisions with previous revisions commit by using this command:
+`git diff --name-only $GIT_PRE_COMMIT $GIT_CURR_COMMIT $DIR_PATH`
+
 		2. After get files change, detect which project this files belong. 
 		    - If the files is belong spring boot project like java file, pom.yml... marked the project.
 			
 		3. Test spring boot java project by using this command:
 			`mvn -Dmaven.test.failure.ignore=false clean package`
-	
+
 *) Config send email: ref config send email from jenkins: https://www.edureka.co/blog/email-notification-in-jenkins/
-	- Config email: 
-		1. Choose gmail account: duanptwebudweb@gmail.com
-		2. Go to "Manage your Google Account" => Security => Signing in to Google => App passwords
-		3. Choose Mail on Select app option
-        4. Choose other => type linux	
-        5. Copy and keep secret token.
-		
+- Config email:
+1. Choose gmail account: duanptwebudweb@gmail.com
+2. Go to "Manage your Google Account" => Security => Signing in to Google => App passwords
+3. Choose Mail on Select app option
+4. Choose other => type linux
+5. Copy and keep secret token.
+
     - From Jenkins:
 		1. Config SMTP server
 		  - From Dashboard/Manage Jenkins/Configure System, scroll to "E-mail Notification" tab
@@ -238,9 +241,9 @@
 		  - add System Admin e-mail address: jenkins-gcp-server@jenkins.com
 
 *) Config build trigger when create pull request and merged in github:
-	- install plugin: GitHub Pull Request Builder
-		1. reference: https://plugins.jenkins.io/ghprb/
-		
+- install plugin: GitHub Pull Request Builder
+1. reference: https://plugins.jenkins.io/ghprb/
+
 		2. Setup this plugin:
 		
 			2.1 Go to ``Manage Jenkins`` -> ``Configure System`` -> ``GitHub pull requests builder`` section.

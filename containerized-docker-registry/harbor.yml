@@ -18,7 +18,7 @@ https:
   #  private_key: /home/ducbinh/certs/yourdomain.com.key
   certificate: /harbor_certs/yourdomain.com.crt
   private_key: /harbor_certs/yourdomain.com.key
-  
+
 #sl_cert = /home/ducbinh/certs/yourdomain.com.crt
 #ssl_cert_key = /home/ducbinh/certs/yourdomain.com.key
 # # Uncomment following will enable tls communication between all harbor components

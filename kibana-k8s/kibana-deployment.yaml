@@ -14,7 +14,7 @@ spec:
   selector:
     matchLabels:
       io.kompose.service: kibana
-  strategy: {}
+  strategy: { }
   template:
     metadata:
       annotations:
@@ -25,19 +25,19 @@ spec:
         io.kompose.service: kibana
     spec:
       containers:
-      - env:
-        - name: ELASTICSEARCH_HOSTS
-          value: http://elasticsearch:9200
-        - name: ELASTICSEARCH_URL
-          value: http://elasticsearch:9200
-        #image: docker.elastic.co/kibana/kibana:7.8.0
-        image: docker.elastic.co/kibana/kibana:8.5.3
-        #imagePullPolicy: ""
-        name: service-kibana
-        ports:
-        - containerPort: 5601
-        resources: {}
+        - env:
+            - name: ELASTICSEARCH_HOSTS
+              value: http://elasticsearch:9200
+            - name: ELASTICSEARCH_URL
+              value: http://elasticsearch:9200
+          #image: docker.elastic.co/kibana/kibana:7.8.0
+          image: docker.elastic.co/kibana/kibana:8.5.3
+          #imagePullPolicy: ""
+          name: service-kibana
+          ports:
+            - containerPort: 5601
+          resources: { }
       restartPolicy: Always
       serviceAccountName: ""
       volumes: null
-status: {}
+status: { }

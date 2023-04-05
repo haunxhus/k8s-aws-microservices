@@ -9,5 +9,5 @@ services:
     ports:
       - "8762:8762"
     restart: on-failure
-    stdin_open: true 
+    stdin_open: true
     tty: true

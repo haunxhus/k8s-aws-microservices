@@ -77,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
     @Cacheable(value = "products", key = "#id")
     public Product findById(Integer id) {
         System.out.println("Call method");
-        return productRepository.findById(id).get();
+        return productRepository.findById(id);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @CachePut(value = "products", key = "#id")
     public Product update(Product product, Integer id) {
-        Product current = productRepository.findById(product.getId()).get();
+        Product current = productRepository.findById(product.getId());
         current.setName(product.getName());
         current.setPrice(product.getPrice());
         return current;

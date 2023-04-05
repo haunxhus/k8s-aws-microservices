@@ -14,7 +14,7 @@ spec:
   selector:
     matchLabels:
       io.kompose.service: elasticsearch
-  strategy: {}
+  strategy: { }
   template:
     metadata:
       annotations:
@@ -25,28 +25,28 @@ spec:
         io.kompose.service: elasticsearch
     spec:
       containers:
-      - env:
-        - name: ES_JAVA_OPTS
-          value: -Xms512m -Xmx512m
-        - name: bootstrap.memory_lock
-          value: "true"
-        - name: cluster.name
-          value: es-docker-cluster
-        - name: discovery.type
-          value: single-node
-        - name: node.name
-          value: elasticsearch
-        - name: xpack.security.enabled
-          value: "false"
-        #image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
-        image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3
-        #imagePullPolicy: ""
-        name: service-elasticsearch
-        ports:
-        - containerPort: 9200
-        - containerPort: 9300
-        resources: {}
+        - env:
+            - name: ES_JAVA_OPTS
+              value: -Xms512m -Xmx512m
+            - name: bootstrap.memory_lock
+              value: "true"
+            - name: cluster.name
+              value: es-docker-cluster
+            - name: discovery.type
+              value: single-node
+            - name: node.name
+              value: elasticsearch
+            - name: xpack.security.enabled
+              value: "false"
+          #image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
+          image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3
+          #imagePullPolicy: ""
+          name: service-elasticsearch
+          ports:
+            - containerPort: 9200
+            - containerPort: 9300
+          resources: { }
       restartPolicy: Always
       serviceAccountName: ""
       volumes: null
-status: {}
+status: { }
