@@ -41,6 +41,8 @@
         <module>containerized-main</module>
         <module>containerized-config-server</module>
         <module>containerized-authorization-server</module>
+        <module>containerized-import-export</module>
+<!--        <module>containerized-zipkin</module>-->
     </modules>
 
     <dependencies>

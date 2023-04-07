@@ -15,17 +15,16 @@ import java.util.List;
 
 @Component
 @FeignClient("containerized-products")
-public interface ProductServiceClient
-{
-	@GetMapping(value = "/product/api/v1/products/{productId}")
-	Product findById(@PathVariable("productId") Integer orderId);
+public interface ProductServiceClient {
+    @GetMapping(value = "/product/api/v1/products/{productId}")
+    Product findById(@PathVariable("productId") Integer orderId);
 
-	@GetMapping(value = "/product/api/v1/products")
-	List<Product> findAll();
+    @GetMapping(value = "/product/api/v1/products")
+    List<Product> findAll();
 
-	@PutMapping(value = "/product/api/v1/products/{productId}")
-	Boolean updateProductInventory(@PathVariable("productId") Integer productId, @RequestParam Double amount);
+    @PutMapping(value = "/product/api/v1/products/{productId}")
+    Boolean updateProductInventory(@PathVariable("productId") Integer productId, @RequestParam Double amount);
 
-	@PutMapping(value = "/product/api/v1/products/{productId}")
-	void rollbackProductUpdate(@PathVariable("productId") Integer productId, @RequestParam Double amount);
+    @PutMapping(value = "/product/api/v1/products/{productId}")
+    void rollbackProductUpdate(@PathVariable("productId") Integer productId, @RequestParam Double amount);
 }

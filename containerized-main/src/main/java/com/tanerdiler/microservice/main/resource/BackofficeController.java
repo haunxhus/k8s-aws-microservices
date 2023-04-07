@@ -33,47 +33,47 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/v1/backoffice")
 @RequiredArgsConstructor
 public class BackofficeController {
-	
-	private final ProductServiceClient productService;
-	private final OrderServiceClient orderService;
-	private final AccountServiceClient accountService;
 
-	private final BackOfficeService backOfficeService;
+    private final ProductServiceClient productService;
+    private final OrderServiceClient orderService;
+    private final AccountServiceClient accountService;
 
-	private static final Logger logger = LogManager.getLogger(BackofficeController.class);
+    private final BackOfficeService backOfficeService;
 
-	@GetMapping("/orders")
-	public ResponseEntity<List<OrderDTO>> getOrders() {
+    private static final Logger logger = LogManager.getLogger(BackofficeController.class);
 
-		log.warn("Fetching all orders...");
-		List<Order> orders = orderService.findAll();
-		log.info("Fetched Orders : {}", orders);
-		Map<Integer, Account> accounts = new HashMap<>();
-		Map<Integer, Product> products = new HashMap<>();
+    @GetMapping("/orders")
+    public ResponseEntity<List<OrderDTO>> getOrders() {
 
-		log.warn("Fetching products of orders...");
-		orders.stream().filter(o -> !products.containsKey(o.getProductId()))
-				.map(o -> productService.findById(o.getProductId())).forEach(a -> products.put(a.getId(), a));
-		log.info("Fetched products : {}", products);
+        log.warn("Fetching all orders...");
+        List<Order> orders = orderService.findAll();
+        log.info("Fetched Orders : {}", orders);
+        Map<Integer, Account> accounts = new HashMap<>();
+        Map<Integer, Product> products = new HashMap<>();
 
-		log.warn("Fetching accounts of orders...");
-		orders.stream().filter(o -> !accounts.containsKey(o.getAccountId()))
-				.map(o -> accountService.findById(o.getAccountId())).forEach(a -> accounts.put(a.getId(), a));
-		log.info("Fetched accounts : {}", accounts);
+        log.warn("Fetching products of orders...");
+        orders.stream().filter(o -> !products.containsKey(o.getProductId()))
+                .map(o -> productService.findById(o.getProductId())).forEach(a -> products.put(a.getId(), a));
+        log.info("Fetched products : {}", products);
 
-		log.warn("Generating composite of orders...");
-		List<OrderDTO> orderDTOList = new ArrayList<>();
-		orders.forEach(o -> {
-			orderDTOList.add(new OrderDTO(o.getId(), o.getCount(), o.getPrice(), o.getDiscountedPrice(),
-					accounts.get(o.getAccountId()).getFullname(), products.get(o.getProductId()).getName()));
-		});
+        log.warn("Fetching accounts of orders...");
+        orders.stream().filter(o -> !accounts.containsKey(o.getAccountId()))
+                .map(o -> accountService.findById(o.getAccountId())).forEach(a -> accounts.put(a.getId(), a));
+        log.info("Fetched accounts : {}", accounts);
 
-		return ResponseEntity.ok(orderDTOList);
+        log.warn("Generating composite of orders...");
+        List<OrderDTO> orderDTOList = new ArrayList<>();
+        orders.forEach(o -> {
+            orderDTOList.add(new OrderDTO(o.getId(), o.getCount(), o.getPrice(), o.getDiscountedPrice(),
+                    accounts.get(o.getAccountId()).getFullname(), products.get(o.getProductId()).getName()));
+        });
 
-	}
+        return ResponseEntity.ok(orderDTOList);
 
-	@PostMapping("/orders")
-	public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderRequest request) {
-		return new ResponseEntity<>(backOfficeService.createOrder(request), HttpStatus.CREATED);
-	}
+    }
+
+    @PostMapping("/orders")
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderRequest request) {
+        return new ResponseEntity<>(backOfficeService.createOrder(request), HttpStatus.CREATED);
+    }
 }

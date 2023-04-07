@@ -16,6 +16,7 @@ package zipkin2.server.internal.elasticsearch;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zipkin2.internal.Nullable;
@@ -31,45 +32,47 @@ import static zipkin2.server.internal.elasticsearch.ZipkinElasticsearchStorageCo
  * interval. A future version can tighten this by also using poll events.
  */
 class DynamicCredentialsFileLoader implements Runnable {
-  static final Logger LOGGER = LoggerFactory.getLogger(DynamicCredentialsFileLoader.class);
+    static final Logger LOGGER = LoggerFactory.getLogger(DynamicCredentialsFileLoader.class);
 
-  private final String credentialsFile;
+    private final String credentialsFile;
 
-  private final BasicCredentials basicCredentials;
+    private final BasicCredentials basicCredentials;
 
-  public DynamicCredentialsFileLoader(BasicCredentials basicCredentials,
-    String credentialsFile) {
-    this.basicCredentials = basicCredentials;
-    this.credentialsFile = credentialsFile;
-  }
-
-  @Override public void run() {
-    try {
-      updateCredentialsFromProperties();
-    } catch (Exception e) {
-      LOGGER.error("Error loading elasticsearch credentials", e);
+    public DynamicCredentialsFileLoader(BasicCredentials basicCredentials,
+                                        String credentialsFile) {
+        this.basicCredentials = basicCredentials;
+        this.credentialsFile = credentialsFile;
     }
-  }
 
-  void updateCredentialsFromProperties() throws IOException {
-    Properties properties = new Properties();
-    try (FileInputStream is = new FileInputStream(credentialsFile)) {
-      properties.load(is);
+    @Override
+    public void run() {
+        try {
+            updateCredentialsFromProperties();
+        } catch (Exception e) {
+            LOGGER.error("Error loading elasticsearch credentials", e);
+        }
     }
-    String username = ensureNotEmptyOrNull(properties, credentialsFile, USERNAME);
-    String password = ensureNotEmptyOrNull(properties, credentialsFile, PASSWORD);
-    basicCredentials.updateCredentials(username, password);
-  }
 
-  @Nullable static String ensureNotEmptyOrNull(Properties properties, String fileName, String name) {
-    String value = properties.getProperty(name);
-    if (value == null) {
-      throw new IllegalStateException("no " + name + " property in " + fileName);
+    void updateCredentialsFromProperties() throws IOException {
+        Properties properties = new Properties();
+        try (FileInputStream is = new FileInputStream(credentialsFile)) {
+            properties.load(is);
+        }
+        String username = ensureNotEmptyOrNull(properties, credentialsFile, USERNAME);
+        String password = ensureNotEmptyOrNull(properties, credentialsFile, PASSWORD);
+        basicCredentials.updateCredentials(username, password);
     }
-    value = value.trim();
-    if ("".equals(value)) {
-      throw new IllegalStateException("empty " + name + " property in " + fileName);
+
+    @Nullable
+    static String ensureNotEmptyOrNull(Properties properties, String fileName, String name) {
+        String value = properties.getProperty(name);
+        if (value == null) {
+            throw new IllegalStateException("no " + name + " property in " + fileName);
+        }
+        value = value.trim();
+        if ("".equals(value)) {
+            throw new IllegalStateException("empty " + name + " property in " + fileName);
+        }
+        return value;
     }
-    return value;
-  }
 }

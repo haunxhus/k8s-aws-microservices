@@ -15,8 +15,8 @@ public class OrderConsumer {
     Gson gson = new Gson();
 
     @KafkaListener(topics = "send-product", groupId = "order-group",
-    containerFactory = "orderKafkaListenerContainerFactory")
-    public void reciveMessage(String event){
+            containerFactory = "orderKafkaListenerContainerFactory")
+    public void reciveMessage(String event) {
         log.info("=> receiveKafkaMessage {}", event);
 
         JsonObject obj = gson.fromJson(event, JsonObject.class);
@@ -26,8 +26,8 @@ public class OrderConsumer {
         processMessage(obj);
     }
 
-    private void processMessage(JsonObject object){
-        if(object.has("ProductEvent")) {
+    private void processMessage(JsonObject object) {
+        if (object.has("ProductEvent")) {
             JsonElement element = object.get("ProductEvent");
             if (element != null && element.isJsonArray()) {
                 for (JsonElement e : element.getAsJsonArray()) {

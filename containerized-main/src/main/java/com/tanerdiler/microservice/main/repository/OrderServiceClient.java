@@ -12,17 +12,16 @@ import java.util.List;
 
 @Component
 @FeignClient("containerized-orders")
-public interface OrderServiceClient
-{
-	@GetMapping(value = "/order/api/v1/orders/{orderId}")
-	Order findById(@PathVariable("orderId") Integer orderId);
+public interface OrderServiceClient {
+    @GetMapping(value = "/order/api/v1/orders/{orderId}")
+    Order findById(@PathVariable("orderId") Integer orderId);
 
-	@GetMapping(value = "/order/api/v1/orders")
-	List<Order> findAll();
+    @GetMapping(value = "/order/api/v1/orders")
+    List<Order> findAll();
 
-	@PostMapping(value = "/order/api/v1/orders")
-	Order createOrder(Order order);
+    @PostMapping(value = "/order/api/v1/orders")
+    Order createOrder(Order order);
 
-	@DeleteMapping(value = "/order/api/v1/orders/{orderId}")
-	Order deleteOrderById(@PathVariable("orderId") Integer orderId);
+    @DeleteMapping(value = "/order/api/v1/orders/{orderId}")
+    Order deleteOrderById(@PathVariable("orderId") Integer orderId);
 }

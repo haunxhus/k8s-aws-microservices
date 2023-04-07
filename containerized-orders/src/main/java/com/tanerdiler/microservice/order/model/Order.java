@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Order {
 
-	private Integer id;
-	private Integer productId;
-	private Integer accountId;
-	private Integer count;
-	private Double price;
-	private Double discountedPrice;
+    private Integer id;
+    private Integer productId;
+    private Integer accountId;
+    private Integer count;
+    private Double price;
+    private Double discountedPrice;
 
 }

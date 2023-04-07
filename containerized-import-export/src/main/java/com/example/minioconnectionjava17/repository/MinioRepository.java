@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.concurrent.TimeUnit;
 
 @Repository
-public class MinioRepository implements IORepository{
+public class MinioRepository implements IORepository {
 
     @Value("${minio.upload.partSize}")
     private long partSizeUpload;

@@ -311,7 +311,6 @@ services:
     stdin_open: true
     tty: true
 
-
   containerized-authorization-server:
     container_name: containerized-authorization-server
     image: containerized-authorization-server

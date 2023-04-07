@@ -35,12 +35,12 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    ProducerFactory<String, Event> productEventProducerFactory(){
+    ProducerFactory<String, Event> productEventProducerFactory() {
         return defaultProducerFactory();
     }
 
     @Bean
-    KafkaTemplate<String, Event> productKafkaTemplate(){
+    KafkaTemplate<String, Event> productKafkaTemplate() {
         return new KafkaTemplate<>(productEventProducerFactory());
     }
 

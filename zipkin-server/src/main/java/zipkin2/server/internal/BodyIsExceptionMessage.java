@@ -26,21 +26,22 @@ import static com.linecorp.armeria.common.HttpStatus.INTERNAL_SERVER_ERROR;
 import static com.linecorp.armeria.common.MediaType.ANY_TEXT_TYPE;
 
 final class BodyIsExceptionMessage implements ExceptionHandlerFunction {
-  static final Logger LOGGER = LoggerFactory.getLogger(BodyIsExceptionMessage.class);
-  @Override
-  public HttpResponse handleException(ServiceRequestContext ctx, HttpRequest req, Throwable cause) {
-    if (req.method() == HttpMethod.POST && req.path().startsWith("/api/v")) {
-      ZipkinHttpCollector.metrics.incrementMessagesDropped();
-    }
+    static final Logger LOGGER = LoggerFactory.getLogger(BodyIsExceptionMessage.class);
 
-    String message = cause.getMessage();
-    if (message == null) message = cause.getClass().getSimpleName();
-    if (cause instanceof IllegalArgumentException) {
-      return HttpResponse.of(BAD_REQUEST, ANY_TEXT_TYPE, message);
-    } else {
-      LOGGER.warn("Unexpected error handling request.", cause);
+    @Override
+    public HttpResponse handleException(ServiceRequestContext ctx, HttpRequest req, Throwable cause) {
+        if (req.method() == HttpMethod.POST && req.path().startsWith("/api/v")) {
+            ZipkinHttpCollector.metrics.incrementMessagesDropped();
+        }
 
-      return HttpResponse.of(INTERNAL_SERVER_ERROR, ANY_TEXT_TYPE, message);
+        String message = cause.getMessage();
+        if (message == null) message = cause.getClass().getSimpleName();
+        if (cause instanceof IllegalArgumentException) {
+            return HttpResponse.of(BAD_REQUEST, ANY_TEXT_TYPE, message);
+        } else {
+            LOGGER.warn("Unexpected error handling request.", cause);
+
+            return HttpResponse.of(INTERNAL_SERVER_ERROR, ANY_TEXT_TYPE, message);
+        }
     }
-  }
 }

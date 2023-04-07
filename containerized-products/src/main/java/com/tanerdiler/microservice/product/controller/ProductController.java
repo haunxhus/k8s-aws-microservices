@@ -20,13 +20,13 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping ("/send-event")
+    @GetMapping("/send-event")
     public void sendEventProduct() {
         productService.sendProductToOrder();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> findById(@PathVariable("id")Integer id) throws InterruptedException {
+    public ResponseEntity<Product> findById(@PathVariable("id") Integer id) throws InterruptedException {
         return new ResponseEntity<>(productService.findById(id), HttpStatus.OK);
     }
 
@@ -36,14 +36,14 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable("id")Integer id) throws InterruptedException {
+    public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id) throws InterruptedException {
         productService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Product> update(@RequestBody Product product, @PathVariable("id") Integer id) throws InterruptedException {
-        return new ResponseEntity<>(productService.update(product, id),HttpStatus.OK);
+        return new ResponseEntity<>(productService.update(product, id), HttpStatus.OK);
     }
 
     @DeleteMapping("delete-cache")
@@ -52,7 +52,7 @@ public class ProductController {
     }
 
     @GetMapping("/test")
-    public ResponseEntity<String> test(){
+    public ResponseEntity<String> test() {
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 }

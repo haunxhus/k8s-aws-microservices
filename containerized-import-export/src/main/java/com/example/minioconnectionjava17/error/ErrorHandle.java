@@ -16,7 +16,7 @@ public class ErrorHandle {
         e.printStackTrace();
 
         String errorMessage = "Unknow error";
-        if(isDebugMode) {
+        if (isDebugMode) {
             errorMessage = e.getMessage();
         }
 

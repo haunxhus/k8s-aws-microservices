@@ -14,6 +14,7 @@
 package zipkin2.server.internal;
 
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.bind.Binder;
@@ -44,34 +45,35 @@ import org.springframework.core.env.ConfigurableEnvironment;
  */
 // look at RATIONALE.md and update if relevant when changing this file
 public final class ZipkinModuleImporter implements ApplicationContextInitializer<GenericApplicationContext> {
-  static final Logger LOG = LoggerFactory.getLogger(ZipkinModuleImporter.class);
+    static final Logger LOG = LoggerFactory.getLogger(ZipkinModuleImporter.class);
 
-  static final String PROPERTY_NAME_MODULE = "zipkin.internal.module";
+    static final String PROPERTY_NAME_MODULE = "zipkin.internal.module";
 
-  @Override public void initialize(GenericApplicationContext context) {
-    ConfigurableEnvironment env = context.getEnvironment();
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        ConfigurableEnvironment env = context.getEnvironment();
 
-    // At this point in the life-cycle, env can directly resolve plain properties, like the boolean
-    // above. If you tried to resolve a property bound by a yaml map, it returns null, as they are
-    // not yet bound.
-    //
-    // As we are in a configurable environment, we can bind lists properties. We expect this to take
-    // includes from PROPERTY_NAME_MODULE yaml path from all modules.
-    Map<String, String> modules =
-      Binder.get(env).bind(PROPERTY_NAME_MODULE, Map.class).orElse(null);
-    if (modules == null || modules.isEmpty()) {
-      LOG.debug("no modules found under path " + PROPERTY_NAME_MODULE);
-      return;
+        // At this point in the life-cycle, env can directly resolve plain properties, like the boolean
+        // above. If you tried to resolve a property bound by a yaml map, it returns null, as they are
+        // not yet bound.
+        //
+        // As we are in a configurable environment, we can bind lists properties. We expect this to take
+        // includes from PROPERTY_NAME_MODULE yaml path from all modules.
+        Map<String, String> modules =
+                Binder.get(env).bind(PROPERTY_NAME_MODULE, Map.class).orElse(null);
+        if (modules == null || modules.isEmpty()) {
+            LOG.debug("no modules found under path " + PROPERTY_NAME_MODULE);
+            return;
+        }
+
+        LOG.debug("attempting to load modules: " + modules.keySet());
+        for (Map.Entry<String, String> module : modules.entrySet()) {
+            try {
+                context.registerBean(Class.forName(module.getValue()));
+            } catch (Exception e) {
+                // Skip any classes that didn't match due to drift
+                LOG.debug("skipping unloadable module " + module.getKey(), e);
+            }
+        }
     }
-
-    LOG.debug("attempting to load modules: " + modules.keySet());
-    for (Map.Entry<String, String> module : modules.entrySet()) {
-      try {
-        context.registerBean(Class.forName(module.getValue()));
-      } catch (Exception e) {
-        // Skip any classes that didn't match due to drift
-        LOG.debug("skipping unloadable module " + module.getKey(), e);
-      }
-    }
-  }
 }

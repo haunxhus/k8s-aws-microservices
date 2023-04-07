@@ -18,15 +18,15 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @RequiredArgsConstructor
 public class SleuthConfig extends GenericFilterBean {
-	
-	private final Tracer tracer;
+
+    private final Tracer tracer;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         Span currentSpan = this.tracer.currentSpan();
 
-        // for readability we're returning trace id in a hex form
+        // for readability, we're returning trace id in a hex form
         ((HttpServletResponse) response).addHeader("X-B3-TraceId", currentSpan.context().traceIdString());
 
         chain.doFilter(request, response);

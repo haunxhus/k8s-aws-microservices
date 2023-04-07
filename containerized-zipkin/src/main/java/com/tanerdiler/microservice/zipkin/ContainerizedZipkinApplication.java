@@ -9,8 +9,8 @@ import zipkin2.server.internal.EnableZipkinServer;
 @SpringBootApplication
 @EnableZipkinServer
 public class ContainerizedZipkinApplication {
-	public static void main(String[] args) {
-		
-		SpringApplication.run(ContainerizedZipkinApplication.class, args);
-	}
+    public static void main(String[] args) {
+
+        SpringApplication.run(ContainerizedZipkinApplication.class, args);
+    }
 }

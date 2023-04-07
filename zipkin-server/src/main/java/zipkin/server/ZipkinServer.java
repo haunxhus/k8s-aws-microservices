@@ -40,19 +40,19 @@ import zipkin2.server.internal.banner.ZipkinBanner;
 @EnableAutoConfiguration
 @EnableZipkinServer
 public class ZipkinServer {
-  static {
-    SLF4JBridgeHandler.removeHandlersForRootLogger();
-    SLF4JBridgeHandler.install();
-  }
+    static {
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        SLF4JBridgeHandler.install();
+    }
 
-  public static void main(String[] args) {
-    new SpringApplicationBuilder(ZipkinServer.class)
-      .banner(new ZipkinBanner())
-      .initializers(new ZipkinModuleImporter(), new ZipkinActuatorImporter())
-      // Avoids potentially expensive DNS lookup and inaccurate startup timing
-      .logStartupInfo(false)
-      .properties(
-        EnableAutoConfiguration.ENABLED_OVERRIDE_PROPERTY + "=false",
-        "spring.config.name=zipkin-server").run(args);
-  }
+    public static void main(String[] args) {
+        new SpringApplicationBuilder(ZipkinServer.class)
+                .banner(new ZipkinBanner())
+                .initializers(new ZipkinModuleImporter(), new ZipkinActuatorImporter())
+                // Avoids potentially expensive DNS lookup and inaccurate startup timing
+                .logStartupInfo(false)
+                .properties(
+                        EnableAutoConfiguration.ENABLED_OVERRIDE_PROPERTY + "=false",
+                        "spring.config.name=zipkin-server").run(args);
+    }
 }

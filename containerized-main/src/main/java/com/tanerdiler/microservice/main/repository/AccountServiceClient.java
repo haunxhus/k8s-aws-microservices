@@ -10,13 +10,12 @@ import java.util.List;
 
 @Component
 @FeignClient("containerized-accounts")
-public interface AccountServiceClient
-{
+public interface AccountServiceClient {
 
-	@GetMapping(value = "/account/api/v1/accounts/{accountId}")
-	Account findById(@PathVariable("accountId") Integer accountId);
+    @GetMapping(value = "/account/api/v1/accounts/{accountId}")
+    Account findById(@PathVariable("accountId") Integer accountId);
 
-	@GetMapping(value = "/account/api/v1/accounts")
-	List<Account> findAll();
+    @GetMapping(value = "/account/api/v1/accounts")
+    List<Account> findAll();
 
 }

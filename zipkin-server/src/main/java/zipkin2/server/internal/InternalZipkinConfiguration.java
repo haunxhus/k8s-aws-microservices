@@ -29,24 +29,24 @@ import zipkin2.server.internal.scribe.ZipkinScribeCollectorConfiguration;
 import zipkin2.server.internal.ui.ZipkinUiConfiguration;
 
 @Import({
-  ArmeriaAutoConfiguration.class,
-  ZipkinConfiguration.class,
-  ZipkinHttpConfiguration.class,
-  ZipkinUiConfiguration.class,
-  ZipkinCassandra3StorageConfiguration.class,
-  ZipkinElasticsearchStorageConfiguration.class,
-  ZipkinMySQLStorageConfiguration.class,
-  ZipkinScribeCollectorConfiguration.class,
-  ZipkinSelfTracingConfiguration.class,
-  ZipkinQueryApiV2.class,
-  ZipkinHttpCollector.class,
-  ZipkinGrpcCollector.class,
-  ZipkinActiveMQCollectorConfiguration.class,
-  ZipkinKafkaCollectorConfiguration.class,
-  ZipkinRabbitMQCollectorConfiguration.class,
-  ZipkinMetricsController.class,
-  ZipkinHealthController.class,
-  ZipkinPrometheusMetricsConfiguration.class
+        ArmeriaAutoConfiguration.class,
+        ZipkinConfiguration.class,
+        ZipkinHttpConfiguration.class,
+        ZipkinUiConfiguration.class,
+        ZipkinCassandra3StorageConfiguration.class,
+        ZipkinElasticsearchStorageConfiguration.class,
+        ZipkinMySQLStorageConfiguration.class,
+        ZipkinScribeCollectorConfiguration.class,
+        ZipkinSelfTracingConfiguration.class,
+        ZipkinQueryApiV2.class,
+        ZipkinHttpCollector.class,
+        ZipkinGrpcCollector.class,
+        ZipkinActiveMQCollectorConfiguration.class,
+        ZipkinKafkaCollectorConfiguration.class,
+        ZipkinRabbitMQCollectorConfiguration.class,
+        ZipkinMetricsController.class,
+        ZipkinHealthController.class,
+        ZipkinPrometheusMetricsConfiguration.class
 })
 public class InternalZipkinConfiguration {
 }

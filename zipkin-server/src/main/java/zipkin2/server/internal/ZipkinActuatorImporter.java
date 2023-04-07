@@ -14,6 +14,7 @@
 package zipkin2.server.internal;
 
 import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.bind.Binder;
@@ -37,59 +38,60 @@ import org.springframework.core.env.ConfigurableEnvironment;
  */
 // look at RATIONALE.md and update if relevant when changing this file
 public final class ZipkinActuatorImporter
-  implements ApplicationContextInitializer<GenericApplicationContext> {
-  static final Logger LOG = LoggerFactory.getLogger(ZipkinActuatorImporter.class);
+        implements ApplicationContextInitializer<GenericApplicationContext> {
+    static final Logger LOG = LoggerFactory.getLogger(ZipkinActuatorImporter.class);
 
-  static final String ACTUATOR_IMPL_CLASS =
-    "com.linecorp.armeria.spring.actuate.ArmeriaSpringActuatorAutoConfiguration";
-  static final String PROPERTY_NAME_ACTUATOR_ENABLED = "zipkin.internal.actuator.enabled";
-  static final String PROPERTY_NAME_ACTUATOR_INCLUDE = "zipkin.internal.actuator.include";
+    static final String ACTUATOR_IMPL_CLASS =
+            "com.linecorp.armeria.spring.actuate.ArmeriaSpringActuatorAutoConfiguration";
+    static final String PROPERTY_NAME_ACTUATOR_ENABLED = "zipkin.internal.actuator.enabled";
+    static final String PROPERTY_NAME_ACTUATOR_INCLUDE = "zipkin.internal.actuator.include";
 
-  final String actuatorImplClass;
+    final String actuatorImplClass;
 
-  public ZipkinActuatorImporter() {
-    this(ACTUATOR_IMPL_CLASS);
-  }
-
-  ZipkinActuatorImporter(String actuatorImplClass) { // visible for testing
-    this.actuatorImplClass = actuatorImplClass;
-  }
-
-  @Override public void initialize(GenericApplicationContext context) {
-    ConfigurableEnvironment env = context.getEnvironment();
-    if ("false".equalsIgnoreCase(env.getProperty(PROPERTY_NAME_ACTUATOR_ENABLED))) {
-      LOG.debug("skipping actuator as it is disabled");
-      return;
+    public ZipkinActuatorImporter() {
+        this(ACTUATOR_IMPL_CLASS);
     }
 
-    // At this point in the life-cycle, env can directly resolve plain properties, like the boolean
-    // above. If you tried to resolve a property bound by a yaml list, it returns null, as they are
-    // not yet bound.
-    //
-    // As we are in a configurable environment, we can bind lists properties. We expect this to take
-    // includes from PROPERTY_NAME_ACTUATOR_INCLUDE yaml path of zipkin-server-shared.yml.
-    String[] includes =
-      Binder.get(env).bind(PROPERTY_NAME_ACTUATOR_INCLUDE, String[].class).orElse(null);
-    if (includes == null || includes.length == 0) {
-      LOG.debug("no actuator configuration found under path " + PROPERTY_NAME_ACTUATOR_INCLUDE);
-      return;
+    ZipkinActuatorImporter(String actuatorImplClass) { // visible for testing
+        this.actuatorImplClass = actuatorImplClass;
     }
 
-    LOG.debug("attempting to load actuator configuration: " + Arrays.toString(includes));
-    try {
-      context.registerBean(Class.forName(actuatorImplClass));
-    } catch (Exception e) {
-      LOG.debug("skipping actuator as implementation is not available", e);
-      return;
-    }
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        ConfigurableEnvironment env = context.getEnvironment();
+        if ("false".equalsIgnoreCase(env.getProperty(PROPERTY_NAME_ACTUATOR_ENABLED))) {
+            LOG.debug("skipping actuator as it is disabled");
+            return;
+        }
 
-    for (String include : includes) {
-      try {
-        context.registerBean(Class.forName(include));
-      } catch (Exception e) {
-        // Skip any classes that didn't match due to drift
-        LOG.debug("skipping unloadable actuator config " + include, e);
-      }
+        // At this point in the life-cycle, env can directly resolve plain properties, like the boolean
+        // above. If you tried to resolve a property bound by a yaml list, it returns null, as they are
+        // not yet bound.
+        //
+        // As we are in a configurable environment, we can bind lists properties. We expect this to take
+        // includes from PROPERTY_NAME_ACTUATOR_INCLUDE yaml path of zipkin-server-shared.yml.
+        String[] includes =
+                Binder.get(env).bind(PROPERTY_NAME_ACTUATOR_INCLUDE, String[].class).orElse(null);
+        if (includes == null || includes.length == 0) {
+            LOG.debug("no actuator configuration found under path " + PROPERTY_NAME_ACTUATOR_INCLUDE);
+            return;
+        }
+
+        LOG.debug("attempting to load actuator configuration: " + Arrays.toString(includes));
+        try {
+            context.registerBean(Class.forName(actuatorImplClass));
+        } catch (Exception e) {
+            LOG.debug("skipping actuator as implementation is not available", e);
+            return;
+        }
+
+        for (String include : includes) {
+            try {
+                context.registerBean(Class.forName(include));
+            } catch (Exception e) {
+                // Skip any classes that didn't match due to drift
+                LOG.debug("skipping unloadable actuator config " + include, e);
+            }
+        }
     }
-  }
 }

@@ -18,13 +18,13 @@ import org.springframework.boot.web.server.Compression;
 
 @ConfigurationProperties("server")
 class CompressionProperties {
-  public Compression getCompression() {
-    return compression;
-  }
+    public Compression getCompression() {
+        return compression;
+    }
 
-  public void setCompression(Compression compression) {
-    this.compression = compression;
-  }
+    public void setCompression(Compression compression) {
+        this.compression = compression;
+    }
 
-  private Compression compression;
+    private Compression compression;
 }

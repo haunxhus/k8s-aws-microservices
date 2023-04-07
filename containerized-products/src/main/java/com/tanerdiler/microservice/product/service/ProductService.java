@@ -6,15 +6,15 @@ import java.util.List;
 
 public interface ProductService {
 
-     void sendProductToOrder();
+    void sendProductToOrder();
 
-     List<Product> getAll() throws InterruptedException;
+    List<Product> getAll() throws InterruptedException;
 
-     Product findById(Integer id) throws InterruptedException;
+    Product findById(Integer id) throws InterruptedException;
 
-     void deleteById(Integer id) throws InterruptedException;
+    void deleteById(Integer id) throws InterruptedException;
 
-     void deleteAll() throws InterruptedException;
+    void deleteAll() throws InterruptedException;
 
-     Product update(Product product, Integer id) throws InterruptedException;
+    Product update(Product product, Integer id) throws InterruptedException;
 }

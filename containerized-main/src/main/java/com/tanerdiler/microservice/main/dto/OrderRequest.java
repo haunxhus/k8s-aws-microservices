@@ -4,10 +4,10 @@ import lombok.Data;
 
 @Data
 public class OrderRequest {
-	private Integer id;
-	private Integer productId;
-	private Integer accountId;
-	private Integer count;
-	private Double price;
-	private Double discountedPrice;
+    private Integer id;
+    private Integer productId;
+    private Integer accountId;
+    private Integer count;
+    private Double price;
+    private Double discountedPrice;
 }

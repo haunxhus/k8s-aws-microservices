@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public class MinioService implements IOService{
+public class MinioService implements IOService {
 
     public IORepository ioRepository;
 

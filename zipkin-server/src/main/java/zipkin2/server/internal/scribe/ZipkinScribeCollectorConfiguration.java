@@ -30,20 +30,22 @@ import zipkin2.storage.StorageComponent;
 @ConditionalOnClass(ScribeCollector.class)
 @ConditionalOnProperty(value = "zipkin.collector.scribe.enabled", havingValue = "true")
 public class ZipkinScribeCollectorConfiguration {
-  /** The init method will block until the scribe port is listening, or crash on port conflict */
-  @Bean(initMethod = "start")
-  ScribeCollector scribe(
-    @Value("${zipkin.collector.scribe.category:zipkin}") String category,
-    @Value("${zipkin.collector.scribe.port:9410}") int port,
-    CollectorSampler sampler,
-    CollectorMetrics metrics,
-    StorageComponent storage) {
-    return ScribeCollector.newBuilder()
-      .category(category)
-      .port(port)
-      .sampler(sampler)
-      .metrics(metrics)
-      .storage(storage)
-      .build();
-  }
+    /**
+     * The init method will block until the scribe port is listening, or crash on port conflict
+     */
+    @Bean(initMethod = "start")
+    ScribeCollector scribe(
+            @Value("${zipkin.collector.scribe.category:zipkin}") String category,
+            @Value("${zipkin.collector.scribe.port:9410}") int port,
+            CollectorSampler sampler,
+            CollectorMetrics metrics,
+            StorageComponent storage) {
+        return ScribeCollector.newBuilder()
+                .category(category)
+                .port(port)
+                .sampler(sampler)
+                .metrics(metrics)
+                .storage(storage)
+                .build();
+    }
 }

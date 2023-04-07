@@ -26,7 +26,7 @@ public class SleuthConfig extends GenericFilterBean {
 
         Span currentSpan = this.tracer.currentSpan();
 
-        // for readability we're returning trace id in a hex form
+        // for readability, we're returning trace id in a hex form
         ((HttpServletResponse) response).addHeader("X-B3-TraceId", currentSpan.context().traceIdString());
 
         chain.doFilter(request, response);

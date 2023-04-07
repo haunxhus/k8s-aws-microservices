@@ -19,6 +19,7 @@ import com.linecorp.armeria.client.SimpleDecoratingHttpClient;
 import com.linecorp.armeria.common.HttpHeaderNames;
 import com.linecorp.armeria.common.HttpRequest;
 import com.linecorp.armeria.common.HttpResponse;
+
 import java.util.Objects;
 
 /**
@@ -29,19 +30,19 @@ import java.util.Objects;
  */
 final class BasicAuthInterceptor extends SimpleDecoratingHttpClient {
 
-  final BasicCredentials basicCredentials;
+    final BasicCredentials basicCredentials;
 
-  BasicAuthInterceptor(HttpClient client, BasicCredentials basicCredentials) {
-    super(client);
-    this.basicCredentials = basicCredentials;
-  }
-
-  @Override
-  public HttpResponse execute(ClientRequestContext ctx, HttpRequest req) throws Exception {
-    String credentials = basicCredentials.getCredentials();
-    if (credentials != null) {
-      ctx.addAdditionalRequestHeader(HttpHeaderNames.AUTHORIZATION, credentials);
+    BasicAuthInterceptor(HttpClient client, BasicCredentials basicCredentials) {
+        super(client);
+        this.basicCredentials = basicCredentials;
     }
-    return unwrap().execute(ctx, req);
-  }
+
+    @Override
+    public HttpResponse execute(ClientRequestContext ctx, HttpRequest req) throws Exception {
+        String credentials = basicCredentials.getCredentials();
+        if (credentials != null) {
+            ctx.addAdditionalRequestHeader(HttpHeaderNames.AUTHORIZATION, credentials);
+        }
+        return unwrap().execute(ctx, req);
+    }
 }

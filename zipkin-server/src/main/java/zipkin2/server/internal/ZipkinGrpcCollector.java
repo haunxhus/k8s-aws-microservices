@@ -19,9 +19,11 @@ import com.linecorp.armeria.server.grpc.protocol.AbstractUnsafeUnaryGrpcService;
 import com.linecorp.armeria.spring.ArmeriaServerConfigurator;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Executor;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import zipkin2.Callback;
@@ -31,68 +33,74 @@ import zipkin2.collector.CollectorMetrics;
 import zipkin2.collector.CollectorSampler;
 import zipkin2.storage.StorageComponent;
 
-/** Collector for receiving spans on a gRPC endpoint. */
+/**
+ * Collector for receiving spans on a gRPC endpoint.
+ */
 @ConditionalOnProperty(name = "zipkin.collector.grpc.enabled") // disabled by default
 final class ZipkinGrpcCollector {
 
-  @Bean ArmeriaServerConfigurator grpcCollectorConfigurator(StorageComponent storage,
-    CollectorSampler sampler, CollectorMetrics metrics) {
-    CollectorMetrics grpcMetrics = metrics.forTransport("grpc");
-    Collector collector = Collector.newBuilder(getClass())
-      .storage(storage)
-      .sampler(sampler)
-      .metrics(grpcMetrics)
-      .build();
+    @Bean
+    ArmeriaServerConfigurator grpcCollectorConfigurator(StorageComponent storage,
+                                                        CollectorSampler sampler, CollectorMetrics metrics) {
+        CollectorMetrics grpcMetrics = metrics.forTransport("grpc");
+        Collector collector = Collector.newBuilder(getClass())
+                .storage(storage)
+                .sampler(sampler)
+                .metrics(grpcMetrics)
+                .build();
 
-    return sb ->
-      sb.service("/zipkin.proto3.SpanService/Report", new SpanService(collector, grpcMetrics));
-  }
-
-  static final class SpanService extends AbstractUnsafeUnaryGrpcService {
-
-    final Collector collector;
-    final CollectorMetrics metrics;
-
-    SpanService(Collector collector, CollectorMetrics metrics) {
-      this.collector = collector;
-      this.metrics = metrics;
+        return sb ->
+                sb.service("/zipkin.proto3.SpanService/Report", new SpanService(collector, grpcMetrics));
     }
 
-    @Override protected CompletionStage<ByteBuf> handleMessage(ServiceRequestContext srCtx, ByteBuf bytes) {
-      metrics.incrementMessages();
-      metrics.incrementBytes(bytes.readableBytes());
+    static final class SpanService extends AbstractUnsafeUnaryGrpcService {
 
-      if (!bytes.isReadable()) {
-        return CompletableFuture.completedFuture(bytes); // lenient on empty messages
-      }
+        final Collector collector;
+        final CollectorMetrics metrics;
 
-      try {
-        CompletableFutureCallback result = new CompletableFutureCallback();
+        SpanService(Collector collector, CollectorMetrics metrics) {
+            this.collector = collector;
+            this.metrics = metrics;
+        }
 
-        // collector.accept might block so need to move off the event loop. We make sure the
-        // callback is context aware to continue the trace.
-        Executor executor = ServiceRequestContext.mapCurrent(
-          ctx -> ctx.makeContextAware(ctx.blockingTaskExecutor()),
-          CommonPools::blockingTaskExecutor);
+        @Override
+        protected CompletionStage<ByteBuf> handleMessage(ServiceRequestContext srCtx, ByteBuf bytes) {
+            metrics.incrementMessages();
+            metrics.incrementBytes(bytes.readableBytes());
 
-        collector.acceptSpans(bytes.nioBuffer(), SpanBytesDecoder.PROTO3, result, executor);
+            if (!bytes.isReadable()) {
+                return CompletableFuture.completedFuture(bytes); // lenient on empty messages
+            }
 
-        return result;
-      } finally {
-        bytes.release();
-      }
+            try {
+                CompletableFutureCallback result = new CompletableFutureCallback();
+
+                // collector.accept might block so need to move off the event loop. We make sure the
+                // callback is context aware to continue the trace.
+                Executor executor = ServiceRequestContext.mapCurrent(
+                        ctx -> ctx.makeContextAware(ctx.blockingTaskExecutor()),
+                        CommonPools::blockingTaskExecutor);
+
+                collector.acceptSpans(bytes.nioBuffer(), SpanBytesDecoder.PROTO3, result, executor);
+
+                return result;
+            } finally {
+                bytes.release();
+            }
+        }
     }
-  }
 
-  static final class CompletableFutureCallback extends CompletableFuture<ByteBuf>
-    implements Callback<Void> {
+    static final class CompletableFutureCallback extends CompletableFuture<ByteBuf>
+            implements Callback<Void> {
 
-    @Override public void onSuccess(Void value) {
-      complete(Unpooled.EMPTY_BUFFER);
+        @Override
+        public void onSuccess(Void value) {
+            complete(Unpooled.EMPTY_BUFFER);
+        }
+
+        @Override
+        public void onError(Throwable t) {
+            completeExceptionally(t);
+        }
     }
-
-    @Override public void onError(Throwable t) {
-      completeExceptionally(t);
-    }
-  }
 }

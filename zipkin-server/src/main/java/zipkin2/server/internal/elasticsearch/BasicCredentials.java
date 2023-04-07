@@ -15,6 +15,7 @@ package zipkin2.server.internal.elasticsearch;
 
 import java.util.Base64;
 import java.util.Optional;
+
 import zipkin2.internal.Nullable;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -27,23 +28,23 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 final class BasicCredentials {
 
-  private volatile String basicCredentials;
+    private volatile String basicCredentials;
 
-  BasicCredentials() {
+    BasicCredentials() {
 
-  }
+    }
 
-  BasicCredentials(String username, String password) {
-    updateCredentials(username, password);
-  }
+    BasicCredentials(String username, String password) {
+        updateCredentials(username, password);
+    }
 
-  void updateCredentials(String username, String password) {
-    String token = username + ':' + password;
-    basicCredentials = "Basic " + Base64.getEncoder().encodeToString(token.getBytes(UTF_8));
-  }
+    void updateCredentials(String username, String password) {
+        String token = username + ':' + password;
+        basicCredentials = "Basic " + Base64.getEncoder().encodeToString(token.getBytes(UTF_8));
+    }
 
-  @Nullable
-  String getCredentials() {
-    return basicCredentials;
-  }
+    @Nullable
+    String getCredentials() {
+        return basicCredentials;
+    }
 }
