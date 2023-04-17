@@ -1,4 +1,3 @@
-
 version: '3.7'
 
 #networks:
@@ -49,7 +48,7 @@ services:
     command: logstash -f /usr/share/logstash/pipeline
     depends_on:
       elasticsearch:
-          condition: service_started
+        condition: service_started
     volumes:
       - ./containerized-logstash/config:/usr/share/logstash/config:ro
       - ./containerized-logstash/pipeline:/usr/share/logstash/pipeline:ro
@@ -59,22 +58,6 @@ services:
       - "5000:5000"
       - "5044:5044"
       - "12204:12204"
-
-  # #################################################### zipkin service #######################################################
-
- # zipkin:
- #   image: openzipkin/zipkin:latest
- #   container_name: zipkin
-    # Environment settings are defined here https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md#environment-variables
- #   environment:
- #   networks:
- #     - e-network
- #   depends_on:
- #     - logstash
- #   ports:
-      # Port used for the Zipkin UI and HTTP Api
- #     - 9411:9411
- #   restart: on-failure
 
   # #################################################### kibana service #######################################################
 
@@ -110,13 +93,13 @@ services:
     depends_on:
       logstash:
         condition: service_started
-    entrypoint: ["./wait-for-services.sh", "logstash", "5000", "java", "-jar", "zipkin-server.jar"]
+    entrypoint: [ "./wait-for-services.sh", "logstash", "5000", "java", "-jar", "zipkin-server.jar" ]
     ports:
       - "9411:9411"
     restart: on-failure
 
 
- # #################################################### containerized-discovery service #######################################################
+  # #################################################### containerized-discovery service #######################################################
 
   discovery:
     container_name: containerized-discovery
@@ -133,14 +116,14 @@ services:
         condition: service_started
       logstash:
         condition: service_started
-    command: ["wait-for-services.sh", "zipkin", "9411", "java",  "-jar", "containerized-discovery.jar"]
+    command: [ "wait-for-services.sh", "zipkin", "9411", "java",  "-jar", "containerized-discovery.jar" ]
     ports:
       - "8761:8761"
     restart: on-failure
     stdin_open: true # connect docker container by shell: docker run -i
     tty: true # connect docker container by shell:        docker run -i
 
- # #################################################### containerized-products service #######################################################
+  # #################################################### containerized-products service #######################################################
 
   containerized-products:
     container_name: containerized-products
@@ -159,14 +142,14 @@ services:
         condition: service_started
       discovery:
         condition: service_started
-    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-products.jar"]
+    entrypoint: [ "./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-products.jar" ]
     ports:
       - "2227:2227"
     restart: on-failure
     stdin_open: true
     tty: true
 
- # #################################################### containerized-gateway service #######################################################
+  # #################################################### containerized-gateway service #######################################################
 
   containerized-gateway:
     container_name: containerized-gateway
@@ -189,14 +172,14 @@ services:
         condition: service_started
       containerized-authorization-server:
         condition: service_started
-    entrypoint: ["./wait-for-services.sh", "containerized-authorization-server", "9000", "java", "-jar", "containerized-gateway.jar"]
+    entrypoint: [ "./wait-for-services.sh", "containerized-authorization-server", "9000", "java", "-jar", "containerized-gateway.jar" ]
     ports:
       - "8762:8762"
     restart: on-failure
     stdin_open: true
     tty: true
 
- # #################################################### containerized-accounts service #######################################################
+  # #################################################### containerized-accounts service #######################################################
 
   containerized-accounts:
     container_name: containerized-accounts
@@ -215,7 +198,7 @@ services:
         condition: service_started
       discovery:
         condition: service_started
-    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-accounts.jar"]
+    entrypoint: [ "./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-accounts.jar" ]
     ports:
       - "2222:2222"
     restart: on-failure
@@ -224,7 +207,7 @@ services:
 
 
 
- # #################################################### containerized-orders service #######################################################
+  # #################################################### containerized-orders service #######################################################
 
   containerized-orders:
     container_name: containerized-orders
@@ -243,7 +226,7 @@ services:
         condition: service_started
       discovery:
         condition: service_started
-    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-orders.jar"]
+    entrypoint: [ "./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-orders.jar" ]
     ports:
       - "2226:2226"
     restart: on-failure
@@ -270,7 +253,7 @@ services:
         condition: service_started
       discovery:
         condition: service_started
-    entrypoint: [ "./wait-for-services.sh", "discovery", "8080", "java", "-jar", "containerized-import-export-0.0.1-SNAPSHOT.jar" ]
+    entrypoint: [ "./wait-for-services.sh", "discovery", "8080", "java", "-jar", "containerized-import-export.jar" ]
     environment:
       - MINIO_ENDPOINT=http://minio:9000/
       - MINIO_ACCESS_KEY=JUEfzzdjg69PPSKk
@@ -285,7 +268,7 @@ services:
     tty: true
 
 
- # #################################################### containerized-main service #######################################################
+  # #################################################### containerized-main service #######################################################
 
   containerized-main:
     container_name: containerized-main
@@ -304,7 +287,7 @@ services:
         condition: service_started
       discovery:
         condition: service_started
-    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-main.jar"]
+    entrypoint: [ "./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-main.jar" ]
     ports:
       - "2223:2223"
     restart: on-failure
@@ -328,7 +311,7 @@ services:
       - DB_USERNAME=vmodev
 #    volumes:
 #      - ./wait-for-services.sh:/usr/local/bin/wait-for-services.sh # :ro, ro = read only
-    entrypoint: ["./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-authorization-server.jar"]
+    entrypoint: [ "./wait-for-services.sh", "discovery", "8761", "java", "-jar", "containerized-authorization-server.jar" ]
 #    entrypoint: ["java", "-jar", "containerized-authorization-server.jar"]
     ports:
       - "9000:9000"
@@ -340,6 +323,8 @@ services:
     restart: on-failure
     stdin_open: true
     tty: true
+#    links:
+#      - mysql8
 
   mysql8:
     container_name: mysql8
@@ -355,7 +340,7 @@ services:
 #      MYSQL_PASSWORD: vmodev
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     ports:
-      - "3306:3306"
+      - "3306"
     volumes:
       - './docker/db/data:/var/lib/mysql'
       - './docker/db/my.cnf:/etc/mysql/conf.d/my.cnf'
