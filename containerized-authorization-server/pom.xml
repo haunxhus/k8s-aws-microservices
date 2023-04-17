@@ -17,7 +17,7 @@
         <java.version>17</java.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <logtash-logback-encoder.version>6.6</logtash-logback-encoder.version>
+<!--        <logtash-logback-encoder.version>6.6</logtash-logback-encoder.version>-->
         <jersey.apache.client4.version>1.19.4</jersey.apache.client4.version>
     </properties>
 

@@ -66,6 +66,10 @@ If you want to change token acquiring logic you can go with custom TokenGranter.
 
 To run quickly with docker-compose just need to run maven command:
 
+*) Note
+
+The Resource Owner Password Credentials grant is omitted from OAuth 2.1
+
 **Here we go**
 
 Run with docker-compose
@@ -157,3 +161,14 @@ curl --location 'localhost:8762/product/api/v1/products' \
 ![](../assets/gw/auth.png)
 
 **Successfully**
+
+### References and more detail
+- https://docs.spring.io/spring-authorization-server/docs/current/reference/html/index.html
+- https://connect2id.com/products/server/docs/api/token
+- https://connect2id.com/products/server/docs/guides/oauth-client-authentication
+- https://connect2id.com/products/server/docs/api
+
+
+TODO:
+
+Add role based: https://www.appsdeveloperblog.com/add-roles-to-jwt-issued-by-new-spring-authorization-server/

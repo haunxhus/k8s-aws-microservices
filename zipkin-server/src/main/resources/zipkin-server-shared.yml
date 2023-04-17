@@ -223,11 +223,11 @@ armeria:
 
 spring:
   main:
-     allow-bean-definition-overriding: true
+    allow-bean-definition-overriding: true
   logstash:
-     #server: localhost
-     server: logstash
-     port: 5000
+    #server: localhost
+    server: logstash
+    port: 5000
   logging:
     pattern:
       console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([${springAppName:-},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}]){yellow} %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
@@ -235,8 +235,8 @@ spring:
       org.springframework: WARN
       org.hibernate: WARN
   jmx:
-     # reduce startup time by excluding unexposed JMX service
-     enabled: false
+    # reduce startup time by excluding unexposed JMX service
+    enabled: false
   mvc:
     favicon:
       # zipkin has its own favicon
@@ -302,8 +302,8 @@ management:
       enabled: false
     info:
       enabled: false
-# Disabling auto time http requests since it is added in ZipkinPrometheusMetricsConfiguration
-# In Zipkin we use different naming for the http requests duration
+  # Disabling auto time http requests since it is added in ZipkinPrometheusMetricsConfiguration
+  # In Zipkin we use different naming for the http requests duration
   metrics:
     web:
       server:
