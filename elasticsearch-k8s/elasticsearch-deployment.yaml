@@ -45,8 +45,15 @@ spec:
         ports:
         - containerPort: 9200
         - containerPort: 9300
+        volumeMounts:
+        - name: elasticsearch-storage
+          mountPath: /usr/share/elasticsearch/data
+      volumes:
+      - name: elasticsearch-storage
+        persistentVolumeClaim:
+          claimName: elasticsearch-storage-claim
+          
         resources: {}
       restartPolicy: Always
       serviceAccountName: ""
-      volumes: null
 status: {}

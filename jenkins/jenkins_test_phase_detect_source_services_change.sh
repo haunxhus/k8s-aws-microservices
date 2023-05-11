@@ -40,20 +40,26 @@ if [ -n "${ghprbTargetBranch}" ] || [ "$GIT_PRE_COMMIT" != "$GIT_CURR_COMMIT" ];
 	CHANGED_FILE_FOLDER=
 		echo "########### detect GIT_PRE_COMMIT and GIT_CURR_COMMIT is differences or not. If not using another command. "
 	if [[ -n "$GIT_PRE_COMMIT" && -n "$GIT_CURR_COMMIT" && "$GIT_PRE_COMMIT" != "$GIT_CURR_COMMIT" ]]; then
-	  echo "####### Valid and run command: git diff --name-only $GIT_PRE_COMMIT $GIT_CURR_COMMIT $DIR_PATH";
+	    echo "####### Valid and run command: git diff --name-only $GIT_PRE_COMMIT $GIT_CURR_COMMIT $DIR_PATH";
 		if git diff --name-only $GIT_PRE_COMMIT $GIT_CURR_COMMIT "$DIR_PATH"; then
 			echo "############# running command: git diff --name-only $GIT_PRE_COMMIT $GIT_CURR_COMMIT $DIR_PATH"
 			CHANGED_FILE_FOLDER=$(git diff --name-only $GIT_PRE_COMMIT $GIT_CURR_COMMIT "$DIR_PATH")
 		fi
+	elif [[ -n "${GIT_PRE_COMMIT}" && -n "${GIT_CURR_COMMIT}" && "$GIT_PRE_COMMIT" == "$GIT_CURR_COMMIT" ]]; then
+		echo "####### Valid command: git show --pretty="" --name-only $GIT_PRE_COMMIT";
+		if git show --pretty="" --name-only $GIT_PRE_COMMIT "$DIR_PATH"; then
+		    echo "############# running command: git show --pretty="" --name-only $GIT_PRE_COMMIT $DIR_PATH"
+			CHANGED_FILE_FOLDER=$(git show --pretty="" --name-only $GIT_PRE_COMMIT "$DIR_PATH")
+		fi
 	else
-    echo "####### Valid command: git diff --name-only $SOURCE_BRANCH..$TARGET_BRANCH";
+    	echo "####### Valid command: git diff --name-only $SOURCE_BRANCH..$TARGET_BRANCH";
 		if git diff --name-only "$SOURCE_BRANCH".."$TARGET_BRANCH"; then
 			echo "############# running command: git diff --name-only $SOURCE_BRANCH..$TARGET_BRANCH $DIR_PATH"
 			CHANGED_FILE_FOLDER=$(git diff --name-only "$SOURCE_BRANCH".."$TARGET_BRANCH" "$DIR_PATH")
 		else
-      echo "############# No detect change. Run all then exit."
-    	mvn -Dmaven.test.failure.ignore=false clean package
-    	exit 0;
+			echo "############# No detect change. Run all then exit."
+			mvn -Dmaven.test.failure.ignore=false clean package
+			exit 0;
 		fi
 	fi
 	
@@ -81,6 +87,9 @@ if [ -n "${ghprbTargetBranch}" ] || [ "$GIT_PRE_COMMIT" != "$GIT_CURR_COMMIT" ];
 		do 
 			echo "exist $key"
 			if [ -e "${key}pom.xml" ]; then
+				# run mvn test
+				mvn -f "${key}pom.xml" test
+				# run mvn clean package to jar file
 				mvn -f "${key}pom.xml" -Dmaven.test.skip=true -Dmaven.test.failure.ignore=true clean package
 			fi
 		done

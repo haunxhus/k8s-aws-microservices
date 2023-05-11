@@ -90,13 +90,19 @@ if [  -n "${TARGET_BRANCH}" ] || [ "$GIT_PRE_COMMIT" != "$GIT_CURR_COMMIT" ]; th
 	CHANGED_FILE_FOLDER=
 	echo "########### detect GIT_PRE_COMMIT and GIT_CURR_COMMIT is differences or not. If not using another command. "
 	if [[ -n "${GIT_PRE_COMMIT}" && -n "${GIT_CURR_COMMIT}" && "$GIT_PRE_COMMIT" != "$GIT_CURR_COMMIT" ]]; then
-	  echo "####### Valid command: git diff --name-only $GIT_PRE_COMMIT $GIT_CURR_COMMIT $DIR_PATH";
+	  	echo "####### Valid command: git diff --name-only $GIT_PRE_COMMIT $GIT_CURR_COMMIT $DIR_PATH";
 		if git diff --name-only $GIT_PRE_COMMIT $GIT_CURR_COMMIT "$DIR_PATH"; then
-		  echo "############# running command: git diff --name-only $GIT_PRE_COMMIT $GIT_CURR_COMMIT $DIR_PATH"
+		    echo "############# running command: git diff --name-only $GIT_PRE_COMMIT $GIT_CURR_COMMIT $DIR_PATH"
 			CHANGED_FILE_FOLDER=$(git diff --name-only $GIT_PRE_COMMIT $GIT_CURR_COMMIT "$DIR_PATH")
 		fi
+	elif [[ -n "${GIT_PRE_COMMIT}" && -n "${GIT_CURR_COMMIT}" && "$GIT_PRE_COMMIT" == "$GIT_CURR_COMMIT" ]]; then
+		echo "####### Valid command: git show --pretty="" --name-only $GIT_PRE_COMMIT";
+		if git show --pretty="" --name-only $GIT_PRE_COMMIT "$DIR_PATH"; then
+		    echo "############# running command: git show --pretty="" --name-only $GIT_PRE_COMMIT $DIR_PATH"
+			CHANGED_FILE_FOLDER=$(git show --pretty="" --name-only $GIT_PRE_COMMIT "$DIR_PATH")
+		fi
 	else
-	   echo "####### Valid command: git diff --name-only $SOURCE_BRANCH..$TARGET_BRANCH $DIR_PATH";
+	    echo "####### Valid command: git diff --name-only $SOURCE_BRANCH..$TARGET_BRANCH $DIR_PATH";
 		if git diff --name-only $SOURCE_BRANCH..$TARGET_BRANCH "$DIR_PATH"; then
 			echo "############# running command: git diff --name-only $SOURCE_BRANCH..$TARGET_BRANCH $DIR_PATH"
 			CHANGED_FILE_FOLDER=$(git diff --name-only $SOURCE_BRANCH..$TARGET_BRANCH "$DIR_PATH")
