@@ -125,7 +125,7 @@
 		   
 	   5.4 In Build Steps
 		 - Choose Execute shell add this commands:
-			/bin/bash -xe ./jenkins/jenkins_freestyle_project_build_step.sh <remote_server_user_name> <remote_server_ip>  <remote_user_home_path> <user_private_ssh_key_path>
+			/bin/bash -xe ./jenkins/jenkins_freestyle_project_deploy_phase_build_step.sh <remote_server_user_name> <remote_server_ip>  <remote_user_home_path> <user_private_ssh_key_path>
 			+ remote_server_ip : the remote server
 			+ remote_server_user_name: the remote user name
 			+ remote_user_home_path: home path of user login using ssh
@@ -138,11 +138,11 @@
 				mvn --version
 
 				echo "Current branch ${GIT_BRANCH}";
-				#/bin/bash -xe ./jenkins/jenkins_freestyle_project_build_step.sh
+				#/bin/bash -xe ./jenkins/jenkins_freestyle_project_deploy_phase_build_step.sh
 				if [[ "${GIT_BRANCH}" == *"feature"* ]]; then 
 					mvn -Dmaven.test.failure.ignore=false clean package
 				else 
-					/bin/bash -xe ./jenkins/jenkins_freestyle_project_build_step.sh vienlv 34.124.237.137 /home/vienlv /home/jenkins/id_rsa
+					/bin/bash -xe ./jenkins/jenkins_freestyle_project_deploy_phase_build_step.sh vienlv 34.124.237.137 /home/vienlv /home/jenkins/id_rsa
 				fi	
 			
 		 - If you have many steps, just click "Add build step" button and more script 
@@ -280,7 +280,7 @@
 					+ field `Refspec` add: +refs/heads/develop:refs/remotes/origin/develop +refs/heads/master:refs/remotes/origin/master +refs/pull/*:refs/remotes/origin/pr/* 
 						. +refs/heads/develop:refs/remotes/origin/develop: jenkins server will receive github webhook signal when have any commit to develop branch
 						. +refs/heads/master:refs/remotes/origin/master:   jenkins server will receive github webhook signal when have any commit to master branch
-						. +refs/pull/*:refs/remotes/origin/pr/* :          jenkins server will receive github webhook signal when any PR is created .
+						. +refs/pull/*:refs/remotes/origin/pr/* :          jenkins server will receive github webhook signal when any PR is created.
 						
 			2.2 At the `Branches to build` title
 				- click button `Add Branch` add corresponding branches `Branch Specifier (blank for 'any')` respectively
@@ -362,4 +362,23 @@
 		6. In `Post-build Actions`: chose any event you want like send `E-mail Notification` to user.,...
 		
 	- Click save. then we check log script in http://<jenkin_url>:<jenkin_port>/job/<project_name>/<build_number>/console	
+	
 		ex: http://35.240.178.159:8080/job/k8s-example-vmo-c5-auto/172/console
+		
+		
+*) Fix problem when gcp auto remove your authorized_keys file in $HOME/.ssh/ folder:
+	Require: clone your authorized_keys from outside ./ssh
+	1, way 1: refer this url and follow the guide: https://stackoverflow.com/questions/65141387/authorized-keys-getting-deleted-from-google-cloud-vm
+	                                               https://groups.google.com/g/gce-discussion/c/m6iZ1GWem8Q
+												   https://poe.com/Sage
+	2, Run script as cronjob in background: 
+	  - giving the permission:                 chmod +x $project_folder/jenkins/fix_lost_file_in_gcp.sh 
+	  - running as cron job every 1 minutes:  crontab -e
+	     then add content to file then save:  * * * * *  /path/$project_folder/jenkins/fix_lost_file_in_gcp.sh <path_store_origin_file> <path_store_origin_file> <content_to_check>" >> $path/cron.log 2>&1	 
+	                                     ex:  crontab -e 
+										      * * * * * /path/$project_folder/jenkins/fix_lost_file_in_gcp.sh "/tuan/authorized_keys" "/tuan/.ssh/authorized_keys" "PhamLinh@LinhPhamVan" >> /home/vienlv/cron_logs.log 2>&1
+	                                          * * * * * /home/vienlv/fix_lost_file_in_gcp.sh > /home/vienlv/cron_logs.log 2>&1
+	  - to remove cron job:                    crontab -l | grep -v '<SPECIFICS OF YOUR SCRIPT HERE>' | crontab - 
+	  - to get list cron job:                  crontab -r
+	  - check log:                            grep CRON /var/log/syslog
+	  - show cron job details:                ps aux | grep fix_lost_file_in_gcp.sh

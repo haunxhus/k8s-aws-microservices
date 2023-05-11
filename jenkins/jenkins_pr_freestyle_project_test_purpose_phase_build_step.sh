@@ -66,9 +66,9 @@ if [ ! -d $HOME/git-hist ]; then
 	mkdir "$HOME"/git-hist
 else 
     if [ ! -e "$HOME"/git-hist/$CURRENT_BRANCH_NAME_FORMAT_AS_FILE_NAME ]; then
-		  echo "$HOME/git-hist does not exist. Create it !!!"
+		echo "$HOME/git-hist does not exist. Create it !!!"
 	    touch "$HOME"/git-hist/$CURRENT_BRANCH_NAME_FORMAT_AS_FILE_NAME
-	  fi
+	fi
 fi
 
 
@@ -108,8 +108,12 @@ if [ -n "${ghprbTargetBranch}" ] || [ "$GIT_PREVIOUS_COMMIT" != "$GIT_COMMIT" ];
 	# 3 previous git commit 
 	#
 	chmod +x "$PWD"/jenkins/jenkins_test_phase_detect_source_services_change.sh
-	bash "$PWD"/jenkins/jenkins_test_phase_detect_source_services_change.sh "$PWD" $GIT_COMMIT $GIT_PREVIOUS_COMMIT "${ghprbSourceBranch}" "${ghprbTargetBranch}"
 	
+	if [ -n "${ghprbActualCommit}" ]; then
+		bash "$PWD"/jenkins/jenkins_test_phase_detect_source_services_change.sh "$PWD" "${ghprbActualCommit}" $GIT_PREVIOUS_COMMIT "${ghprbSourceBranch}" "${ghprbTargetBranch}"
+	else
+		bash "$PWD"/jenkins/jenkins_test_phase_detect_source_services_change.sh "$PWD" $GIT_COMMIT $GIT_PREVIOUS_COMMIT "${ghprbSourceBranch}" "${ghprbTargetBranch}"
+	fi
 	
 	# keep success hash commit to file
 	echo "$CURRENT_HASH" > "$HOME"/git-hist/$CURRENT_BRANCH_NAME_FORMAT_AS_FILE_NAME
@@ -216,6 +220,9 @@ do
 	  echo "index: $i, value: ${LIST_PROJECT_FOLDER[$i]}"
 	  if [[ "${LIST_PROJECT_FOLDER[$i]}" == *"$folder"* ]]; then
 		if [ -e "${LIST_PROJECT_FOLDER[$i]}pom.xml" ]; then
+			# run mvn test
+			mvn -f "${key}pom.xml" test
+			# run mvn clean package to jar file
 			mvn -f "${LIST_PROJECT_FOLDER[$i]}pom.xml" -Dmaven.test.skip=false -Dmaven.test.failure.ignore=false clean package
 		fi
 	  fi

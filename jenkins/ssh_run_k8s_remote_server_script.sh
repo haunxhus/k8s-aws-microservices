@@ -84,8 +84,8 @@ if [ ${#files[@]} -gt 0 ]; then
 	
 EOSSH1
 	
-	#ref: https://linuxize.com/post/how-to-use-scp-command-to-securely-transfer-files/
-	#ref: https://linux.die.net/man/1/scp
+	#ref: https://linuxize.com/post/how-to-use-scp-command-to-securely-transfer-files/ 
+	#ref: https://linux.die.net/man/1/scp 
 	set -eo pipefail
 	sudo scp -v -o StrictHostKeyChecking=no -i "$JENKIN_SSH_KEY_PATH" -r "$HOME"/k8s-example-tar-folder/ "$REMOTE_USER"@$REMOTE_IP:"$REMOTE_HOME_PATH"/microservice-k8s-tar/
 	sudo scp -v -o StrictHostKeyChecking=no -i "$JENKIN_SSH_KEY_PATH" -r "$PWD"/jenkins/containerized_build_k8s_scripts.sh "$REMOTE_USER"@$REMOTE_IP:"$REMOTE_HOME_PATH"/containerized_build_k8s_scripts.sh
