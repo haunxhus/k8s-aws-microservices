@@ -271,8 +271,8 @@ echo "execute $LIST_FOLDER_NEWEST_UPDATE"
 
 # // TODO
 #check list folder will apply in jenkins global environment in the future
-declare -a LIST_PROJECT_FOLDER=("containerized-accounts/" "containerized-config-server/" "containerized-discovery/" "containerized-gateway/" "containerized-logstash/" "containerized-main/" "containerized-orders/" "containerized-products/" "containerized-prometheus/" "zipkin-server/")
-declare -a LIST_CONTAINER_NAME=("containerized-accounts" "containerized-config-server" "containerized-discovery" "containerized-gateway" "containerized-logstash" "containerized-main" "containerized-orders" "containerized-products" "containerized-prometheus" "zipkin-server")
+declare -a LIST_PROJECT_FOLDER=("containerized-accounts/" "containerized-config-server/" "containerized-discovery/" "containerized-gateway/" )
+declare -a LIST_CONTAINER_NAME=("containerized-accounts" "containerized-config-server" "containerized-discovery" "containerized-gateway" )
 arrayListProjectLength=${#LIST_PROJECT_FOLDER[@]}
 
 echo "the PWD is : ${PWD}"
